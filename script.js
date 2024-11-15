@@ -1,11 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
-    gsap.from("#navbar", {
-        duration: 1,
-        y: -100,
-        opacity: 0,
-        ease: "power3.out"
-    });
-});
-document.getElementById("theme-switch").addEventListener("change", function () {
-    document.body.classList.toggle("dark-mode");
+const container = document.querySelector("#container")
+gsap.from(container, {
+    duration: 2,
+    y: -60,
+    ease: "linear",
+})
+const theme = document.querySelector("#theme-switch");
+theme.addEventListener("click", () => {
+    document.body.classList.toggle("dark-theme");
 });
