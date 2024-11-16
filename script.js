@@ -16,7 +16,6 @@ gsap.from("#projectsCard", {
     scrollTrigger: {
         trigger: "#projectsCard",
         scroller: "body",
-        // markers: true,
         start: "top 80%",
         end: "top 50%",
         scrub: true,
@@ -28,7 +27,6 @@ gsap.from("#skills", {
     scrollTrigger: {
         trigger: "#skills",
         scroller: "body",
-        // markers: true,
         start: "top 80%",
         end: "top 50%",
         scrub: true,
