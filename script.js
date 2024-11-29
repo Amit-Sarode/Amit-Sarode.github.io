@@ -1,5 +1,6 @@
 
-gsap.from("#container", {
+let tl = gsap.timeline()
+tl.from("#container", {
     duration: 3,
     y: -100,
     opacity: 0,
@@ -10,9 +11,11 @@ document.getElementById("theme-switch").addEventListener("change", () => {
     document.body.classList.toggle("dark-theme");
 });
 
-gsap.from("#projectsCard", {
+tl.from("#projectsCard", {
     y: 100,
     opacity: 0,
+    duration: 2,
+    stagger: 0.3,
     scrollTrigger: {
         trigger: "#projectsCard",
         scroller: "body",
@@ -21,9 +24,11 @@ gsap.from("#projectsCard", {
         scrub: true,
     },
 });
-gsap.from("#skills", {
+tl.from("#skills", {
     y: 100,
     opacity: 0,
+    duration: 2,
+    stagger: 0.3,
     scrollTrigger: {
         trigger: "#skills",
         scroller: "body",

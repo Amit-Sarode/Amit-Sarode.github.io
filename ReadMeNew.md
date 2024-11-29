@@ -1,4 +1,3 @@
-# Amit-Sarode.github.io
 # 💫 About Me:
 As a fresher, I'm enthusiastic about learning and growing in the dynamic world of web development. I've worked on projects that showcase my skills in designing interactive user interfaces, optimizing web performance, and collaborating on impactful ideas.<br><br><br><br>💻 What I bring to the table:<br><br>Proficient in: HTML, CSS, JavaScript, React, Tailwind CSS.<br>Familiar with: Git, APIs, responsive design, and web accessibility.<br>A problem-solving mindset and attention to detail to create seamless user experiences.<br><br>📫 Let's connect: I'm actively looking for opportunities to contribute to exciting projects and grow as a web developer. Feel free to check out my projects and reach out!
 
