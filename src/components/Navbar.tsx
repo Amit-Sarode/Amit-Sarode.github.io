@@ -21,7 +21,16 @@ const Navbar: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    document.body.className = isDark ? 'dark-mode' : 'light-mode';
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark-mode") {
+      setIsDark(true);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    document.body.className = isDark ? "dark-mode" : "light-mode";
+    localStorage.setItem("theme", document.body.className);
   }, [isDark]);
 
 
