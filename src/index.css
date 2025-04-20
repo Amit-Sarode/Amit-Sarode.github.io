@@ -8,9 +8,7 @@ input , textarea{
     border: solid;
 }
 button{
-    border: solid;
     background-color: brown;
-    color:white;
     padding-left:5px;
     padding-right:10px;
     height: 40px;

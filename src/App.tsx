@@ -6,14 +6,17 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <Router>
+    <div>
+    
       <Navbar/>
-      <Routes>
+      <div className='pt-[60px]' >
+      <Routes >
         <Route path="/" element={<Hero />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
-    </Router>
+      </div>
+      </div>
   );
 }
 
