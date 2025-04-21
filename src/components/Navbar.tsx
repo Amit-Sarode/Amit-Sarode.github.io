@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import resume from '../assets/Amit Sarode -resume.pdf'
 
 const Navbar: React.FC = () => {
   const navItem = [
     { name: "Projects", path: "/projects" },
     { name: "Contact", path: "/contact" },
-    { name: "LinkedIn", path: "https://linkedin.com", external: true },
-    { name: "Github", path: "https://github.com", external: true },
+    { name: "LinkedIn", path: "https://www.linkedin.com/in/amit-sarode/", external: true },
+    { name: "Github", path: "https://github.com/Amit-Sarode", external: true },
     { name: "Resume", path: "/resume" },
   ];
+const handleEmail =()=>{
+    const mailtoLink = `mailto:${encodeURIComponent("sarodeamit990@gmail.com")}?subject=${encodeURIComponent('')}&body=${encodeURIComponent( '')}`;
+    window.location.href = mailtoLink;
+}
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = resume;  
+    link.download = "Amit Sarode -resume.pdf";  
+    link.click();  
+  
+    URL.revokeObjectURL(link.href);
+  };
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -36,7 +49,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
+   
       <motion.div
         className="fixed origin-left top-0 left-0 right-0 h-[4px] bg-teal-300 z-50"
         style={{ scaleX }}
@@ -51,13 +64,12 @@ const Navbar: React.FC = () => {
 
         <motion.div
          className="flex items-center gap-10"
-         initial={{opacity:0}}
-         animate={{opacity:1}}
-        transition={{duration:1}}
          >
           {navItem.map((item, idx) =>
             item.external ? (
               <motion.a
+              initial={{ opacity: 0, y:-20 }}
+                animate={{ opacity: 1, y: 0 }}
                 key={idx}
                 href={item.path}
                 target="_blank"
@@ -67,20 +79,34 @@ const Navbar: React.FC = () => {
                 {item.name}
               </motion.a>
             ) : (
-              <Link
-                key={idx}
-                to={item.path}
-                className="hover:text-teal-300 transition-all duration-200"
-              >
-                {item.name}
-              </Link>
+              <motion.div
+              initial={{ opacity: 0, y:-20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}>
+                  {
+                    item.name==="Resume"?(
+                      <button
+                      className="hover:text-teal-300 transition-all duration-200" onClick={handleDownload}>Resume</button>
+                    ):(
+                      <Link
+                      key={idx}
+                      to={item.path}
+                      className="hover:text-teal-300 transition-all duration-200"
+                    >
+                      {item.name}
+                    </Link>
+
+                    )
+                  }
+            
+              </motion.div>
             )
           )}
-
-          <motion.button
+       <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="ml-4 bg-teal-400  font-medium px-4 py-1 rounded-md shadow hover:bg-teal-300 transition duration-200"
+            className="ml-4 bg-teal-400   font-medium px-5 py-2 rounded-md shadow hover:bg-teal-300 transition duration-200"
+            onClick={()=>handleEmail()}
           >
             Email Me
           </motion.button>
@@ -101,5 +127,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-
-

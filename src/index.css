@@ -1,18 +1,9 @@
 @import "tailwindcss";
 
 
-
 input , textarea{
     border: solid;
 }
-button{
-    background-color: brown;
-    padding-left:5px;
-    padding-right:10px;
-    height: 40px;
-    width: 100px;
-}
-
 
 body.light-mode  {
     background-color: white;
@@ -141,4 +132,19 @@ body.light-mode  {
 
 .input:checked + .slider:before {
   transform: translateX(30px);
+}
+
+
+
+.slick-center .group img {
+  transform: scale(1.15);
+  transition: transform 0.5s ease;
+  z-index: 10;
+}
+
+
+
+.slick-slide .group {
+  opacity: 0.8;
+  transition: opacity 0.5s ease;
 }

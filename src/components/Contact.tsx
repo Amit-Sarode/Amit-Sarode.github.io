@@ -10,6 +10,10 @@ const Contact :React.FC = () => {
     <input type="email" name="user_email" placeholder="Email" required />
     <textarea name="message" placeholder="Message" required />
     <button type="submit">Send</button>
+    <h1>
+      Talk with me
+    </h1>
+    <a href='https://instagram.com/amit_sarode__/'>instagram</a>
   </form>
   )
 }
