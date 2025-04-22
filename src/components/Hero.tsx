@@ -122,16 +122,16 @@ const  newSkills =[
           |
         </motion.span>
       </motion.div>
-
-      <motion.a
-        className="font-semibold mt-4  transition-colors px-6 py-2 text-white bg-teal-300 hover:bg-teal-200  rounded-lg shadow-md hover:scale-105"
-        initial={{ opacity: 0, x: -100 }}
+<motion.div initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 1.5 }}
-        href={"/contact"}
+        transition={{ delay: 1.2, duration: 1.5 }}>
+      <Link
+        className="font-semibold mt-4  transition-colors px-6 py-2 text-white bg-teal-300 hover:bg-teal-200  rounded-lg shadow-md hover:scale-105"
+        to={"/contact"}
       >
         Contact Me
-      </motion.a>
+      </Link>
+      </motion.div>
     </section>
     </Tilt3D>
     <section className='h-auto md:h-[50vh] '>
