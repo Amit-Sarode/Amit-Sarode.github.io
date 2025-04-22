@@ -1,13 +1,18 @@
 import React, { useEffect, useState,} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import profileImg from '../assets/profileImg.png';
 import flower from '../assets/flower_delivery.png'
 import doctor from '../assets/doctor-preview.png'
 import space from '../assets/Space-preview.png'
+import demo from '../assets/Screenshot 2025-04-22 at 1.34.46 PM.png'
+import huddle from  '../assets/Screenshot 2025-04-22 at 1.31.28 PM.png'
+import taskManager from '../assets/Screenshot 2025-04-22 at 1.30.33 PM.png'
+import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png'
 import react from '../assets/react.svg'
 import Tilt3D from './ThreeDTilt';
 import MagneticDiv from './Magnetic';
+
 const Hero: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const texts = ['Frontend Developer', 'React Enthusiast',"React Pioneer","Frontend Explorer","React Engineer"];
@@ -68,12 +73,14 @@ const  newSkills =[
 
 
     const projects = [
-      {name:"Healthcare" , link:"" ,img:doctor},
-      {name:"Flower Delivery" , link:"" ,img:flower},
-      {name:"Space Tourism" , link:"" ,img:space},
-      {name:"Ecommerce" , link:"" ,img:""},
-      {name:"To-Do List" , link:"" ,img:""},
-      {name:"To-Do" , link:"" ,img:""},
+      {name:"Ecommerce" , link:"https://ecommerce-xi-five-58.vercel.app/" ,img:ecom},
+      {name:"Healthcare" , link:"https://healthcheck-nine.vercel.app/" ,img:doctor},
+      {name:"Flower Delivery" , link:"https://flower-delivery-nu.vercel.app/" ,img:flower},
+      {name:"Space Tourism" , link:"https://space-tourism-five-eta.vercel.app/" ,img:space},
+      {name:"Demo-PortFolio" , link:'https://portfolio-three-livid-82.vercel.app/' , img:demo},
+      {name:"Task Manager" , link:"https://task-manager-five-umber.vercel.app/" ,img:taskManager},
+      {name:"Huddle" , link:"https://huddle-xi-ten.vercel.app/" ,img:huddle},
+      
     ]
 
   return (<>
@@ -239,14 +246,17 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     <div className='w-full'>
     <p className='flex justify-center font-semibold text-4xl'>My Work</p>
     <div className='grid grid-cols-1  lg:grid-cols-2 text-center gap-10 py-10'>
+     
       {
         projects.map((item,id)=>{
           return(
             <motion.div key={id} 
             className=' flex justify-center gap-5 flex-col'>
+              <Link target='_blank' to={item.link}>
               <img className='object-fit h-[300px] w-[500px]'
               src={item.img}></img>
             <h1>{item.name}</h1>
+            </Link>
           </motion.div>
           )
         })

@@ -13,7 +13,7 @@ const Contact :React.FC = () => {
     <h1>
       Talk with me
     </h1>
-    <a href='https://instagram.com/amit_sarode__/'>instagram</a>
+    <a target=' _blank' href='https://instagram.com/amit_sarode__/'>instagram</a>
   </form>
   )
 }
