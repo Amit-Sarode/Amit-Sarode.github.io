@@ -68,8 +68,8 @@ const Contact = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white px-6 py-16 flex flex-col items-center">
-      <ToastContainer position="top-right" theme="dark" autoClose={3000} />
+    <section className="min-h-screen px-6 py-16 flex flex-col items-center">
+      <ToastContainer position="top-right"  autoClose={3000} />
 
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
@@ -86,7 +86,7 @@ const Contact = () => {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-lg bg-white/5 p-8 rounded-xl shadow-lg backdrop-blur-md flex flex-col gap-5"
+        className="w-full max-w-lg  p-8 rounded-xl shadow-lg backdrop-blur-md flex flex-col gap-5"
       >
         <input
           type="text"
@@ -95,7 +95,7 @@ const Contact = () => {
           onChange={handeChange}
           placeholder="Your Name"
           required
-          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md text-white focus:outline-none"
+          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md focus:outline-none"
         />
 
         <input
@@ -105,7 +105,7 @@ const Contact = () => {
           onChange={handeChange}
           placeholder="Your Email"
           required
-          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md text-white focus:outline-none"
+          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md focus:outline-none"
         />
 
         <input
@@ -115,7 +115,7 @@ const Contact = () => {
           onChange={handeChange}
           placeholder="Subject / Title"
           required
-          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md text-white focus:outline-none"
+          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md focus:outline-none"
         />
 
         <textarea
@@ -125,12 +125,12 @@ const Contact = () => {
           placeholder="Your Message"
           required
           rows={5}
-          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md text-white focus:outline-none"
+          className="bg-transparent border border-gray-500 px-4 py-2 rounded-md focus:outline-none"
         />
 
         <button
           type="submit"
-          className="bg-teal-500 hover:bg-teal-600 transition-colors duration-300 text-white py-2 rounded-md font-semibold"
+          className="bg-teal-500 hover:bg-teal-600 transition-colors duration-300  py-2 rounded-md font-semibold"
         >
           Send Message
         </button>
@@ -144,7 +144,7 @@ const Contact = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.4 }}
-            className="mt-8 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg"
+            className="mt-8 bg-green-500  px-6 py-3 rounded-lg shadow-lg"
           >
             🎉 Email sent successfully!
           </motion.div>

@@ -24,7 +24,24 @@ body.light-mode  {
     background-color: #393E46;
     color: white;
   }
+  body.light-mode input {
+    background-color: white;
+    color: black;
+  }
 
+  body.dark-mode input {
+    color: white;
+    background-color: black;
+  }
+
+  body.light-mode textarea {
+    background-color: white;
+    color: black;
+  }
+  body.dark-mode textarea {
+    background-color: black;
+    color: white;
+  }
   
 .switch {
   font-size: 17px;

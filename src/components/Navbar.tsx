@@ -54,10 +54,14 @@ const [mobile,setMobile]  = useState<boolean>(false)
     { name: "Github", path: "https://github.com/Amit-Sarode", external: true },
     { name: "Resume", path: "/resume" },
   ];
-const handleEmail =()=>{
-    const mailtoLink = `mailto:${encodeURIComponent("sarodeamit990@gmail.com")}?subject=${encodeURIComponent('')}&body=${encodeURIComponent( '')}`;
-    window.location.href = mailtoLink;
+  const handleEmail = () => {
+    const email = "sarodeamit990@gmail.com";
+    const subject = encodeURIComponent('');
+    const body = encodeURIComponent(''); 
+    const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
+    window.open(mailtoLink, '_blank');
 }
+
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = resume;  
@@ -220,9 +224,9 @@ const handleEmail =()=>{
 
 
        <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="ml-4 bg-teal-400   font-medium px-5 py-2 rounded-md shadow hover:bg-teal-300 transition duration-200"
+            // whileHover={{ scale: 1.05 }}
+            // whileTap={{ scale: 0.95 }}
+            className="ml-4  font-medium px-5 py-2 rounded-md shadow text-white bg-teal-300 hover:bg-teal-200  hover:scale-105"
             onClick={()=>handleEmail()}
           >
             Email Me

@@ -128,7 +128,7 @@ const  newSkills =[
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.2, duration: 1.5 }}
-        href="/contact"
+        href={"/contact"}
       >
         Contact Me
       </motion.a>
@@ -162,7 +162,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     {
       skills.map((item,id)=>{
         return(
-          <MagneticDiv>
+          <MagneticDiv key={id}>
           <motion.div
           initial={{ y: 100 }}
           whileInView={{ y: 0 }}
@@ -172,7 +172,6 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
                      border border-gray-300 rounded-tl-[40px] rounded-br-[40px] 
                      overflow-hidden text-center hover:bg-teal-100 
                      transition-colors duration-300 group"
-          key={id}
         >
           
           <div className="flex flex-col items-center justify-center gap-2 transition-opacity duration-300 group-hover:opacity-0">
@@ -198,7 +197,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     {
       newSkills.map((item,id)=>{
         return(
-          <MagneticDiv>
+          <MagneticDiv key={id}>
         <motion.div
           initial={{ y: 100 }}
           whileInView={{ y: 0 }}
@@ -208,7 +207,6 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
                      border border-gray-300 rounded-tl-[40px] rounded-br-[40px] 
                      overflow-hidden text-center hover:bg-teal-100 
                      transition-colors duration-300 group"
-          key={id}
         >
           
           <div className="flex flex-col items-center justify-center gap-2 transition-opacity duration-300 group-hover:opacity-0">
