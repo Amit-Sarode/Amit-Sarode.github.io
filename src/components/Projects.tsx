@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link,useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import flower from '../assets/flower_delivery.png'
 import doctor from '../assets/doctor-preview.png'
@@ -9,7 +9,6 @@ import huddle from  '../assets/Screenshot 2025-04-22 at 1.31.28 PM.png'
 import taskManager from '../assets/Screenshot 2025-04-22 at 1.30.33 PM.png'
 import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png'
 const Projects:React.FC = () => {
-  const navigate = useNavigate()
   const projects = [
     {name:"Ecommerce" , link:"https://ecommerce-xi-five-58.vercel.app/" ,img:ecom},
     {name:"Healthcare" , link:"https://healthcheck-nine.vercel.app/" ,img:doctor},
