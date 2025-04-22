@@ -78,8 +78,8 @@ const Chatgpt: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen h-screen bg-gray-100 flex items-center justify-center p-6 cursor-none">
-      <section className="w-full max-w-2xl absolute h-[80vh]  bg-white shadow-lg rounded-lg p-6 flex flex-col space-y-4">
+    <main className="min-h-screen h-screen  flex items-center justify-center p-6 cursor-none">
+      <section className="w-full max-w-2xl absolute h-[80vh]  bg-[#727272] shadow-lg rounded-lg p-6 flex flex-col space-y-4">
         <div className="flex flex-col space-y-3 max-h-[70vh] overflow-y-auto">
           {messages.map((message, id) => (
             <div

@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring , AnimatePresence } from 'framer-motion';
 import resume from '../assets/Amit Sarode -resume.pdf'
 
@@ -33,7 +33,7 @@ export const useClickOutside = (handler: () => void) => {
 };
 
 const Navbar: React.FC = () => {
-
+const navigate = useNavigate()
   const domNode = useClickOutside(() => {
     useEffect(()=>{
       setMobile(false);
@@ -142,7 +142,8 @@ const [mobile,setMobile]  = useState<boolean>(false)
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 10, opacity: 0 }}
      className=' z-50 rounded-2xl bg-[#EEEEEE] text-black w-40 h-auto py-5 text-center absolute top-[60px] right-0'
-    >{navItem.map((item, idx) =>
+    > <button onClick={()=>navigate('/chatgpt')}>chatbot</button>
+      {navItem.map((item, idx) =>
    (
         <motion.div
         key={idx}
