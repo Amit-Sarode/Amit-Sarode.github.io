@@ -7,6 +7,7 @@ import doctor from '../assets/doctor-preview.png'
 import space from '../assets/Space-preview.png'
 import react from '../assets/react.svg'
 import Tilt3D from './ThreeDTilt';
+import MagneticDiv from './Magnetic';
 const Hero: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const texts = ['Frontend Developer', 'React Enthusiast',"React Pioneer","Frontend Explorer","React Engineer"];
@@ -163,6 +164,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     {
       skills.map((item,id)=>{
         return(
+          <MagneticDiv>
           <motion.div
           initial={{ y: 100 }}
           whileInView={{ y: 0 }}
@@ -188,6 +190,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
             <p className="text-sm font-medium text-gray-800">{item.text}</p>
           </div>
         </motion.div>
+        </MagneticDiv>
         )
       })
     }
@@ -196,7 +199,9 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     <div className='grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-5 px-10 py-10'>
     {
       newSkills.map((item,id)=>{
-        return(<motion.div
+        return(
+          <MagneticDiv>
+        <motion.div
           initial={{ y: 100 }}
           whileInView={{ y: 0 }}
           transition={{ duration: 0.5, delay: id * 0.05 }}
@@ -221,7 +226,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
             <p className="text-sm font-medium text-gray-800">{item.text}</p>
           </div>
         </motion.div>
-
+        </MagneticDiv>
         )
       })
     }
@@ -232,7 +237,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
 
     <section className='h-auto pt-10 px-10 py-5 '>
     <div className='w-full'>
-    <p className='flex justify-center font-semibold text-4xl'>Projects</p>
+    <p className='flex justify-center font-semibold text-4xl'>My Work</p>
     <div className='grid grid-cols-1  lg:grid-cols-2 text-center gap-10 py-10'>
       {
         projects.map((item,id)=>{
