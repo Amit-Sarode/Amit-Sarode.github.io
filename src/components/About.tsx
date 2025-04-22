@@ -13,6 +13,8 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     </div>
     <div>
       add certificates here
+      <img src='https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg'>
+      </img>
     </div>
    
     </>

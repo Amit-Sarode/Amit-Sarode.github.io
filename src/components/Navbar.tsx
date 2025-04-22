@@ -141,6 +141,7 @@ const handleEmail =()=>{
     >{navItem.map((item, idx) =>
    (
         <motion.div
+        key={idx}
         initial={{ opacity: 0, y:-20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1 }}>
@@ -193,6 +194,7 @@ const handleEmail =()=>{
               </motion.a>
             ) : (
               <motion.div
+              key={idx}
               initial={{ opacity: 0, y:-20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}>
