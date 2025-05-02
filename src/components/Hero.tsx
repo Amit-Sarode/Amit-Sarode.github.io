@@ -59,12 +59,18 @@ name:"React" , icon:react, text:'⭐️⭐️⭐️⭐️★'
     { name:'Tailwind',icon:'https://adware-technologies.s3.amazonaws.com/uploads/technology/thumbnail/31/tailwind.png',text:'⭐️⭐️⭐️⭐️★'},
     {name:"React Native",icon:react,text:'⭐️⭐️⭐️★★'},
     {name:"Framer Motion",icon:'https://cdn.iconscout.com/icon/free/png-512/free-framer-icon-download-in-svg-png-gif-file-formats--logo-social-media-pack-logos-icons-1912027.png?f=webp&w=512',text:'⭐️⭐️⭐️★★'},
+    {name:"Node.JS",icon:'https://w7.pngwing.com/pngs/452/24/png-transparent-js-logo-node-logos-and-brands-icon.png',text:'⭐️⭐️⭐️★★'},
+    {name:"Github",icon:'https://cdn2.iconfinder.com/data/icons/font-awesome/1792/github-1024.png',text:'⭐️⭐️⭐️★★'},
+    {name:"Redux",icon:'https://e7.pngegg.com/pngimages/413/852/png-clipart-redux-react-logo-javascript-dq-purple-violet.png',text:'⭐️⭐️⭐️★★'}
   ]
 
 const  newSkills =[
   {name:'LLM' ,icon:'https://as2.ftcdn.net/v2/jpg/07/56/11/69/1000_F_756116963_MKdL7O7BKH1ZHicpGXHd9ys9xDMhkGr2.jpg',text:'Large Language Model'},
   {name:'Transformer' ,icon:'https://static.thenounproject.com/png/6855240-512.png',text:'Specific type of Neural Network Architecture'},
-  {name:'MCP Server' ,icon:'https://avatars.githubusercontent.com/u/182288589?s=200&v=4',text:'Model Context Protocol'}
+  {name:'MCP Server' ,icon:'https://avatars.githubusercontent.com/u/182288589?s=200&v=4',text:'Model Context Protocol'},
+  // {name:'DSA' ,icon:'https://avatars.githubusercontent.com/u/182288589?s=200&v=4',text:'Model Context Protocol'} ,
+    {name:"d3 .js",icon:'https://w7.pngwing.com/pngs/723/733/png-transparent-d3js-original-logo-icon-thumbnail.png',text:'⭐️⭐️⭐️★★'},
+    {name:"firebase",icon:'https://w7.pngwing.com/pngs/723/733/png-transparent-d3js-original-logo-icon-thumbnail.png',text:'⭐️⭐️⭐️★★'}
 ]
 
     const projects = [
@@ -150,7 +156,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
       onClick={()=>navigate('/about')}
         className="px-6 py-2 text-white bg-teal-300 hover:bg-teal-200 transition rounded-lg font-semibold shadow-md hover:scale-105"
       >
-         Know More About Me
+         MY Certificates
       </button>
     </div>
     </section>
@@ -171,14 +177,15 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
           className="relative flex items-center justify-center h-24 w-full max-w-sm mx-auto 
                      border border-gray-300 rounded-tl-[40px] rounded-br-[40px] 
                      overflow-hidden text-center hover:bg-teal-100 
-                     transition-colors duration-300 group"
+                     transition-colors duration-300 group "
         >
           
           <div className="flex flex-col items-center justify-center gap-2 transition-opacity duration-300 group-hover:opacity-0">
             <img
+            loading='lazy'
               src={item.icon}
               alt={item.name}
-              className="h-8 w-8 object-cover rounded-full"
+              className="h-8 w-8 object-cover rounded-full bg-gray-50"
             />
             <p className="font-semibold tracking-wider font-mono">{item.name}</p>
           </div>
@@ -211,6 +218,7 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
           
           <div className="flex flex-col items-center justify-center gap-2 transition-opacity duration-300 group-hover:opacity-0">
             <img
+            loading='lazy'
               src={item.icon}
               alt={item.name}
               className="h-8 w-8 object-cover bg-white rounded-full"
@@ -241,7 +249,8 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
           
               <motion.div key={id} className='flex justify-center gap-5 flex-col'>
                 <Link target='_blank' to={item.link}>
-                  <img className='object-cover h-[300px] w-full sm:w-[500px] mx-auto'
+                  <img loading='lazy'
+                  className='object-cover h-[300px] w-full sm:w-[500px] mx-auto'
                     src={item.img} alt={item.name}
                   />
                   <h1>{item.name}</h1>

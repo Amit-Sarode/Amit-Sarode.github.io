@@ -165,3 +165,32 @@ body.light-mode  {
   opacity: 0.8;
   transition: opacity 0.5s ease;
 }
+
+
+
+
+/* 
+.loader {
+  overflow: visible;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  display: flex;
+}
+
+.logo {
+  fill: none;
+  stroke-dasharray: 20px;
+  stroke: black;
+  animation: load 5s infinite linear;
+}
+
+@keyframes load {
+  0% {
+    stroke-dashoffset: 0px;
+  }
+
+  100% {
+    stroke-dashoffset: 200px;
+  }
+} */

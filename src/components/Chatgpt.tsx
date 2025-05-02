@@ -79,7 +79,7 @@ const Chatgpt: React.FC = () => {
 
   return (
     <main className="min-h-screen h-screen  flex items-center justify-center p-6 cursor-none">
-      <section className="w-full max-w-2xl absolute h-[80vh]  bg-[#727272] shadow-lg rounded-lg p-6 flex flex-col space-y-4">
+      <section className="w-full max-w-2xl absolute h-[85vh] scroller-width-0 bg-[#727272] shadow-lg rounded-lg p-6 flex flex-col space-y-4">
         <div className="flex flex-col space-y-3 max-h-[70vh] overflow-y-auto">
           {messages.map((message, id) => (
             <div
@@ -99,7 +99,7 @@ const Chatgpt: React.FC = () => {
 
           {isTyping && (
             <div className="self-start text-left rounded-lg p-3 max-w-[80%] flex items-center space-x-3">
-              <span className="block text-sm font-semibold">ChatGPT</span>
+              <span className="block text-sm font-semibold">Sai is Thinking</span>
               <div className="w-5 h-5 border-4 border-dashed rounded-full animate-spin border-blue-500"></div>
             </div>
           )}

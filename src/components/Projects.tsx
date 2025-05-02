@@ -30,7 +30,9 @@ const Projects:React.FC = () => {
           
               <motion.div key={id} className='flex justify-center gap-5 flex-col'>
                 <Link target='_blank' to={item.link}>
-                  <img className='object-cover h-[300px] w-full sm:w-[500px] mx-auto'
+                  <img 
+                  loading='lazy' 
+                  className='object-cover h-[300px] w-full sm:w-[500px] mx-auto'
                     src={item.img} alt={item.name}
                   />
                   <h1>{item.name}</h1>
