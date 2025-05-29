@@ -10,6 +10,7 @@ import taskManager from '../assets/Screenshot 2025-04-22 at 1.30.33 PM.png'
 import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png'
 const Projects:React.FC = () => {
   const projects = [
+    // {name:"BikeSearch",link:"#" , img:''},
     {name:"Ecommerce" , link:"https://ecommerce-xi-five-58.vercel.app/" ,img:ecom},
     {name:"Healthcare" , link:"https://healthcheck-nine.vercel.app/" ,img:doctor},
     {name:"Flower Delivery" , link:"https://flower-delivery-nu.vercel.app/" ,img:flower},

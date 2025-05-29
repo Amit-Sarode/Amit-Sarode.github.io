@@ -81,9 +81,10 @@ const  newSkills =[
     ]
 
   return (<>
-  <Tilt3D>
+  
     <section className="hero gap-5 flex flex-col items-center justify-center min-h-screen text-center">
-      
+       <Tilt3D>
+    
       <motion.img
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -92,7 +93,7 @@ const  newSkills =[
         src={profileImg}
         alt="Profile Picture"
       />
-
+</Tilt3D>
       <motion.h1
         className="font-bold text-4xl font-serif"
         initial={{ opacity: 0, x: -100 }}
@@ -139,7 +140,6 @@ const  newSkills =[
       </Link>
       </motion.div>
     </section>
-    </Tilt3D>
     <section className='h-auto md:h-[50vh] '>
     <div className='w-full'>
     <div className='flex justify-center font-semibold text-4xl'>About Me</div>
@@ -168,8 +168,9 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
     {
       skills.map((item,id)=>{
         return(
-          <MagneticDiv key={id}>
+          <MagneticDiv >
           <motion.div
+          key={id}
           initial={{ y: 100 }}
           whileInView={{ y: 0 }}
           transition={{ duration: 0.5, delay: id * 0.05 }}
@@ -276,90 +277,3 @@ When I’m not coding, you can find me exploring new tech, learning about UI/UX 
 };
 
 export default Hero;
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import { motion } from 'motion/react';
-// import profileImg from '../assets/profileImg.png';
-
-// const Hero: React.FC = () => {
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   const texts = ['Frontend Developer', 'React Enthusiast'];
-//   const [currentText, setCurrentText] = useState('');
-//   const [textIndex, setTextIndex] = useState(0);
-//   const [charIndex, setCharIndex] = useState(0);
-//   const [typingForward, setTypingForward] = useState(true);
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       const fullText = texts[textIndex];
-
-//       if (typingForward) {
-//         if (charIndex < fullText.length) {
-//           setCurrentText(fullText.slice(0, charIndex + 1));
-//           setCharIndex((prev) => prev + 1);
-//         } else {
-//           setTypingForward(false);
-//           setTimeout(() => {}, 1000); // pause before deleting
-//         }
-//       } else {
-//         if (charIndex > 0) {
-//           setCurrentText(fullText.slice(0, charIndex - 1));
-//           setCharIndex((prev) => prev - 1);
-//         } else {
-//           setTypingForward(true);
-//           setTextIndex((prev) => (prev + 1) % texts.length);
-//         }
-//       }
-//     }, 100);
-
-//     return () => clearInterval(interval);
-//   }, [charIndex, typingForward, textIndex, texts]);
-
-//   return (
-//     <section className="hero gap-5 flex flex-col items-center justify-center min-h-screen text-center">
-//       <motion.img
-//         initial={{ y: -100, opacity: 0 }}
-//         animate={{ y: 0, opacity: 1 }}
-//         transition={{ delay: 0.5, duration: 2 }}
-//         className="border-2 object-cover object-center shadow-lg border-[#ddd] rounded-[50%] h-[200px] w-[200px]"
-//         id="profile-picture"
-//         src={profileImg}
-//         alt="Profile Picture"
-//       />
-
-//       <motion.h1
-//         className="font-bold text-4xl font-serif"
-//         initial={{ opacity: 0, x: -100 }}
-//         animate={{ opacity: 1, x: 0 }}
-//         transition={{ delay: 0.6, duration: 2 }}
-//       >
-//         Hi, I'm Amit Sarode
-//       </motion.h1>
-
-//       <motion.p
-//         className="font-semibold font-mono inline"
-//         aria-live="polite"
-//         initial={{ opacity: 0, x: -100 }}
-//         animate={{ opacity: 1, x: 0 }}
-//         transition={{ delay: 0.2 ,duration: 3 }}
-//       >
-//         {currentText}
-//         <span className="animate-pulse">|</span>
-//       </motion.p>
-
-//       <motion.a
-//         className="font-semibold mt-4 underline text-blue-600 hover:text-blue-800 transition-colors"
-//         initial={{ opacity: 0, x: -100 }}
-//         animate={{ opacity: 1, x: 0 }}
-//         transition={{ delay: 0.8, duration: 2 }}
-//         href="#contact"
-//       >
-//         Contact Me
-//       </motion.a>
-//     </section>
-//   );
-// };
-
-// export default Hero;

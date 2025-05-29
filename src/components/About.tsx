@@ -12,11 +12,11 @@ const About :React.FC = () => {
     <div className='w-full'>
     <div className='flex justify-center'>About Me</div>
     <p className='px-12 py-5'>
-    Hi, I’m Amit Sarode, a passionate Frontend Developer with 2 years of experience in creating dynamic and user-friendly web applications. With a deep understanding of HTML, CSS, JavaScript, and modern frontend frameworks like React and Framer motion, I specialize in building seamless and responsive interfaces that engage users and deliver optimal performance.
+Hi, I’m Amit Sarode, a passionate Frontend Developer with over 2 years of hands-on experience crafting responsive and dynamic web applications. Despite coming from a non-traditional background with a Bachelor of Arts degree, I’ve pursued my passion for programming through real-world projects, continuous learning, and dedication.
 
-I’m always eager to stay updated with the latest trends and best practices in frontend development, continuously improving my skills and knowledge. I take pride in writing clean, maintainable code and collaborating with teams to bring creative ideas to life. Whether it’s building from scratch or refining existing designs, I enjoy the challenge of turning concepts into polished digital experiences.
+I specialize in building clean, user-focused interfaces using React, Redux, Tailwind CSS, and MUI. I’ve also expanded into mobile development with React Native, creating innovative apps like an OCR-based number plate scanner and a multilingual AI voice diary. My work combines a strong eye for design with scalable code architecture and API integration.
 
-When I’m not coding, you can find me exploring new tech, learning about UI/UX design, or contributing to open-source projects.
+Currently, I’m working at Atum Information Technologies, where I contribute to projects that solve real-world problems. I’m driven by curiosity, creativity, and the desire to build things that make a difference.
     </p>
     </div>
     <div>
