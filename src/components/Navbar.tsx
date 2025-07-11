@@ -1,7 +1,7 @@
 import React, { useEffect, useState,useRef } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring , AnimatePresence } from 'framer-motion';
-import resume from '../assets/Amit Sarode -resume.pdf'
+import resume from '../assets/Amit_Sarode_Resume.pdf'
 
 export const useWindowSize = () => {
   const [width, setWidth] = useState(window.innerWidth);
