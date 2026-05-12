@@ -1,37 +1,488 @@
+
+
+
+// import React from 'react'
+// import { motion } from 'framer-motion'
+
+// const About: React.FC = () => {
+//   const certificates = [
+//     { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },
+//     { name: "Frontend Mastery", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-98a0333e-6ba1-4973-bcc5-46a44944f187.jpg?v=1745387851000" },
+//     { name: "JavaScript Deep Dive", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-51b4a0db-d01d-469a-ba2b-747485bc045a.jpg?v=1745385669000" },
+//     { name: "Web Design", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-68f7f083-7098-4901-8792-9fac8c4677f0.jpg?v=1745395351000" },
+//     { name: "Advanced React", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-1b736a84-be80-4c25-b589-fd8905fbe4e5.jpg?v=1745396160000" },
+//     { name: "Node.js Basics", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-f281d26f-3bba-42d4-8ed0-6eace42f32a4.jpg?v=1745402596000" },
+//     { name: "UI/UX Principles", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-20e6490f-c036-4ad3-a224-b6d3fa384959.jpg?v=1745405522000" }
+//   ]
+
+//   return (
+//     <section className="w-full py-20 px-6 md:px-20">
+//       {/* Bio Section */}
+//       <motion.div 
+//         initial={{ opacity: 0, y: 20 }}
+//         whileInView={{ opacity: 1, y: 0 }}
+//         viewport={{ once: true }}
+//         className="max-w-4xl mx-auto text-center"
+//       >
+//         <h2 className="text-4xl font-bold mb-8 font-serif">About Me</h2>
+//         <p className="text-lg leading-relaxed text-gray-400 text-left">
+//           Hi, I’m <span className="text-teal-300 font-semibold">Amit Sarode</span>, a passionate Frontend Developer with over 2 years of hands-on experience crafting responsive and dynamic web applications. Despite coming from a <span className="italic">non-traditional background</span> with a Bachelor of Arts degree, I’ve pursued my passion for programming through real-world projects and relentless dedication.
+//           <br /><br />
+//           I specialize in building clean, user-focused interfaces using <span className="text-teal-300">React, Redux, Tailwind CSS, and MUI</span>. I’ve also expanded into mobile development with <span className="text-teal-300">React Native</span>, creating innovative apps like an OCR-based number plate scanner. Currently, I’m contributing to impactful projects at <span className="font-semibold text-white">Atum Information Technologies</span>.
+//         </p>
+//       </motion.div>
+
+//       {/* Certificates Section */}
+//       <div className="mt-24">
+//         <h3 className="text-3xl font-bold text-center mb-12">Professional Certifications</h3>
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+//           {certificates.map((cert, idx) => (
+//             <motion.div
+//               key={idx}
+//               whileHover={{ scale: 1.03 }}
+//               className="relative group overflow-hidden rounded-xl bg-gray-800 border border-gray-700 shadow-xl"
+//             >
+//               <img 
+//                 loading="lazy" 
+//                 src={cert.url} 
+//                 alt={cert.name}
+//                 className="w-full h-64 object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+//               />
+//               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+//                  <p className="text-white font-semibold text-center">{cert.name || "Course Completion"}</p>
+//               </div>
+//             </motion.div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   )
+// }
+
+// export default About
+
+
+
+
+
 import React from 'react'
-const About :React.FC = () => {
-  const certificates = [{name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg"},
-    {name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-98a0333e-6ba1-4973-bcc5-46a44944f187.jpg?v=1745387851000"},
-    {name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-51b4a0db-d01d-469a-ba2b-747485bc045a.jpg?v=1745385669000"},
-    {name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-68f7f083-7098-4901-8792-9fac8c4677f0.jpg?v=1745395351000"}
-    ,{name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-1b736a84-be80-4c25-b589-fd8905fbe4e5.jpg?v=1745396160000"},
-    {name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-f281d26f-3bba-42d4-8ed0-6eace42f32a4.jpg?v=1745402596000"},
-    {name:"", url:"https://udemy-certificate.s3.amazonaws.com/image/UC-20e6490f-c036-4ad3-a224-b6d3fa384959.jpg?v=1745405522000"}
-  ]
-  return (<>
-    <div className='w-full'>
-    <div className='flex justify-center'>About Me</div>
-    <p className='px-12 py-5'>
-Hi, I’m Amit Sarode, a passionate Frontend Developer with over 2 years of hands-on experience crafting responsive and dynamic web applications. Despite coming from a non-traditional background with a Bachelor of Arts degree, I’ve pursued my passion for programming through real-world projects, continuous learning, and dedication.
+import { motion } from 'framer-motion'
+import profileImg from '../assets/profileImg.png'
+import SEO from './SEO'
 
-I specialize in building clean, user-focused interfaces using React, Redux, Tailwind CSS, and MUI. I’ve also expanded into mobile development with React Native, creating innovative apps like an OCR-based number plate scanner and a multilingual AI voice diary. My work combines a strong eye for design with scalable code architecture and API integration.
+const certificates = [
+  { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },
+  { name: "Frontend Mastery", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-98a0333e-6ba1-4973-bcc5-46a44944f187.jpg?v=1745387851000" },
+  { name: "JavaScript Deep Dive", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-51b4a0db-d01d-469a-ba2b-747485bc045a.jpg?v=1745385669000" },
+  { name: "Web Design", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-68f7f083-7098-4901-8792-9fac8c4677f0.jpg?v=1745395351000" },
+  { name: "Advanced React", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-1b736a84-be80-4c25-b589-fd8905fbe4e5.jpg?v=1745396160000" },
+  { name: "Node.js Basics", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-f281d26f-3bba-42d4-8ed0-6eace42f32a4.jpg?v=1745402596000" },
+  { name: "UI/UX Principles", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-20e6490f-c036-4ad3-a224-b6d3fa384959.jpg?v=1745405522000" },
+]
 
-Currently, I’m working at Atum Information Technologies, where I contribute to projects that solve real-world problems. I’m driven by curiosity, creativity, and the desire to build things that make a difference.
-    </p>
+const stats = [
+  { value: '2+', label: 'Years Experience' },
+  { value: '10+', label: 'Projects Shipped' },
+  { value: '7', label: 'Certifications' },
+  { value: '∞', label: 'Lines of Code' },
+]
+
+const Reveal: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({
+  children, delay = 0, className,
+}) => (
+  <motion.div
+    className={className}
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-60px' }}
+    transition={{ duration: 0.75, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+  >
+    {children}
+  </motion.div>
+)
+
+const About: React.FC = () => {
+  return (
+    <div
+      style={{
+        background: 'linear-gradient(135deg, #020d0a 0%, #050f10 40%, #02100d 100%)',
+        minHeight: '100vh',
+        color: '#e2e8f0',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <SEO
+        title="About | Frontend Developer Nagpur | Amit Sarode"
+        description="Frontend developer profile, experience, certifications, testimonials, and work style."
+        path="/about"
+      />
+      {/* Grid lines */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: 'none',
+          backgroundImage: `
+            linear-gradient(rgba(20,184,166,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(20,184,166,0.025) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
+        }}
+      />
+
+      {/* Ambient glow top-left */}
+      <div
+        style={{
+          position: 'fixed',
+          top: -100,
+          left: -100,
+          width: 500,
+          height: 500,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+      {/* Ambient glow bottom-right */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: -100,
+          right: -100,
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(14,116,144,0.1) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      <section
+        style={{
+          width: '100%',
+          maxWidth: 1100,
+          margin: '0 auto',
+          padding: '120px 24px 100px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {/* ── Section label ── */}
+        <Reveal>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
+              00 / ABOUT
+            </span>
+          </div>
+
+          <h2
+            style={{
+              fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+              fontWeight: 700,
+              lineHeight: 1.1,
+              background: 'linear-gradient(135deg, #f1f5f9 30%, #94a3b8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              marginBottom: 60,
+            }}
+          >
+            About Me
+          </h2>
+        </Reveal>
+
+        {/* ── Bio + stats layout ── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 48,
+            alignItems: 'start',
+            marginBottom: 80,
+          }}
+        >
+          {/* Bio text */}
+          <Reveal delay={0.1}>
+            <img
+              src={profileImg}
+              alt="Amit Sarode"
+              style={{ width: 120, height: 120, borderRadius: '9999px', objectFit: 'cover', marginBottom: 20, border: '2px solid rgba(20,184,166,0.4)' }}
+            />
+            <p
+              style={{
+                fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+                lineHeight: 1.9,
+                color: '#94a3b8',
+              }}
+            >
+              Hi, I'm{' '}
+              <span style={{ color: '#5eead4', fontWeight: 600 }}>Amit Sarode</span>, a passionate
+              Frontend Developer with over 2 years of hands-on experience crafting responsive and
+              dynamic web applications. Despite coming from a{' '}
+              <span style={{ fontStyle: 'italic', color: '#cbd5e1' }}>non-traditional background</span>{' '}
+              with a Bachelor of Arts degree, I've pursued my passion for programming through
+              real-world projects and relentless dedication.
+              <br />
+              <br />I specialize in building clean, user-focused interfaces using{' '}
+              <span style={{ color: '#5eead4', fontWeight: 500 }}>
+                React, Redux, Tailwind CSS, and MUI
+              </span>
+              . I've also expanded into mobile development with{' '}
+              <span style={{ color: '#5eead4', fontWeight: 500 }}>React Native</span>, creating
+              innovative apps like an OCR-based number plate scanner. Currently contributing to
+              impactful projects at{' '}
+              <span style={{ color: '#f1f5f9', fontWeight: 600 }}>Atum Information Technologies</span>.
+            </p>
+            <p style={{ marginTop: 16, color: '#5eead4', fontWeight: 600 }}>
+              I ship on time, reply in 24hrs.
+            </p>
+            <blockquote style={{ marginTop: 18, padding: '14px 16px', borderLeft: '3px solid #14b8a6', background: 'rgba(20,184,166,0.05)', color: '#cbd5e1' }}>
+              "Amit consistently delivers clean frontend work and communicates clearly across deadlines." - Colleague at Atum IT
+            </blockquote>
+          </Reveal>
+
+          {/* Stats grid */}
+          <Reveal delay={0.2}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 16,
+              }}
+            >
+              {stats.map((s, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
+                  whileHover={{ y: -4 }}
+                  style={{
+                    padding: '24px 20px',
+                    borderRadius: 16,
+                    background: 'rgba(20,184,166,0.04)',
+                    border: '1px solid rgba(20,184,166,0.12)',
+                    textAlign: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  <p
+                    style={{
+                      fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
+                      fontWeight: 800,
+                      color: '#14b8a6',
+                      lineHeight: 1,
+                      marginBottom: 8,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {s.value}
+                  </p>
+                  <p style={{ fontSize: 12, color: '#475569', letterSpacing: '0.06em' }}>{s.label}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Availability card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              style={{
+                marginTop: 16,
+                padding: '18px 24px',
+                borderRadius: 16,
+                background: 'rgba(20,184,166,0.06)',
+                border: '1px solid rgba(20,184,166,0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  background: '#14b8a6',
+                  boxShadow: '0 0 12px #14b8a6',
+                  flexShrink: 0,
+                  animation: 'pulse 2s ease-in-out infinite',
+                }}
+              />
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#5eead4', marginBottom: 2 }}>
+                  Open to opportunities
+                </p>
+                <p style={{ fontSize: 12, color: '#475569' }}>
+                  Freelance, full-time & contract roles
+                </p>
+              </div>
+            </motion.div>
+          </Reveal>
+        </div>
+
+        {/* ── Divider ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 64 }}>
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent)' }} />
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(20,184,166,0.4)' }} />
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent)' }} />
+        </div>
+
+        {/* ── Certifications ── */}
+        <Reveal delay={0.1}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
+              VERIFIED CREDENTIALS
+            </span>
+          </div>
+
+          <h3
+            style={{
+              fontSize: 'clamp(1.6rem, 4vw, 2.5rem)',
+              fontWeight: 700,
+              background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              marginBottom: 40,
+            }}
+          >
+            Professional Certifications
+          </h3>
+        </Reveal>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: 20,
+          }}
+        >
+          {certificates.map((cert, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.07, duration: 0.6 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              style={{
+                position: 'relative',
+                borderRadius: 16,
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.06)',
+                background: '#0a1628',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+                cursor: 'pointer',
+              }}
+            >
+              <img
+                loading="lazy"
+                src={cert.url}
+                alt={cert.name}
+                style={{
+                  width: '100%',
+                  height: 200,
+                  objectFit: 'cover',
+                  display: 'block',
+                  filter: 'brightness(0.75) saturate(0.6)',
+                  transition: 'filter 0.5s ease, transform 0.5s ease',
+                }}
+                onMouseEnter={(e) => {
+                  const img = e.currentTarget
+                  img.style.filter = 'brightness(0.95) saturate(1)'
+                  img.style.transform = 'scale(1.05)'
+                }}
+                onMouseLeave={(e) => {
+                  const img = e.currentTarget
+                  img.style.filter = 'brightness(0.75) saturate(0.6)'
+                  img.style.transform = 'scale(1)'
+                }}
+              />
+
+              {/* Overlay gradient */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(2,13,10,0.9) 0%, transparent 55%)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Label */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '16px 18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', marginBottom: 2 }}>
+                    {cert.name}
+                  </p>
+                  <p style={{ fontSize: 11, color: '#14b8a6', fontFamily: 'monospace', letterSpacing: '0.06em' }}>
+                    Udemy · Verified
+                  </p>
+                </div>
+
+                {/* Check badge */}
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    background: 'rgba(20,184,166,0.15)',
+                    border: '1px solid rgba(20,184,166,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 12,
+                    color: '#14b8a6',
+                    flexShrink: 0,
+                  }}
+                >
+                  ✓
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 12px #14b8a6; }
+          50% { opacity: 0.6; box-shadow: 0 0 4px #14b8a6; }
+        }
+      `}</style>
     </div>
-    <div>
-      add certificates here{
-        certificates.map((image,idx)=>{
-          return(
-            <img  key={idx}
-            className='text-center px-10 h-[500px] w-[800px]' loading='lazy' src={image.url}>
-      </img>
-          )
-        })
-      }
-    </div>
-   
-    </>
   )
 }
 
