@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import SEO from './SEO';
 
 
-import doctor from '../assets/doctor-preview.png';
-import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png';
+import doctor from '/assets/img/doctor-preview.png';
+import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
 
 const filters = ['All', 'React', 'React Native', 'Full Stack', 'Vanilla'];
 

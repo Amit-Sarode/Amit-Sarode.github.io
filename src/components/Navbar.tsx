@@ -1,7 +1,7 @@
 // import React, { useEffect, useState,useRef } from 'react';
 // import { Link,useNavigate } from 'react-router-dom';
 // import { motion, useScroll, useSpring , AnimatePresence } from 'framer-motion';
-// import resume from '../assets/Amit Sarode -resume (1).pdf'
+// import resume from '/assets/Amit Sarode -resume (1).pdf'
 
 // export const useWindowSize = () => {
 //   const [width, setWidth] = useState(window.innerWidth);
@@ -254,7 +254,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
-import resume from '../assets/Amit Sarode -resume (1).pdf';
+import resume from '/assets/Amit Sarode -resume (1).pdf';
 
 /* ─── Hooks ─── */
 export const useWindowSize = () => {

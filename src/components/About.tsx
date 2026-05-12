@@ -67,7 +67,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import profileImg from '../assets/profileImg.png'
+import profileImg from '/assets/img/profileImg.png'
 import SEO from './SEO'
 
 const certificates = [

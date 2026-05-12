@@ -1,12 +1,12 @@
 // import React, { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // import { motion } from 'framer-motion';
-// import profileImg from '../assets/profileImg.png';
-// import flower from '../assets/flower_delivery.png';
-// import doctor from '../assets/doctor-preview.png';
-// import demo from '../assets/Screenshot 2025-04-22 at 1.34.46 PM.png';
-// import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png';
-// import react from '../assets/react.svg';
+// import profileImg from '/assets/img/profileImg.png';
+// import flower from '/assets/img/flower_delivery.png';
+// import doctor from '/assets/img/doctor-preview.png';
+// import demo from '/assets/img/Screenshot 2025-04-22 at 1.34.46 PM.png';
+// import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
+// import react from '/assets/img/react.svg';
 // import Tilt3D from './ThreeDTilt';
 
 // const Hero: React.FC = () => {
@@ -198,10 +198,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import profileImg from '../assets/profileImg.png';
-import doctor from '../assets/doctor-preview.png';
-import ecom from '../assets/Screenshot 2025-04-22 at 1.15.51 PM.png';
-import react from '../assets/react.svg';
+import profileImg from '/assets/img/profileImg.png';
+import doctor from '/assets/img/doctor-preview.png';
+import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
+import react from '/assets/img/react.svg';
 import Tilt3D from './ThreeDTilt';
 import SEO from './SEO';
 
@@ -478,7 +478,7 @@ const testimonials = [
       }}
     >
       <SEO
-        title="React Developer Nagpur | Hire Frontend Developer India | Amit Sarode"
+        title="Amit Sarode | React Developer Nagpur | Hire Frontend Developer India"
         description="React developer in Nagpur available for freelance and remote projects worldwide. Hire a frontend developer in India for fast, production-ready interfaces."
         path="/"
       />
