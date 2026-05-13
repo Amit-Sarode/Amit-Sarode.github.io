@@ -1,200 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
-// import profileImg from '/assets/img/profileImg.png';
-// import flower from '/assets/img/flower_delivery.png';
-// import doctor from '/assets/img/doctor-preview.png';
-// import demo from '/assets/img/Screenshot 2025-04-22 at 1.34.46 PM.png';
-// import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
-// import react from '/assets/img/react.svg';
-// import Tilt3D from './ThreeDTilt';
-
-// const Hero: React.FC = () => {
-//   const navigate = useNavigate();
-//   const [displayText, setDisplayText] = useState("");
-  
-//   const texts = ['Frontend Developer', 'React Native Developer', "UI/UX Enthusiast", "React Engineer"];
-//   const [textIndex, setTextIndex] = useState(0);
-//   const [isDeleting, setIsDeleting] = useState(false);
-
-//   useEffect(() => {
-//     const currentFullText = texts[textIndex];
-    
-//     const timeout = setTimeout(() => {
-//       if (!isDeleting) {
-//         setDisplayText(currentFullText.substring(0, displayText.length + 1));
-//         if (displayText === currentFullText) {
-//           setTimeout(() => setIsDeleting(true), 2000); 
-//         }
-//       } else {
-//         setDisplayText(currentFullText.substring(0, displayText.length - 1));
-//         if (displayText === "") {
-//           setIsDeleting(false);
-//           setTextIndex((prev) => (prev + 1) % texts.length);
-//         }
-//       }
-//     }, isDeleting ? 50 : 150);
-
-//     return () => clearTimeout(timeout);
-//   }, [displayText, isDeleting, textIndex]);
-
-//   const skills = [
-//     { name: 'React', level: '85%', color: '#61DAFB', icon: react, bg: 'rgba(97, 218, 251, 0.15)' },
-//     { name: 'JavaScript', level: '90%', color: '#F7DF1E', icon: 'https://www.svgrepo.com/show/303206/javascript-logo.svg', bg: 'rgba(247, 223, 30, 0.15)' },
-//     { name: 'TypeScript', level: '85%', color: '#3178C6', icon: 'https://www.svgrepo.com/show/374144/typescript.svg', bg: 'rgba(49, 120, 198, 0.15)' },
-//     { name: 'Tailwind', level: '80%', color: '#38BDF8', icon: 'https://www.svgrepo.com/show/374118/tailwind.svg', bg: 'rgba(56, 189, 248, 0.15)' },
-//     { name: 'React Native', level: '80%', color: '#61DAFB', icon: react, bg: 'rgba(97, 218, 251, 0.15)' },
-//     { name: 'Node.js', level: '75%', color: '#339933', icon: 'https://w7.pngwing.com/pngs/452/24/png-transparent-js-logo-node-logos-and-brands-icon.png', bg: 'rgba(51, 153, 51, 0.15)' },
-//   ];
-
-//   const certificates = [
-//     { url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg", title: "Advanced React" },
-//     { url: "https://udemy-certificate.s3.amazonaws.com/image/UC-98a0333e-6ba1-4973-bcc5-46a44944f187.jpg", title: "Frontend Web" },
-//     { url: "https://udemy-certificate.s3.amazonaws.com/image/UC-51b4a0db-d01d-469a-ba2b-747485bc045a.jpg", title: "JavaScript ES6" },
-//   ];
-
-//   return (
-//     <div className="transition-colors duration-500 overflow-x-hidden">
-      
-//       {/* 1. HERO SECTION */}
-//       <section className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-//         <Tilt3D>
-//           <motion.img 
-//             initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-//             className="rounded-full h-44 w-44 object-cover border-4 border-teal-500 shadow-2xl"
-//             src={profileImg} alt="Amit" 
-//           />
-//         </Tilt3D>
-//         <motion.h1 
-//           initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-//           className="text-5xl md:text-7xl font-bold mt-8 tracking-tighter"
-//         >
-//           Amit Sarode
-//         </motion.h1>
-//         <div className="text-2xl text-teal-500 font-mono mt-2 h-10">
-//           {displayText}<span className="animate-pulse">|</span>
-//         </div>
-
-//         {/* --- ADDED LETS TALK BUTTON --- */}
-//         <motion.button
-//           initial={{ opacity: 0, y: 20 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ delay: 0.5, duration: 0.8 }}
-//           whileHover={{ scale: 1.05 }}
-//           whileTap={{ scale: 0.95 }}
-//           onClick={() => navigate('/contact')}
-//           className="mt-8 px-8 py-3 bg-teal-500 text-white font-bold rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-//         >
-//           Let's Talk
-//         </motion.button>
-//       </section>
-
-//       {/* 2. JOURNEY & CERTIFICATES */}
-//       <section className="py-20 max-w-6xl mx-auto px-6 border-t border-gray-100 dark:border-gray-800">
-//         <h2 className="text-3xl font-bold mb-8 text-teal-500">The Journey</h2>
-//         <div className="grid md:grid-cols-2 gap-10 items-center">
-//             <p className="text-xl leading-relaxed opacity-80">
-//                 From a Bachelor of Arts to a specialized 
-//                 <span className="text-teal-500"> Frontend Engineer</span>. My path is defined by a 
-//                 transition from theory to creation, building production-ready apps at Atum IT.
-//             </p>
-//             <div className="bg-teal-500/10 p-6 rounded-2xl border border-teal-500/20 italic text-sm">
-//                 "I don't just write code; I craft digital interfaces that solve human problems."
-//             </div>
-//         </div>
-
-//         <div className="mt-16">
-//             <h3 className="text-xl font-semibold mb-6 uppercase tracking-widest text-gray-400">Verified Certifications</h3>
-//             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-//                 {certificates.map((cert, i) => (
-//                     <motion.div key={i} whileHover={{ scale: 1.05 }} className="relative group rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-//                         <img src={cert.url} alt={cert.title} className="w-full h-48 object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-//                     </motion.div>
-//                 ))}
-//             </div>
-//         </div>
-//       </section>
-
-//       {/* 3. SKILLS SECTION */}
-//       <section className="py-24 bg-gray-50 dark:bg-[#1a1a1a]/40 px-6 transition-colors">
-//         <div className="max-w-6xl mx-auto">
-//           <div className="text-center mb-16">
-//             <h2 className="text-4xl font-bold">Technical Arsenal</h2>
-//             <div className="h-1.5 w-20 bg-teal-500 mx-auto mt-4 rounded-full"></div>
-//           </div>
-
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//             {skills.map((skill, i) => (
-//               <motion.div 
-//                 key={i}
-//                 whileHover={{ y: -8 }}
-//                 style={{ backgroundColor: skill.bg }}
-//                 className="p-6 rounded-3xl backdrop-blur-md border border-gray-200 dark:border-gray-700 transition-all"
-//               >
-//                 <div className="flex justify-between items-center mb-5">
-//                   <div className="flex items-center gap-3">
-//                     <img src={skill.icon} alt={skill.name} className="h-8 w-8 object-contain" />
-//                     <span className="font-black text-lg" style={{ color: skill.color }}>{skill.name}</span>
-//                   </div>
-//                   <span className="text-xs font-bold opacity-70">{skill.level}</span>
-//                 </div>
-                
-//                 <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
-//                   <motion.div 
-//                     initial={{ width: 0 }}
-//                     whileInView={{ width: skill.level }}
-//                     viewport={{ once: true }}
-//                     transition={{ duration: 1.5, ease: "easeOut" }}
-//                     style={{ backgroundColor: skill.color }}
-//                     className="h-full rounded-full"
-//                   />
-//                 </div>
-//               </motion.div>
-//             ))}
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* 4. WORK SECTION */}
-//        <section className="py-24 px-6 mb-10">
-//         <div className="max-w-6xl mx-auto">
-//             <h2 className="text-4xl font-bold mb-12">Selected Projects</h2>
-//             <div className="grid md:grid-cols-2 gap-12">
-//                 {[
-//                   { name: "Ecommerce", img: ecom, tech: "React / Redux", link: "https://ecommerce-xi-five-58.vercel.app/" },
-//                   { name: "Healthcare", img: doctor, tech: "Firebase / MUI", link: "https://healthcheck-nine.vercel.app/" }
-//                 ].map((p, i) => (
-//                   <motion.div 
-//                     key={i} 
-//                     whileHover={{ y: -10 }} 
-//                     className="group cursor-pointer"
-//                     onClick={() => window.open(p.link, '_blank')}
-//                   >
-//                     <div className="rounded-3xl overflow-hidden h-80 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg">
-//                         <img src={p.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={p.name} />
-//                     </div>
-//                     <div className="mt-6 flex justify-between items-center">
-//                         <div>
-//                             <h3 className="text-2xl font-bold">{p.name}</h3>
-//                             <p className="text-teal-500 font-mono text-sm uppercase tracking-wider">{p.tech}</p>
-//                         </div>
-//                         <div className="h-12 w-12 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white group-hover:border-teal-500 transition-all">
-//                             →
-//                         </div>
-//                     </div>
-//                   </motion.div>
-//                 ))}
-//             </div>
-//         </div>
-//       </section>
-//     </div>
-//   );
-// };
-
-// export default Hero;
-
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -204,6 +7,251 @@ import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
 import react from '/assets/img/react.svg';
 import Tilt3D from './ThreeDTilt';
 import SEO from './SEO';
+
+
+
+interface Skill {
+  name: string;
+  desc: string;
+  level: number;
+  color: string;
+  badge: string;
+  tags: string[];
+  icon: string;
+  featured?: boolean;
+  bg: string;
+}
+ 
+function SkillCard({ skill, index }: { skill: any; index: number }) {
+  const { color } = skill;
+  const colorBg   = `${color}14`; // ~8% opacity fill
+  const colorBorder = `${color}28`; // ~16% opacity border
+ 
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.07, duration: 0.6, ease: 'easeOut' }}
+      whileHover={{ y: -6, scale: 1.015 }}
+      style={{
+        position: 'relative',
+        padding: '22px 24px',
+        borderRadius: 18,
+        background:  'rgba(255,255,255,0.02)',
+        border: `1px solid rgba(255,255,255,0.06)`,
+        overflow: 'hidden',
+        cursor: 'default',
+        transition: 'border-color 0.25s',
+      }}
+      className="skill-card group"
+    >
+      {/* Hover top-border glow — rendered via CSS class below */}
+      <style>{`
+        .skill-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, ${color}, transparent);
+          opacity: 0;
+          transition: opacity 0.3s;
+          pointer-events: none;
+        }
+        .skill-card:hover::before { opacity: 1; }
+        .skill-card:hover { border-color: ${color} !important; }
+      `}</style>
+ 
+      {/* Corner ambient glow */}
+      <div
+        style={{
+          position: 'absolute',
+          top: -40,
+          right: -40,
+          width: 130,
+          height: 130,
+          borderRadius: '50%',
+          background: color,
+          opacity: 0.04,
+          filter: 'blur(32px)',
+          pointerEvents: 'none',
+          transition: 'opacity 0.3s',
+        }}
+        className="group-hover:opacity-[0.09]"
+      />
+ 
+      {/* Featured badge */}
+      {skill.featured && (
+        <span
+          style={{
+            position: 'absolute',
+            top: 14,
+            right: 14,
+            fontSize: 9,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color,
+            padding: '2px 8px',
+            border: `1px solid ${colorBorder}`,
+            borderRadius: 20,
+            background: colorBg,
+          }}
+        >
+          Featured
+        </span>
+      )}
+ 
+      {/* Top row: icon + badge */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          marginBottom: 16,
+        }}
+      >
+        {/* Icon */}
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            background: colorBg,
+            border: `1px solid ${colorBorder}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          <img
+            src={skill.icon}
+            alt={skill.name}
+            style={{
+              width: 22,
+              height: 22,
+              objectFit: 'contain',
+              filter: 'brightness(0) invert(1)',
+              opacity: 0.85,
+            }}
+          />
+        </div>
+ 
+        {/* Badge */}
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: '0.08em',
+            padding: '3px 10px',
+            borderRadius: 20,
+            background: colorBg,
+            color,
+            border: `1px solid ${colorBorder}`,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {skill.badge}
+        </span>
+      </div>
+ 
+      {/* Name */}
+      <p
+        style={{
+          fontFamily: "'Syne', sans-serif",
+          fontWeight: 600,
+          fontSize: 15,
+          color: '#e2e8f0',
+          margin: '0 0 6px',
+          lineHeight: 1.3,
+        }}
+      >
+        {skill.name}
+      </p>
+ 
+      {/* Description */}
+      <p
+        style={{
+          fontSize: 12,
+          color: '#475569',
+          fontWeight: 300,
+          margin: '0 0 16px',
+          lineHeight: 1.55,
+        }}
+      >
+        {skill.desc}
+      </p>
+ 
+      {/* Tags */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap' as const,
+          gap: 6,
+          marginBottom: 18,
+        }}
+      >
+        {skill.tags.map((tag:any) => (
+          <span
+            key={tag}
+            style={{
+              fontSize: 10,
+              letterSpacing: '0.05em',
+              padding: '2px 8px',
+              borderRadius: 4,
+              background: 'rgba(255,255,255,0.04)',
+              color: '#64748b',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+ 
+      {/* Progress bar */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div
+          style={{
+            flex: 1,
+            height: 3,
+            borderRadius: 3,
+            background: 'rgba(255,255,255,0.05)',
+            overflow: 'hidden',
+          }}
+        >
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: `${skill.level}%` }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 1.5,
+              ease: 'easeOut',
+              delay: index * 0.08,
+            }}
+            style={{
+              height: '100%',
+              borderRadius: 3,
+              background: color,
+              boxShadow: `0 0 8px ${color}60`,
+            }}
+          />
+        </div>
+        <span
+          style={{
+            fontSize: 12,
+            color,
+            fontFamily: 'monospace',
+            minWidth: 36,
+            textAlign: 'right' as const,
+          }}
+        >
+          {skill.level}%
+        </span>
+      </div>
+    </motion.div>
+  );
+}
 
 /* ─── Animated background canvas (floating orbs) ─── */
 const AmbientBackground: React.FC = () => {
@@ -447,13 +495,88 @@ const testimonials = [
 
 
   const skills = [
-    { name: 'React', level: 85, color: '#61DAFB', icon: react, bg: 'rgba(97, 218, 251, 0.08)' },
-    { name: 'JavaScript', level: 90, color: '#F7DF1E', icon: 'https://www.svgrepo.com/show/303206/javascript-logo.svg', bg: 'rgba(247, 223, 30, 0.08)' },
-    { name: 'TypeScript', level: 85, color: '#3178C6', icon: 'https://www.svgrepo.com/show/374144/typescript.svg', bg: 'rgba(49, 120, 198, 0.08)' },
-    { name: 'Tailwind', level: 80, color: '#38BDF8', icon: 'https://www.svgrepo.com/show/374118/tailwind.svg', bg: 'rgba(56, 189, 248, 0.08)' },
-    { name: 'React Native', level: 80, color: '#61DAFB', icon: react, bg: 'rgba(97, 218, 251, 0.08)' },
-    { name: 'Node.js', level: 75, color: '#339933', icon: 'https://w7.pngwing.com/pngs/452/24/png-transparent-js-logo-node-logos-and-brands-icon.png', bg: 'rgba(51, 153, 51, 0.08)' },
-  ];
+  {
+    name: 'LLM Application Development',
+    desc: 'Production-grade AI apps powered by GPT-4, Claude & Gemini',
+    level: 92,
+    color: '#8B5CF6',
+    badge: 'Core',
+    tags: ['GPT-4', 'Claude API', 'Agents', 'Fine-tuning'],
+    icon: 'https://www.svgrepo.com/show/235148/chip-ai.svg',
+    featured: true,
+    bg: 'rgba(139, 92, 246, 0.08)',
+  },
+  {
+    name: 'Prompt Engineering',
+    desc: 'Systematic prompt design for reliable, repeatable AI outputs',
+    level: 90,
+    color: '#EC4899',
+    badge: 'Expert',
+    tags: ['Chain-of-Thought', 'Few-shot', 'DSPy', 'Evals'],
+    icon: 'https://www.svgrepo.com/show/143991/command-window.svg',
+    bg: 'rgba(236, 72, 153, 0.08)',
+  },
+  {
+    name: 'AI Chatbot Systems',
+    desc: 'Conversational agents with memory, tools & multi-turn logic',
+    level: 88,
+    color: '#06B6D4',
+    badge: 'Expert',
+    tags: ['LangChain', 'WhatsApp', 'Slack Bots', 'NLP'],
+    icon: 'https://www.svgrepo.com/show/409868/bot.svg',
+    bg: 'rgba(6, 182, 212, 0.08)',
+  },
+  {
+    name: 'RAG & Vector Databases',
+    desc: 'Semantic search pipelines that bring knowledge to any AI model',
+    level: 86,
+    color: '#10B981',
+    tags: ['Pinecone', 'Weaviate', 'pgvector', 'Embeddings'],
+    icon: 'https://www.svgrepo.com/show/330289/deutschebank.svg',
+    featured: true,
+    bg: 'rgba(16, 185, 129, 0.08)',
+  },
+  {
+    name: 'Full Stack Architecture',
+    desc: 'Scalable, cloud-native backend & frontend systems built to grow',
+    level: 90,
+    color: '#F59E0B',
+    badge: 'Expert',
+    tags: ['Node.js', 'REST', 'GraphQL', 'Microservices'],
+    icon: 'https://cdn.simpleicons.org/nodedotjs/white',
+    bg: 'rgba(245, 158, 11, 0.08)',
+  },
+  {
+    name: 'React & Next.js',
+    desc: 'High-performance interfaces clients love — fast, clean, responsive',
+    level: 92,
+    color: '#61DAFB',
+    badge: 'Core',
+    tags: ['Next.js 14', 'Tailwind', 'Framer Motion', 'SSR'],
+    icon: react,
+    bg: 'rgba(97, 218, 251, 0.08)',
+  },
+  {
+    name: 'TypeScript Systems',
+    desc: 'Type-safe codebases that scale without breaking under pressure',
+    level: 88,
+    color: '#3178C6',
+    badge: 'Advanced',
+    tags: ['Zod', 'tRPC', 'Prisma', 'Type Guards'],
+    icon: 'https://www.svgrepo.com/show/374144/typescript.svg',
+    bg: 'rgba(49, 120, 198, 0.08)',
+  },
+  {
+    name: 'API & Backend Engineering',
+    desc: 'Robust APIs that connect your tools, data, and automation workflows',
+    level: 85,
+    color: '#339933',
+    badge: 'Advanced',
+    tags: ['Express', 'PostgreSQL', 'Redis', 'Webhooks'],
+    icon: 'https://cdn.simpleicons.org/nodedotjs/white',
+    bg: 'rgba(51, 153, 51, 0.08)',
+  },
+];
 
   const certificates = [
     { url: 'https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg', title: 'Advanced React' },
@@ -641,6 +764,101 @@ const testimonials = [
         </motion.div>
       </motion.section>
 
+
+
+      {/* ── 3. SKILLS ── */}
+      <section
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          padding: '112px 24px',
+          borderTop: '1px solid rgba(255,255,255,0.04)',
+        }}
+      >
+        {/* Subtle radial ambient behind section heading */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 700,
+            height: 300,
+            background:
+              'radial-gradient(ellipse, rgba(20,184,166,0.07) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }}
+        />
+ 
+        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
+          {/* Header */}
+          <Reveal>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+              <span
+                style={{
+                  width: 32,
+                  height: 2,
+                  background: '#14b8a6',
+                  borderRadius: 2,
+                  display: 'inline-block',
+                }}
+              />
+              <span
+                style={{
+                  color: '#14b8a6',
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  letterSpacing: '0.14em',
+                }}
+              >
+                01 / EXPERTISE
+              </span>
+            </div>
+ 
+            <h2
+              style={{
+                fontFamily: "'Syne', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)',
+                color: '#f1f5f9',
+                margin: '0 0 12px',
+                lineHeight: 1.1,
+              }}
+            >
+              Technical Arsenal
+            </h2>
+ 
+            <p
+              style={{
+                color: '#64748b',
+                fontSize: 14,
+                fontWeight: 300,
+                marginBottom: 48,
+                maxWidth: 480,
+                lineHeight: 1.75,
+              }}
+            >
+              End-to-end capabilities to build, ship, and scale intelligent
+              automation systems that drive measurable outcomes.
+            </p>
+          </Reveal>
+ 
+          {/* Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: 16,
+            }}
+          >
+            {skills.map((skill, i) => (
+              <SkillCard key={skill.name} skill={skill} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+
       {/* ── 2. JOURNEY & CERTIFICATES ── */}
       <section className="relative z-10 py-28 max-w-6xl mx-auto px-6">
         <Divider />
@@ -649,7 +867,7 @@ const testimonials = [
           <div className="flex items-center gap-3 mb-2">
             <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
             <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
-              01 / STORY
+              02 / STORY
             </span>
           </div>
           <h2
@@ -763,118 +981,10 @@ const testimonials = [
         </Reveal>
       </section>
 
-      {/* ── 3. SKILLS ── */}
-      <section
-        className="relative z-10 py-28 px-6"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
-      >
-        <div className="max-w-6xl mx-auto">
-          <Reveal>
-            <div className="flex items-center gap-3 mb-2">
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
-                02 / EXPERTISE
-              </span>
-            </div>
-            <h2
-              className="font-bold mb-16"
-              style={{
-                fontSize: 'clamp(2rem, 5vw, 3rem)',
-                background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Technical Arsenal
-            </h2>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {skills.map((skill, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.6 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                style={{
-                  padding: '24px 28px',
-                  borderRadius: 20,
-                  background: skill.bg,
-                  border: `1px solid ${skill.color}18`,
-                  backdropFilter: 'blur(12px)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
-              >
-                {/* corner glow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: -20,
-                    right: -20,
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    background: `${skill.color}22`,
-                    filter: 'blur(20px)',
-                    pointerEvents: 'none',
-                  }}
-                />
-
-                <div className="flex justify-between items-center mb-5">
-                  <div className="flex items-center gap-3">
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 10,
-                        background: `${skill.color}14`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img src={skill.icon} alt={skill.name} style={{ height: 22, width: 22, objectFit: 'contain' }} />
-                    </div>
-                    <span style={{ fontWeight: 700, fontSize: 16, color: skill.color }}>{skill.name}</span>
-                  </div>
-                  <span style={{ fontSize: 13, color: '#475569', fontFamily: 'monospace' }}>{skill.level}%</span>
-                </div>
-
-                {/* Progress bar */}
-                <div
-                  style={{
-                    width: '100%',
-                    height: 4,
-                    borderRadius: 4,
-                    background: 'rgba(255,255,255,0.06)',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.6, ease: 'easeOut', delay: i * 0.1 }}
-                    style={{
-                      height: '100%',
-                      borderRadius: 4,
-                      background: `linear-gradient(90deg, ${skill.color}80, ${skill.color})`,
-                      boxShadow: `0 0 10px ${skill.color}60`,
-                    }}
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* ── 4. PROJECTS ── */}
-      <section
+      {/* <section
         id="projects"
         className="relative z-10 py-28 px-6 mb-10"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
@@ -913,7 +1023,7 @@ const testimonials = [
                 className="group cursor-pointer"
                 onClick={() => window.open(p.link, '_blank')}
               >
-                {/* Image wrapper */}
+              
                 <div
                   style={{
                     borderRadius: 20,
@@ -945,7 +1055,7 @@ const testimonials = [
                     }}
                   />
 
-                  {/* Year badge */}
+       
                   <div
                     style={{
                       position: 'absolute',
@@ -964,7 +1074,7 @@ const testimonials = [
                     {p.year}
                   </div>
 
-                  {/* Hover overlay */}
+              
                   <div
                     style={{
                       position: 'absolute',
@@ -1031,6 +1141,8 @@ const testimonials = [
         </div>
       </section>
 
+       */}
+
 
       {/* ── 5. CLIENTS ── */}
 <section
@@ -1042,7 +1154,7 @@ const testimonials = [
       <div className="flex items-center gap-3 mb-2">
         <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
         <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
-          04 / CLIENTS
+          03 / CLIENTS
         </span>
       </div>
       <h2
@@ -1080,7 +1192,6 @@ const testimonials = [
         transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
         style={{ display: 'flex', gap: 16, width: 'max-content' }}
       >
-        {/* Duplicate the list for seamless loop */}
         {[...clients, ...clients].map((client, i) => (
           <div
             key={i}
@@ -1165,7 +1276,7 @@ const testimonials = [
       <div className="flex items-center gap-3 mb-2">
         <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
         <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
-          05 / TESTIMONIALS
+          04 / TESTIMONIALS
         </span>
       </div>
       <h2
