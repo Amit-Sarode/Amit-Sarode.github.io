@@ -5,6 +5,8 @@ import SEO from './SEO';
 import doctor from '/assets/img/doctor-preview.png';
 import ecom from "./../../public/assets/img/ecom.png"
 import vibenote from "../../public/assets/img/vibenote.png"
+import gymvid from "../../public/assets/vids/gym.mp4"
+import foodvid from  '../../public/assets/vids/food.mp4'
 // ─── Types ───────────────────────────────────────────
 interface Solved { problem: string; solution: string; result: string }
 interface Project {
@@ -33,9 +35,9 @@ const DEMO_VIDEOS = {
   finance: 'https://www.w3schools.com/html/mov_bbb.mp4',
   health:  'https://www.w3schools.com/html/mov_bbb.mp4',
   shop:    'https://www.w3schools.com/html/mov_bbb.mp4',
-  food:    '../../public/assets/vids/food.mp4',
+  food:   foodvid,
   travel:  'https://www.w3schools.com/html/mov_bbb.mp4',
-  gym:      '../../public/assets/vids/gym.mp4'
+  gym:    gymvid
 };
 
 // ─── Data ────────────────────────────────────────────
