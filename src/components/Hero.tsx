@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import profileImg from '/assets/img/profileImg.png';
 import doctor from '/assets/img/doctor-preview.png';
-import ecom from '/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png';
+import ecom from '../../public/assets/img/ecom.png';
 import react from '/assets/img/react.svg';
 import Tilt3D from './ThreeDTilt';
 import SEO from './SEO';

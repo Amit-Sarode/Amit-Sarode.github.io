@@ -3,8 +3,8 @@ import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from
 import { Link } from 'react-router-dom';
 import SEO from './SEO';
 import doctor from '/assets/img/doctor-preview.png';
-import ecom from "./../../public/assets/img/Screenshot 2025-04-22 at 1.15.51 PM.png"
-
+import ecom from "./../../public/assets/img/ecom.png"
+import vibenote from "../../public/assets/img/vibenote.png"
 // ─── Types ───────────────────────────────────────────
 interface Solved { problem: string; solution: string; result: string }
 interface Project {
@@ -29,21 +29,64 @@ const PH = (id: string) => `https://images.unsplash.com/photo-${id}?w=1200&q=80`
 
 // Free-to-use looping demo videos (Big Buck Bunny clips as stand-ins)
 const DEMO_VIDEOS = {
-  tech:    'https://www.w3schools.com/html/mov_bbb.mp4',
+  tech:    'https://pixabay.com/videos/download/video-13232_medium.mp4',
   finance: 'https://www.w3schools.com/html/mov_bbb.mp4',
   health:  'https://www.w3schools.com/html/mov_bbb.mp4',
   shop:    'https://www.w3schools.com/html/mov_bbb.mp4',
-  food:    'https://www.w3schools.com/html/mov_bbb.mp4',
+  food:    '../../public/assets/vids/food.mp4',
   travel:  'https://www.w3schools.com/html/mov_bbb.mp4',
+  gym:      '../../public/assets/vids/gym.mp4'
 };
 
 // ─── Data ────────────────────────────────────────────
 const projects: Project[] = [
+
   {
-    id: 1,
+    id: 2,
+    name: 'GymFit – Modern Fitness Platform',
+    link: 'https://gym-orpin-two.vercel.app/',
+    img: PH('1517836357463-d25dfeac3438'),
+    video: DEMO_VIDEOS.gym,
+    desc: 'Modern gym and fitness website with responsive UI, workout-focused sections, membership plans, and high-converting landing experience.',
+    metric: 'Responsive fitness platform · Smooth UX · Conversion-focused',
+    complexity: '3 weeks · 10+ sections · Fully responsive',
+    clientQuote: '"The website finally gives our gym the premium look we wanted."',
+    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Vercel'],
+    category: 'Web Development',
+    year: '2026',
+    accent: '#ef4444',
+    solved: {
+      problem: 'Traditional gym websites feel outdated, slow, and fail to engage new members.',
+      solution: 'Designed a modern responsive fitness platform with strong branding, animated UI, and clear membership CTAs.',
+      result: 'Improved user engagement, mobile experience, and overall brand perception.',
+    },
+},
+
+{
+    id: 8,
+    name: 'Restaurant Website',
+    link: 'https://restaurant-ecru-two.vercel.app/',
+    img: PH('1517248135467-4c7edcad34c4'),
+    video: DEMO_VIDEOS.food,
+    desc: 'Elegant restaurant landing page with menu showcase, reservation flow, and animated sections.',
+    metric: 'Sub-2s load · Fully responsive',
+    complexity: '2 weeks · Pixel-perfect · Animated',
+    clientQuote: '"Exactly the premium feel we were looking for."',
+    tech: ['React', 'Tailwind', 'Framer Motion'],
+    category: 'React',
+    year: '2025',
+    accent: '#f97316',
+    solved: {
+      problem: 'Restaurant had no online presence and was losing walk-in customers to competitors.',
+      solution: 'Built animated landing page with online menu, Google Maps embed, and reservation CTA.',
+      result: 'Online reservations started from day one; Google Maps ranking improved within 2 weeks.',
+    },
+  },
+  {
+    id: 11,
     name: 'VibNote – AI Diary',
     link: 'https://web-vibenote.vercel.app/',
-    img: PH('1518770660439-4636190af475'),
+    img: vibenote,
     video: DEMO_VIDEOS.tech,
     desc: 'AI diary that detects human emotions from journal entries using NLP. Cross-platform web + React Native mobile.',
     metric: 'Emotion detection ~87% accurate · Web + Mobile',
@@ -179,26 +222,7 @@ const projects: Project[] = [
       result: 'Decision time per trade cut in half; all data visible in a single view.',
     },
   },
-  {
-    id: 8,
-    name: 'Restaurant Website',
-    link: 'https://restaurant-ecru-two.vercel.app/',
-    img: PH('1517248135467-4c7edcad34c4'),
-    video: DEMO_VIDEOS.food,
-    desc: 'Elegant restaurant landing page with menu showcase, reservation flow, and animated sections.',
-    metric: 'Sub-2s load · Fully responsive',
-    complexity: '2 weeks · Pixel-perfect · Animated',
-    clientQuote: '"Exactly the premium feel we were looking for."',
-    tech: ['React', 'Tailwind', 'Framer Motion'],
-    category: 'React',
-    year: '2025',
-    accent: '#f97316',
-    solved: {
-      problem: 'Restaurant had no online presence and was losing walk-in customers to competitors.',
-      solution: 'Built animated landing page with online menu, Google Maps embed, and reservation CTA.',
-      result: 'Online reservations started from day one; Google Maps ranking improved within 2 weeks.',
-    },
-  },
+  
   {
     id: 9,
     name: 'Jollie Macaron',
