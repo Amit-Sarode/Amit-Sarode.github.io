@@ -1,66 +1,6 @@
 
 
 
-// import React from 'react'
-// import { motion } from 'framer-motion'
-
-// const About: React.FC = () => {
-//   const certificates = [
-//     { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },
-//     { name: "Frontend Mastery", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-98a0333e-6ba1-4973-bcc5-46a44944f187.jpg?v=1745387851000" },
-//     { name: "JavaScript Deep Dive", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-51b4a0db-d01d-469a-ba2b-747485bc045a.jpg?v=1745385669000" },
-//     { name: "Web Design", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-68f7f083-7098-4901-8792-9fac8c4677f0.jpg?v=1745395351000" },
-//     { name: "Advanced React", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-1b736a84-be80-4c25-b589-fd8905fbe4e5.jpg?v=1745396160000" },
-//     { name: "Node.js Basics", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-f281d26f-3bba-42d4-8ed0-6eace42f32a4.jpg?v=1745402596000" },
-//     { name: "UI/UX Principles", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-20e6490f-c036-4ad3-a224-b6d3fa384959.jpg?v=1745405522000" }
-//   ]
-
-//   return (
-//     <section className="w-full py-20 px-6 md:px-20">
-//       {/* Bio Section */}
-//       <motion.div 
-//         initial={{ opacity: 0, y: 20 }}
-//         whileInView={{ opacity: 1, y: 0 }}
-//         viewport={{ once: true }}
-//         className="max-w-4xl mx-auto text-center"
-//       >
-//         <h2 className="text-4xl font-bold mb-8 font-serif">About Me</h2>
-//         <p className="text-lg leading-relaxed text-gray-400 text-left">
-//           Hi, I’m <span className="text-teal-300 font-semibold">Amit Sarode</span>, a passionate Frontend Developer with over 2 years of hands-on experience crafting responsive and dynamic web applications. Despite coming from a <span className="italic">non-traditional background</span> with a Bachelor of Arts degree, I’ve pursued my passion for programming through real-world projects and relentless dedication.
-//           <br /><br />
-//           I specialize in building clean, user-focused interfaces using <span className="text-teal-300">React, Redux, Tailwind CSS, and MUI</span>. I’ve also expanded into mobile development with <span className="text-teal-300">React Native</span>, creating innovative apps like an OCR-based number plate scanner. Currently, I’m contributing to impactful projects at <span className="font-semibold text-white">Atum Information Technologies</span>.
-//         </p>
-//       </motion.div>
-
-//       {/* Certificates Section */}
-//       <div className="mt-24">
-//         <h3 className="text-3xl font-bold text-center mb-12">Professional Certifications</h3>
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-//           {certificates.map((cert, idx) => (
-//             <motion.div
-//               key={idx}
-//               whileHover={{ scale: 1.03 }}
-//               className="relative group overflow-hidden rounded-xl bg-gray-800 border border-gray-700 shadow-xl"
-//             >
-//               <img 
-//                 loading="lazy" 
-//                 src={cert.url} 
-//                 alt={cert.name}
-//                 className="w-full h-64 object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-//               />
-//               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
-//                  <p className="text-white font-semibold text-center">{cert.name || "Course Completion"}</p>
-//               </div>
-//             </motion.div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   )
-// }
-
-// export default About
-
 
 
 
@@ -227,7 +167,7 @@ const About: React.FC = () => {
               Frontend Developer with over 2 years of hands-on experience crafting responsive and
               dynamic web applications. Despite coming from a{' '}
               <span style={{ fontStyle: 'italic', color: '#cbd5e1' }}>non-traditional background</span>{' '}
-              with a Bachelor of Arts degree, I've pursued my passion for programming through
+              with a Non Technical degree, I've pursued my passion for programming through
               real-world projects and relentless dedication.
               <br />
               <br />I specialize in building clean, user-focused interfaces using{' '}

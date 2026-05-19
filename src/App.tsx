@@ -1,13 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import CustomLoader from './components/CustomCursor';
+import Loader from './components/Loader';
 import Footer from './components/Footer';
 import HireMeButton from './components/HireMeButton';
 import ScrollToTop from './components/ScrollToTop';
 
 const Contact    = lazy(() => import('./components/Contact'));
 const Navbar     = lazy(() => import('./components/Navbar'));
-const CustomCursor = lazy(() => import('./components/CustomCursor'));
 const About      = lazy(() => import('./components/About'));
 const Chatgpt    = lazy(() => import('./components/Chatgpt'));
 const Projects   = lazy(() => import('./components/Projects'));
@@ -25,12 +24,11 @@ function App() {
     >
       <Suspense fallback={null}>
         <Navbar />
-        <CustomCursor />
       </Suspense>
       <ScrollToTop />
 
       <div style={{ paddingTop: 64 }}>
-        <Suspense fallback={<CustomLoader />}>
+        <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/"         element={<Hero />} />
             <Route path="/projects" element={<Projects />} />

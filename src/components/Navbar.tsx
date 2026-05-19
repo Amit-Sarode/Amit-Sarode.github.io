@@ -1,256 +1,3 @@
-// import React, { useEffect, useState,useRef } from 'react';
-// import { Link,useNavigate } from 'react-router-dom';
-// import { motion, useScroll, useSpring , AnimatePresence } from 'framer-motion';
-// import resume from '/assets/Amit Sarode -resume (1).pdf'
-
-// export const useWindowSize = () => {
-//   const [width, setWidth] = useState(window.innerWidth);
-
-//   useEffect(() => {
-//     const handleResize = () => setWidth(window.innerWidth);
-//     window.addEventListener("resize", handleResize);
-//     return () => window.removeEventListener("resize", handleResize);
-//   }, []);
-
-//   return width;
-// };
- 
-
-// export const useClickOutside = (handler: () => void) => {
-//   const domNode = useRef<HTMLDivElement>(null);
-
-//   useEffect(() => {
-//     const maybeHandler = (event: MouseEvent) => {
-//       if (domNode.current && !domNode.current.contains(event.target as Node)) {
-//         handler();
-//       }
-//     };
-//     document.addEventListener("mousedown", maybeHandler);
-//     return () => document.removeEventListener("mousedown", maybeHandler);
-//   }, [handler]);
-
-//   return domNode;
-// };
-
-// const Navbar: React.FC = () => {
-// const navigate = useNavigate()
-//   const domNode = useClickOutside(() => {
-//     useEffect(()=>{
-//       setMobile(false);
-//     },[domNode]) 
-//   });
-  
-//   const width = useWindowSize();
-//   useEffect(() => {
-//     setMobile(false);
-//   }, [width]);
-
-// const [mobile,setMobile]  = useState<boolean>(false)
-
-//   const navItem = [
-//     { name: "Projects", path: "/projects" },
-//     { name: "Contact", path: "/contact" },
-//     { name: "Linkedin", path: "https://www.linkedin.com/in/amit-sarode/", external: true },
-//     { name: "Github", path: "https://github.com/Amit-Sarode", external: true },
-//     { name: "Resume", path: "/resume" },
-//   ];
-//   const handleEmail = () => {
-//     const email = "sarodeamit990@gmail.com";
-//     const subject = encodeURIComponent('');
-//     const body = encodeURIComponent(''); 
-//     const mailtoLink = `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
-//     window.open(mailtoLink, '_blank');
-// }
-
-//   const handleDownload = () => {
-//     const link = document.createElement('a');
-//     link.href = resume;  
-//     link.download = "Amit Sarode -resume.pdf";  
-//     link.click();  
-  
-//     URL.revokeObjectURL(link.href);
-//   };
-
-//   const { scrollYProgress } = useScroll();
-//   const scaleX = useSpring(scrollYProgress, {
-//     stiffness: 100,
-//     damping: 30,
-//     restDelta: 0.001
-//   });
-    
-//   const [isDark, setIsDark] = useState(false);
-
-//   useEffect(() => {
-//     const savedTheme = localStorage.getItem("theme");
-//     if (savedTheme === "dark-mode") {
-//       setIsDark(true);
-//     }
-//   }, []);
-
-
-//   useEffect(() => {
-//     document.body.className = isDark ? "dark-mode" : "light-mode";
-//     localStorage.setItem("theme", document.body.className);
-//   }, [isDark]);
-
-
-//   return (
-//     <>
-   
-//       <motion.div
-//         className="fixed origin-left top-0 left-0 right-0 h-[4px] bg-teal-300 z-50"
-//         style={{ scaleX }}
-//       />
-    
-//       {/* Nav */}
-//       <nav className="w-full fixed top-0 left-0 z-40 flex items-center justify-between px-10 h-[60px] bg-[#393E46] shadow-md">
-//         <div className=" text-xl font-bold">
-//           <Link to="/">Home</Link>
-//         </div>
-
-
-//         <div ref={domNode} className="lg:hidden  md:hidden right-0 absolute pr-10">
-//           <label className="switch">
-//   <span className="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="#ffd43b"><circle r="5" cy="12" cx="12"></circle><path d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"></path></g></svg></span>
-//   <span className="moon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg></span>   
-//   <input checked={isDark} id="switch" type="checkbox" className="input"
-//   onChange={() => setIsDark(prev => !prev)}/>
-//   <span className="slider"></span>
-// </label>
-
-//         <button className='text-center absolute top-2 right-3'>
-//         {
-//           mobile?(
-//             <svg onClick={()=>setMobile(false)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
-//   <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />
-// </svg>
-
-//           ):(
-//             <svg onClick={()=>setMobile(true)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
-//   <path fillRule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
-// </svg>
-//           )
-//         }
-//         </button>
-//       </div>
-// <AnimatePresence>
-//       {
-//   mobile&&(
-//     <motion.div 
-//     ref={domNode}
-//     initial={{ x: 10, opacity: 0 }}
-//             animate={{ x: 0, opacity: 1 }}
-//             exit={{ x: 10, opacity: 0 }}
-//      className=' z-50 rounded-2xl bg-[#EEEEEE] text-black w-40 h-auto py-5 text-center absolute top-[60px] right-0'
-//     > <button onClick={()=>navigate('/chatgpt')}>chatbot</button>
-//       {navItem.map((item, idx) =>
-//    (
-//         <motion.div
-//         key={idx}
-//         initial={{ opacity: 0, y:-20 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ delay: idx * 0.1 }}>
-//             {
-//               item.name==="Resume"?(
-//                 <button
-//                 className="hover:text-teal-300 transition-all duration-200" onClick={handleDownload}>Resume</button>
-//               ):(<motion.div>
-//                 {
-//                   item.external ?(
-//                     <Link to={item.path} target='_blank' >{item.name}</Link>
-//                   ):(
-//                     <Link
-//                     key={idx}
-//                     to={item.path}
-//                     className="hover:text-teal-300 transition-all duration-200"
-//                   >
-//                     {item.name}
-//                   </Link>
-//                   )
-//                 }
-//               </motion.div>
-//               )
-//             }
-//         </motion.div>
-//       )
-//     )}
-//     </motion.div>
-//   )
-// }
-// </AnimatePresence>
-
-
-// {/* desktop nav */}
-//         <motion.div 
-//          className="hidden md:flex lg:flex items-center gap-10"
-//          >
-//           {navItem.map((item, idx) =>
-//             item.external ? (
-//               <motion.a
-//               initial={{ opacity: 0, y:-20 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 key={idx}
-//                 href={item.path}
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//                 className="hover:text-teal-300 transition-all duration-200"
-//               >
-//                 {item.name}
-//               </motion.a>
-//             ) : (
-//               <motion.div
-//               key={idx}
-//               initial={{ opacity: 0, y:-20 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 transition={{ delay: idx * 0.1 }}>
-//                   {
-//                     item.name==="Resume"?(
-//                       <button
-//                       className="hover:text-teal-300 transition-all duration-200" onClick={handleDownload}>Resume</button>
-//                     ):(
-//                       <Link
-//                       key={idx}
-//                       to={item.path}
-//                       className="hover:text-teal-300 transition-all duration-200"
-//                     >
-//                       {item.name}
-//                     </Link>
-
-//                     )
-//                   }
-            
-//               </motion.div>
-//             )
-//           )}
-
-
-//        <motion.button
-//             // whileHover={{ scale: 1.05 }}
-//             // whileTap={{ scale: 0.95 }}
-//             className="ml-4  font-medium px-5 py-2 rounded-md shadow text-white bg-teal-300 hover:bg-teal-200  hover:scale-105"
-//             onClick={()=>handleEmail()}
-//           >
-//             Email Me
-//           </motion.button>
-//           <label className="switch">
-//   <span className="sun"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="#ffd43b"><circle r="5" cy="12" cx="12"></circle><path d="m21 13h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm-17 0h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2zm13.66-5.66a1 1 0 0 1 -.66-.29 1 1 0 0 1 0-1.41l.71-.71a1 1 0 1 1 1.41 1.41l-.71.71a1 1 0 0 1 -.75.29zm-12.02 12.02a1 1 0 0 1 -.71-.29 1 1 0 0 1 0-1.41l.71-.66a1 1 0 0 1 1.41 1.41l-.71.71a1 1 0 0 1 -.7.24zm6.36-14.36a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm0 17a1 1 0 0 1 -1-1v-1a1 1 0 0 1 2 0v1a1 1 0 0 1 -1 1zm-5.66-14.66a1 1 0 0 1 -.7-.29l-.71-.71a1 1 0 0 1 1.41-1.41l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.29zm12.02 12.02a1 1 0 0 1 -.7-.29l-.66-.71a1 1 0 0 1 1.36-1.36l.71.71a1 1 0 0 1 0 1.41 1 1 0 0 1 -.71.24z"></path></g></svg></span>
-//   <span className="moon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path></svg></span>   
-//   <input checked={isDark} id="switch" type="checkbox" className="input"
-//   onChange={() => setIsDark(prev => !prev)}/>
-//   <span className="slider"></span>
-// </label>
-//         </motion.div>
-//       </nav> 
-//     </>
-//   );
-// };
-
-// export default Navbar;
-
-
-
-
-
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
@@ -527,6 +274,43 @@ const Navbar: React.FC = () => {
           {/* Divider */}
           <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.08)', margin: '0 8px' }} />
 
+          {/* Call CTA */}
+          <motion.a
+            href="tel:+919322137885"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.45 }}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(20,184,166,0.4)' }}
+            whileTap={{ scale: 0.97 }}
+            style={{
+              padding: '8px 20px',
+              borderRadius: 50,
+              background: 'transparent',
+              border: '1px solid rgba(20,184,166,0.3)',
+              color: '#14b8a6',
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: 'pointer',
+              letterSpacing: '0.02em',
+              transition: 'all 0.3s',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <motion.span
+              animate={{ rotate: [0, -15, 15, -15, 0] }}
+              transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 3 }}
+              style={{ display: 'inline-flex' }}
+            >
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.span>
+            Call
+          </motion.a>
+
           {/* Email CTA */}
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
@@ -735,11 +519,47 @@ const Navbar: React.FC = () => {
                 {/* Divider */}
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '8px 14px' }} />
 
-                {/* Mobile email CTA */}
+                {/* Mobile call CTA */}
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: (navItems.length + 1) * 0.06 }}
+                  style={{ padding: '6px 8px' }}
+                >
+                  <a
+                    href="tel:+919322137885"
+                    onClick={closeMobile}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 6,
+                      width: '100%',
+                      padding: '11px',
+                      borderRadius: 10,
+                      background: 'transparent',
+                      border: '1px solid rgba(20,184,166,0.3)',
+                      color: '#14b8a6',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      letterSpacing: '0.02em',
+                      textDecoration: 'none',
+                      marginBottom: 8,
+                    }}
+                  >
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Call Now
+                  </a>
+                </motion.div>
+
+                {/* Mobile email CTA */}
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 2) * 0.06 }}
                   style={{ padding: '6px 8px' }}
                 >
                   <button

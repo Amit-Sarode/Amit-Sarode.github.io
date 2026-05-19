@@ -1,6 +1,10 @@
 import SEO from './SEO';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const CaseStudyHealthcare: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="min-h-screen px-6 py-24 max-w-4xl mx-auto text-slate-200">
       <SEO
@@ -8,6 +12,44 @@ const CaseStudyHealthcare: React.FC = () => {
         description="Healthcare app case study: problem, approach, stack, and measurable outcomes."
         path="/case-study/healthcare"
       />
+
+      {/* Back button */}
+      <motion.button
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4 }}
+        whileHover={{ x: -4 }}
+        onClick={() => navigate('/projects')}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '8px 16px',
+          borderRadius: 10,
+          background: 'rgba(20,184,166,0.08)',
+          border: '1px solid rgba(20,184,166,0.2)',
+          color: '#5eead4',
+          fontSize: 13,
+          fontWeight: 500,
+          cursor: 'pointer',
+          marginBottom: 32,
+          transition: 'all 0.25s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(20,184,166,0.15)';
+          e.currentTarget.style.borderColor = 'rgba(20,184,166,0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(20,184,166,0.08)';
+          e.currentTarget.style.borderColor = 'rgba(20,184,166,0.2)';
+        }}
+      >
+        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Back to Projects
+      </motion.button>
+
       <p className="text-teal-400 uppercase tracking-widest text-xs mb-3">Case Study</p>
       <h1 className="text-4xl font-bold mb-8">Healthcare App</h1>
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from './SEO';
 import doctor from '/assets/img/doctor-preview.png';
@@ -44,6 +44,26 @@ const DEMO_VIDEOS = {
 const projects: Project[] = [
 
   {
+    id: 1,
+    name: 'Lead Dentist – AI Receptionist',
+    link: 'https://lead-dentist.vercel.app/',
+    img: PH('1629909613654-28e377c37b09'),
+    video: DEMO_VIDEOS.health,
+    desc: 'AI-powered dental clinic receptionist that handles appointment booking, answers FAQs, and follows up with patients via WhatsApp — running 24/7 without human intervention.',
+    metric: '80% fewer missed calls · 24/7 availability · 3x faster booking',
+    complexity: '4 weeks · Tawk.to · WhatsApp API',
+    clientQuote: '"Patient enquiries doubled and we stopped missing calls entirely."',
+    tech: ['React', 'OpenAI API', 'WhatsApp API', 'Node.js'],
+    category: 'React',
+    year: '2025',
+    accent: '#10B981',
+    solved: {
+      problem: 'Clinic missed 40% of incoming calls during busy hours — lost revenue and frustrated patients.',
+      solution: 'Built an AI receptionist on WhatsApp that handles booking, rescheduling, and common questions with natural conversation.',
+      result: 'Missed calls dropped 80%; appointment bookings increased 3x; staff focused on in-clinic care.',
+    },
+  },
+  {
     id: 2,
     name: 'GymFit – Modern Fitness Platform',
     link: 'https://gym-orpin-two.vercel.app/',
@@ -56,7 +76,7 @@ const projects: Project[] = [
     tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Vercel'],
     category: 'Web Development',
     year: '2026',
-    accent: '#ef4444',
+    accent: '#22c55e',
     solved: {
       problem: 'Traditional gym websites feel outdated, slow, and fail to engage new members.',
       solution: 'Designed a modern responsive fitness platform with strong branding, animated UI, and clear membership CTAs.',
@@ -278,23 +298,6 @@ const techColors: Record<string, string> = {
 
 const filters = ['All', 'React', 'React Native', 'Full Stack'];
 
-// ─── 3D tilt hook ────────────────────────────────────
-const useTilt = () => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), { stiffness: 200, damping: 20 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 200, damping: 20 });
-
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
-  const onMouseLeave = () => { x.set(0); y.set(0); };
-
-  return { rotateX, rotateY, onMouseMove, onMouseLeave };
-};
-
 // ─── Browser mock frame ───────────────────────────────
 const BrowserFrame: React.FC<{
   img: string; video?: string; accent: string; num: number; name: string; link: string;
@@ -456,7 +459,7 @@ const SolvedPanel: React.FC<{ solved: Solved; accent: string; open: boolean }> =
                 <span style={{ fontSize: 10, fontFamily: 'monospace', color: accent, letterSpacing: '0.08em', display: 'block', marginBottom: 2 }}>
                   {s.label.toUpperCase()}
                 </span>
-                <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.6 }}>{s.value}</p>
+                <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0, lineHeight: 1.6 }}>{s.value}</p>
               </div>
             </div>
           ))}
@@ -469,31 +472,25 @@ const SolvedPanel: React.FC<{ solved: Solved; accent: string; open: boolean }> =
 // ─── Project Card ─────────────────────────────────────
 const ProjectCard: React.FC<{ item: Project; idx: number; large?: boolean }> = ({ item, idx, large }) => {
   const [expanded, setExpanded] = useState(false);
-  const { rotateX, rotateY, onMouseMove, onMouseLeave: tiltLeave } = useTilt();
   const imgHeight = large ? 320 : 200;
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 30, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: idx * 0.05, duration: 0.5 }}
-      style={{ perspective: 1000 }}
     >
       <motion.div
         style={{
-          rotateX, rotateY,
           borderRadius: 20, overflow: 'hidden',
           background: 'rgba(10,18,34,0.9)',
           border: `1px solid ${item.accent}20`,
           boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px ${item.accent}10`,
           display: 'flex', flexDirection: 'column',
           transition: 'box-shadow 0.3s',
-          transformStyle: 'preserve-3d',
         }}
-        onMouseMove={onMouseMove}
-        onMouseLeave={tiltLeave}
         whileHover={{ boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 30px ${item.accent}20, 0 0 0 1px ${item.accent}30` }}
       >
         {/* Browser frame + image/video */}
@@ -526,7 +523,7 @@ const ProjectCard: React.FC<{ item: Project; idx: number; large?: boolean }> = (
 
           {/* Description */}
           <p style={{
-            fontSize: 12, color: '#475569', lineHeight: 1.65, margin: 0,
+            fontSize: 12, color: '#94a3b8', lineHeight: 1.65, margin: 0,
             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
           }}>
             {item.desc}
@@ -729,7 +726,7 @@ const Spotlight: React.FC<{ item: Project }> = ({ item }) => {
             }}>{item.complexity}</span>
           </div>
 
-          <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.75, margin: 0, maxWidth: 580 }}>
+          <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.75, margin: 0, maxWidth: 580 }}>
             {item.desc}
           </p>
 
@@ -752,7 +749,7 @@ const Spotlight: React.FC<{ item: Project }> = ({ item }) => {
                 }}>
                   {['!', '→', '✓'][i]}
                 </span>
-                <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.6 }}>{pt}</p>
+                <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0, lineHeight: 1.6 }}>{pt}</p>
               </div>
             ))}
           </div>
@@ -830,9 +827,62 @@ const Projects: React.FC = () => {
       {/* Grid lines */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-        backgroundImage: `linear-gradient(rgba(20,184,166,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.025) 1px,transparent 1px)`,
+        backgroundImage: `linear-gradient(rgba(20,184,166,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.03) 1px,transparent 1px)`,
         backgroundSize: '80px 80px',
+        maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%)',
+        WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%)',
       }} />
+
+      {/* Ambient glow orbs */}
+      <motion.div
+        animate={{ x: [0, 30, -20, 0], y: [0, -20, 30, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        style={{
+          position: 'fixed',
+          top: '10%',
+          left: '8%',
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+      <motion.div
+        animate={{ x: [0, -25, 15, 0], y: [0, 25, -15, 0] }}
+        transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+        style={{
+          position: 'fixed',
+          bottom: '10%',
+          right: '12%',
+          width: 350,
+          height: 350,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+      <motion.div
+        animate={{ x: [0, 20, -15, 0], y: [0, -15, 20, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
 
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', position: 'relative', zIndex: 1 }}>
 
