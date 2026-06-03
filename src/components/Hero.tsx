@@ -1,17 +1,205 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import doctor from '/assets/img/doctor-preview.png';
-import ecom from '../../public/assets/img/ecom.png';
+import { motion, AnimatePresence } from 'framer-motion';
 import SEO from './SEO';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 import HeroScrollExperience from './hero/HeroScrollExperience';
 import SkillCard from './hero/SkillCard';
 import { Reveal, Divider } from './hero/Reveal';
 import {
-  skills, clients, testimonials, certificates,
-  caseStudies, industries, processSteps, pricingPlans, stats,
+  skills, clients, testimonials,
+  caseStudies, processSteps, stats, businesses, type BusinessCategory,
 } from './hero/data';
+
+// ─── Industry Card with Glow ──────────────────────────
+const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate: (id: number) => void }> = ({ biz, index, onNavigate }) => {
+  const [hovered, setHovered] = useState(false);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  return (
+    <Reveal delay={index * 0.05}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+        whileHover={{ y: -8 }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onMouseMove={handleMouseMove}
+        onClick={() => onNavigate(biz.id)}
+        style={{
+          position: 'relative', width: '100%', minHeight: 200,
+          borderRadius: 18, cursor: 'pointer', overflow: 'hidden',
+          background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+          border: `1px solid ${hovered ? `${biz.color}50` : 'rgba(255,255,255,0.06)'}`,
+          boxShadow: hovered
+            ? `0 25px 70px rgba(0,0,0,0.5), 0 0 40px ${biz.color}20, inset 0 1px 0 ${biz.color}15`
+            : '0 4px 20px rgba(0,0,0,0.3)',
+          transition: 'background 0.4s, border-color 0.4s, box-shadow 0.4s',
+          display: 'flex', flexDirection: 'column', padding: 28, justifyContent: 'space-between',
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={`Learn more about ${biz.title}`}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigate(biz.id); } }}
+      >
+        {/* Cursor-following glow */}
+        <div style={{
+          position: 'absolute',
+          left: mouse.x, top: mouse.y,
+          width: 250, height: 250,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${biz.color}18 0%, transparent 70%)`,
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none', zIndex: 0,
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.4s',
+        }} />
+
+        {/* Top gradient bar on hover */}
+        <motion.div
+          animate={{ opacity: hovered ? 1 : 0, scaleX: hovered ? 1 : 0.3 }}
+          transition={{ duration: 0.4 }}
+          style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+            background: `linear-gradient(90deg, transparent, ${biz.color}, transparent)`,
+            transformOrigin: 'center',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Corner glow blob */}
+        <motion.div
+          animate={{ opacity: hovered ? 0.15 : 0, scale: hovered ? 1 : 0.5 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            position: 'absolute', top: -30, right: -30,
+            width: 120, height: 120, borderRadius: '50%',
+            background: biz.color, filter: 'blur(40px)',
+            pointerEvents: 'none', zIndex: 0,
+          }}
+        />
+
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
+          <motion.span
+            animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? 5 : 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            style={{ fontSize: 40, lineHeight: 1, display: 'block', width: 'fit-content' }}
+          >
+            {biz.icon}
+          </motion.span>
+          <h4 style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: hovered ? '#f1f5f9' : '#e2e8f0',
+            margin: 0, lineHeight: 1.3, transition: 'color 0.3s',
+          }}>
+            {biz.title}
+          </h4>
+          <AnimatePresence>
+            {hovered && (
+              <motion.p
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ fontSize: 13, color: '#94a3b8', margin: 0, lineHeight: 1.6, overflow: 'hidden' }}
+              >
+                {biz.description}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <motion.div
+          animate={{ opacity: hovered ? 1 : 0.4, x: hovered ? 4 : 0 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: 'relative', zIndex: 1, marginTop: 14,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={hovered ? biz.color : '#14b8a6'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transition: 'stroke 0.3s' }}>
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+          {biz.link && (
+            <span style={{
+              fontSize: 10, color: hovered ? '#94a3b8' : '#475569',
+              fontFamily: 'monospace', letterSpacing: '0.06em', transition: 'color 0.3s',
+            }}>
+              Has live site ↗
+            </span>
+          )}
+        </motion.div>
+      </motion.div>
+    </Reveal>
+  );
+};
+
+// ─── Glow Card (reusable) ────────────────────────────
+const GlowCard: React.FC<{
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  hoverY?: number;
+}> = ({ children, color = '#14b8a6', className, style, hoverY = -6 }) => {
+  const [hovered, setHovered] = useState(false);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top });
+  }, []);
+
+  return (
+    <motion.div
+      whileHover={{ y: hoverY }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={onMove}
+      className={className}
+      style={{
+        position: 'relative', overflow: 'hidden', borderRadius: 20,
+        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+        border: `1px solid ${hovered ? `${color}40` : 'rgba(255,255,255,0.06)'}`,
+        transition: 'background 0.4s, border-color 0.4s',
+        ...style,
+      }}
+    >
+      {/* Cursor glow */}
+      <div style={{
+        position: 'absolute', left: mouse.x, top: mouse.y,
+        width: 220, height: 220, borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}18 0%, transparent 70%)`,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
+      }} />
+      {/* Corner glow blob */}
+      <div style={{
+        position: 'absolute', top: -25, right: -25,
+        width: 100, height: 100, borderRadius: '50%',
+        background: color, filter: 'blur(35px)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 0.12 : 0, transition: 'opacity 0.5s',
+      }} />
+      {/* Top gradient bar */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+        background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
+        zIndex: 1,
+      }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
+    </motion.div>
+  );
+};
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
@@ -39,82 +227,6 @@ const Hero: React.FC = () => {
       {/* ── CINEMATIC HERO ── */}
       <HeroScrollExperience />
 
-      {/* ── TRUST BAR (transition) ── */}
-      <section style={{
-        position: 'relative',
-        zIndex: 10,
-        padding: '48px 24px',
-        borderTop: '1px solid rgba(255,255,255,0.04)',
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
-        background: 'rgba(20,184,166,0.02)',
-      }}>
-        <div style={{
-          maxWidth: 1152,
-          margin: '0 auto',
-          display: 'flex',
-          flexWrap: 'wrap' as const,
-          justifyContent: 'center',
-          gap: 40,
-        }}>
-          {[
-            { value: '15+', label: 'Projects Shipped' },
-            { value: '10+', label: 'Businesses Automated' },
-            { value: '2+', label: 'Years Building AI' },
-            { value: '99.9%', label: 'Uptime SLA' },
-            { value: '24/7', label: 'Systems Running' },
-          ].map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              style={{ textAlign: 'center' }}
-            >
-              <p style={{
-                fontFamily: 'monospace',
-                fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-                fontWeight: 800,
-                color: '#14b8a6',
-                margin: '0 0 2px',
-              }}>
-                {s.value}
-              </p>
-              <p style={{ fontSize: 11, color: '#475569', margin: 0, letterSpacing: '0.05em' }}>
-                {s.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── SKILLS ── */}
-      <section style={{ position: 'relative', zIndex: 10, padding: '80px 24px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div style={{
-          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-          width: 700, height: 300,
-          background: 'radial-gradient(ellipse, rgba(20,184,166,0.07) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
-          <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>01 / SOLUTIONS</span>
-            </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>What I Build</h2>
-            <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 48, maxWidth: 480, lineHeight: 1.75 }}>
-              Production-ready AI systems that automate workflows, cut costs, and scale with your business. Every solution ships with measurable ROI.
-            </p>
-          </Reveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-            {skills.map((skill, i) => (
-              <SkillCard key={skill.name} skill={skill} index={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── HOW I WORK ── */}
       <section style={{ position: 'relative', zIndex: 10, padding: '112px 24px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
@@ -131,21 +243,14 @@ const Hero: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
             {processSteps.map((item, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  style={{
-                    padding: '32px 28px', borderRadius: 20,
-                    background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-                    position: 'relative', overflow: 'hidden', transition: 'border-color 0.3s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = `${item.color}40`)}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)')}
-                >
-                  <div style={{ fontFamily: 'monospace', fontSize: 11, color: item.color, letterSpacing: '0.1em', marginBottom: 16, opacity: 0.7 }}>STEP {item.step}</div>
-                  <div style={{ fontSize: 32, marginBottom: 16 }}>{item.icon}</div>
-                  <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 20, color: '#f1f5f9', margin: '0 0 10px' }}>{item.title}</h3>
-                  <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
-                </motion.div>
+                <GlowCard color={item.color} style={{ padding: 0 }}>
+                  <div style={{ padding: '32px 28px' }}>
+                    <div style={{ fontFamily: 'monospace', fontSize: 11, color: item.color, letterSpacing: '0.1em', marginBottom: 16, opacity: 0.7 }}>STEP {item.step}</div>
+                    <div style={{ fontSize: 32, marginBottom: 16 }}>{item.icon}</div>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 20, color: '#f1f5f9', margin: '0 0 10px' }}>{item.title}</h3>
+                    <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                  </div>
+                </GlowCard>
               </Reveal>
             ))}
           </div>
@@ -179,20 +284,6 @@ const Hero: React.FC = () => {
             </div>
           </Reveal>
         </div>
-        <Reveal delay={0.1} className="mt-20">
-          <p style={{ fontSize: 12, letterSpacing: '0.14em', color: '#475569', textTransform: 'uppercase', fontFamily: 'monospace', marginBottom: 24 }}>Verified Certifications</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {certificates.map((cert, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.6 }} whileHover={{ y: -6, scale: 1.02 }}
-                style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 20px 60px rgba(0,0,0,0.4)', cursor: 'pointer', background: '#0f172a' }}>
-                <img src={cert.url} alt={cert.title} style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block', filter: 'brightness(0.85)' }} />
-                <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                  <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{cert.title}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </Reveal>
       </section>
 
       {/* ── CLIENTS ── */}
@@ -226,11 +317,12 @@ const Hero: React.FC = () => {
           <Reveal delay={0.2} className="mt-16">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
               {stats.map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                  style={{ padding: '20px 16px', borderRadius: 16, background: 'rgba(20,184,166,0.04)', border: '1px solid rgba(20,184,166,0.1)', textAlign: 'center' }}>
-                  <p style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 800, color: '#14b8a6', margin: '0 0 4px', fontFamily: 'monospace' }}>{s.value}</p>
-                  <p style={{ fontSize: 12, color: '#475569', margin: 0 }}>{s.label}</p>
-                </motion.div>
+                <GlowCard key={i} color="#14b8a6" hoverY={-4} style={{ padding: 0, textAlign: 'center' }}>
+                  <div style={{ padding: '20px 16px' }}>
+                    <p style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 800, color: '#14b8a6', margin: '0 0 4px', fontFamily: 'monospace' }}>{s.value}</p>
+                    <p style={{ fontSize: 12, color: '#475569', margin: 0 }}>{s.label}</p>
+                  </div>
+                </GlowCard>
               ))}
             </div>
           </Reveal>
@@ -250,16 +342,9 @@ const Hero: React.FC = () => {
               Deep domain expertise across multiple verticals. Each industry has unique workflows — I build automation that fits.
             </p>
           </Reveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-            {industries.map((industry, i) => (
-              <Reveal key={i} delay={i * 0.05}>
-                <motion.div whileHover={{ y: -4, borderColor: `${industry.color}40` }}
-                  style={{ padding: '24px 20px', borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', transition: 'border-color 0.3s', cursor: 'default' }}>
-                  <span style={{ fontSize: 28 }}>{industry.icon}</span>
-                  <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 15, color: '#e2e8f0', margin: '12px 0 4px' }}>{industry.name}</h4>
-                  <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.5 }}>{industry.desc}</p>
-                </motion.div>
-              </Reveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
+            {businesses.map((biz, i) => (
+              <IndustryCard key={biz.id} biz={biz} index={i} onNavigate={(id) => navigate(`/projects/${id}`)} />
             ))}
           </div>
         </div>
@@ -296,25 +381,26 @@ const Hero: React.FC = () => {
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
             {testimonials.map((t, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }} whileHover={{ y: -6 }}
-                style={{ padding: '24px 26px', borderRadius: 20, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 16, transition: 'border-color 0.3s' }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(20,184,166,0.2)')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)')}>
-                <div style={{ display: 'flex', gap: 3 }}>
-                  {[...Array(t.stars)].map((_, s) => (<span key={s} style={{ color: '#f59e0b', fontSize: 13 }}>★</span>))}
-                </div>
-                <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.75, margin: 0, fontStyle: 'italic', flex: 1 }}>"{t.text}"</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, ${t.color}40, ${t.color}20)`, border: `1px solid ${t.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: t.color }}>{t.initials}</div>
-                  <div>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', margin: '0 0 2px' }}>{t.name}</p>
-                    <p style={{ fontSize: 11, color: '#334155', margin: 0, fontFamily: 'monospace' }}>{t.role}</p>
+              <Reveal key={i} delay={i * 0.1}>
+                <GlowCard color={t.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  <div style={{ padding: '24px 26px', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+                    <div style={{ display: 'flex', gap: 3 }}>
+                      {[...Array(t.stars)].map((_, s) => (<span key={s} style={{ color: '#f59e0b', fontSize: 13 }}>★</span>))}
+                    </div>
+                    <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.75, margin: 0, fontStyle: 'italic', flex: 1 }}>"{t.text}"</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, ${t.color}40, ${t.color}20)`, border: `1px solid ${t.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: t.color }}>{t.initials}</div>
+                      <div>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', margin: '0 0 2px' }}>{t.name}</p>
+                        <p style={{ fontSize: 11, color: '#334155', margin: 0, fontFamily: 'monospace' }}>{t.role}</p>
+                      </div>
+                      {t.source && (
+                        <div style={{ marginLeft: 'auto', padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', fontSize: 10, color: '#334155', fontFamily: 'monospace' }}>{t.source}</div>
+                      )}
+                    </div>
                   </div>
-                  {t.source && (
-                    <div style={{ marginLeft: 'auto', padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', fontSize: 10, color: '#334155', fontFamily: 'monospace' }}>{t.source}</div>
-                  )}
-                </div>
-              </motion.div>
+                </GlowCard>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -334,72 +420,21 @@ const Hero: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {caseStudies.map((cs, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <motion.div whileHover={{ y: -6 }}
-                  style={{ padding: '28px 24px', borderRadius: 20, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', height: '100%', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = `${cs.color}40`)}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)')}>
-                  <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}15`, border: `1px solid ${cs.color}30`, marginBottom: 16 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: cs.color }}>↗ {cs.result}</span>
+                <GlowCard color={cs.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}15`, border: `1px solid ${cs.color}30`, marginBottom: 16 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: cs.color }}>↗ {cs.result}</span>
+                    </div>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: '#f1f5f9', margin: '0 0 4px', lineHeight: 1.3 }}>{cs.title}</h3>
+                    <p style={{ fontSize: 12, color: '#475569', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
+                    <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {cs.tags.map((tag) => (
+                        <span key={tag} style={{ fontSize: 10, letterSpacing: '0.05em', padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}>{tag}</span>
+                      ))}
+                    </div>
                   </div>
-                  <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: '#f1f5f9', margin: '0 0 4px', lineHeight: 1.3 }}>{cs.title}</h3>
-                  <p style={{ fontSize: 12, color: '#475569', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
-                  <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {cs.tags.map((tag) => (
-                      <span key={tag} style={{ fontSize: 10, letterSpacing: '0.05em', padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}>{tag}</span>
-                    ))}
-                  </div>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PRICING ── */}
-      <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
-          <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>INVESTMENT</span>
-            </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>Pricing</h2>
-            <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 56, maxWidth: 520, lineHeight: 1.75 }}>
-              Transparent pricing to help you plan. Every project includes a discovery call, weekly demos, and post-launch support.
-            </p>
-          </Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
-            {pricingPlans.map((plan, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <motion.div whileHover={{ y: -6 }}
-                  style={{ padding: '32px 28px', borderRadius: 20, background: plan.featured ? 'rgba(139, 92, 246, 0.05)' : 'rgba(255,255,255,0.02)', border: `1px solid ${plan.featured ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255,255,255,0.06)'}`, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', transition: 'border-color 0.3s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = `${plan.color}40`)}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = plan.featured ? 'rgba(139, 92, 246, 0.2)' : 'rgba(255,255,255,0.06)')}>
-                  {plan.featured && (
-                    <div style={{ position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)', padding: '4px 16px', borderRadius: '0 0 12px 12px', background: '#8B5CF6', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'white', textTransform: 'uppercase' }}>Most Popular</div>
-                  )}
-                  <p style={{ fontSize: 12, fontWeight: 600, color: plan.color, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 8px', fontFamily: 'monospace' }}>{plan.tier}</p>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
-                    <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: '#f1f5f9' }}>{plan.price}</span>
-                    {plan.period && <span style={{ fontSize: 13, color: '#475569' }}>{plan.period}</span>}
-                  </div>
-                  <p style={{ fontSize: 13, color: '#64748b', margin: '0 0 20px', lineHeight: 1.6 }}>{plan.desc}</p>
-                  <Divider />
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0 24px', flex: 1 }}>
-                    {plan.features.map((f, j) => (
-                      <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 12, fontSize: 13, color: '#94a3b8' }}>
-                        <span style={{ color: plan.color, fontSize: 14, lineHeight: 1.4 }}>✓</span>{f}
-                      </li>
-                    ))}
-                  </ul>
-                  <a href="#contact" onClick={(e) => { e.preventDefault(); navigate('/contact'); }}
-                    style={{ display: 'block', textAlign: 'center', padding: '12px 20px', borderRadius: 12, background: plan.featured ? 'linear-gradient(135deg, #8B5CF6, #6D28D9)' : 'rgba(255,255,255,0.05)', border: `1px solid ${plan.featured ? 'transparent' : 'rgba(255,255,255,0.1)'}`, color: plan.featured ? 'white' : '#94a3b8', fontWeight: 600, fontSize: 14, textDecoration: 'none', transition: 'all 0.3s', cursor: 'pointer' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 25px ${plan.color}30`; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                    Get Started
-                  </a>
-                </motion.div>
+                </GlowCard>
               </Reveal>
             ))}
           </div>

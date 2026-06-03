@@ -1,14 +1,12 @@
 
 
 
-
-
-
-
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import profileImg from '/assets/img/profileImg.png'
 import SEO from './SEO'
+import { skills } from './hero/data'
+import SkillCard from './hero/SkillCard'
 
 const certificates = [
   { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },
@@ -21,7 +19,7 @@ const certificates = [
 ]
 
 const stats = [
-  { value: '2+', label: 'Years Experience' },
+  { value: '3+', label: 'Years Experience' },
   { value: '10+', label: 'Projects Shipped' },
   { value: '7', label: 'Certifications' },
   { value: '∞', label: 'Lines of Code' },
@@ -40,6 +38,53 @@ const Reveal: React.FC<{ children: React.ReactNode; delay?: number; className?: 
     {children}
   </motion.div>
 )
+
+const GlowCard: React.FC<{
+  children: React.ReactNode
+  color?: string
+  style?: React.CSSProperties
+}> = ({ children, color = '#14b8a6', style }) => {
+  const [hovered, setHovered] = useState(false)
+  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+
+  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top })
+  }, [])
+
+  return (
+    <motion.div
+      whileHover={{ y: -6 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={onMove}
+      style={{
+        position: 'relative', overflow: 'hidden', borderRadius: 20,
+        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+        border: `1px solid ${hovered ? `${color}40` : 'rgba(255,255,255,0.06)'}`,
+        transition: 'background 0.4s, border-color 0.4s',
+        ...style,
+      }}
+    >
+      <div style={{
+        position: 'absolute', left: mouse.x, top: mouse.y,
+        width: 200, height: 200, borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}15 0%, transparent 70%)`,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
+      }} />
+      <div style={{
+        position: 'absolute', top: -20, right: -20,
+        width: 80, height: 80, borderRadius: '50%',
+        background: color, filter: 'blur(30px)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 0.1 : 0, transition: 'opacity 0.5s',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
+    </motion.div>
+  )
+}
 
 const About: React.FC = () => {
   return (
@@ -281,6 +326,50 @@ const About: React.FC = () => {
         </div>
 
         {/* ── Divider ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 64 }}>
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent)' }} />
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(20,184,166,0.4)' }} />
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent)' }} />
+        </div>
+
+        {/* ── SOLUTIONS: What I Build ── */}
+        <Reveal>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
+              01 / SOLUTIONS
+            </span>
+          </div>
+          <h3 style={{
+            fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontWeight: 700,
+            background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            marginBottom: 12,
+          }}>What I Build</h3>
+          <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.75, marginBottom: 40, maxWidth: 520 }}>
+            End-to-end AI solutions and digital products — from chatbots to full-stack platforms.
+          </p>
+        </Reveal>
+
+       {/* ── SKILLS ── */}
+      <section style={{ position: 'relative', zIndex: 10, padding: '80px 24px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{
+          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+          width: 700, height: 300,
+          background: 'radial-gradient(ellipse, rgba(20,184,166,0.07) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
+        
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+            {skills.map((skill, i) => (
+              <SkillCard key={skill.name} skill={skill} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+        {/* ── Divider 2 ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 64 }}>
           <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent)' }} />
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(20,184,166,0.4)' }} />

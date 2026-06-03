@@ -1,827 +1,117 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import SEO from './SEO';
-import doctor from '/assets/img/doctor-preview.png';
-import ecom from "./../../public/assets/img/ecom.png"
-import vibenote from "../../public/assets/img/vibenote.png"
-import gymvid from "../../public/assets/vids/gym.mp4"
-import foodvid from  '../../public/assets/vids/food.mp4'
-// ─── Types ───────────────────────────────────────────
-interface Solved { problem: string; solution: string; result: string }
-interface Project {
-  id: number;
-  name: string;
-  link: string;
-  img: string;
-  video?: string;
-  desc: string;
-  metric: string;
-  complexity: string;
-  clientQuote?: string;
-  tech: string[];
-  category: string;
-  year: string;
-  accent: string;       // brand accent color
-  solved: Solved;
-}
+import { businesses } from './hero/data';
 
-// ─── Helpers ─────────────────────────────────────────
-const PH = (id: string) => `https://images.unsplash.com/photo-${id}?w=1200&q=80`;
-
-// Demo videos from Pexels (free to use)
-const DEMO_VIDEOS = {
-  tech:    'https://videos.pexels.com/video-files/8084618/8084618-hd_1920_1080_25fps.mp4',
-  finance: 'https://videos.pexels.com/video-files/5981350/5981350-hd_1920_1080_25fps.mp4',
-  health:  'https://videos.pexels.com/video-files/5453575/5453575-hd_1080_1920_25fps.mp4',
-  shop:    'https://videos.pexels.com/video-files/7824464/7824464-hd_1080_1920_30fps.mp4',
-  food:   foodvid,
-  travel:  'https://videos.pexels.com/video-files/6214218/6214218-hd_1080_1920_30fps.mp4',
-  gym:    gymvid
+const t = {
+  bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',
+  surface: 'rgba(255,255,255,0.02)', cardBorder: 'rgba(255,255,255,0.06)',
+  teal: '#14b8a6', tealDark: '#0d9488',
+  heading: '#f1f5f9', body: '#e2e8f0', muted: '#94a3b8', mutedMid: '#64748b', mutedDark: '#475569',
 };
 
-// ─── Data ────────────────────────────────────────────
-const projects: Project[] = [
+const SectionLabel: React.FC<{ text: string }> = ({ text }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+    <span style={{ width: 32, height: 2, background: t.teal, borderRadius: 2, display: 'inline-block' }} />
+    <span style={{ color: t.teal, fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>{text}</span>
+  </div>
+);
 
-  {
-    id: 1,
-    name: 'Lead Dentist – AI Receptionist',
-    link: 'https://lead-dentist.vercel.app/',
-    img: PH('1629909613654-28e377c37b09'),
-    video: DEMO_VIDEOS.tech,
-    desc: 'AI-powered dental clinic receptionist that handles appointment booking, answers FAQs, and follows up with patients via WhatsApp — running 24/7 without human intervention.',
-    metric: '80% fewer missed calls · 24/7 availability · 3x faster booking',
-    complexity: '4 weeks · Tawk.to · WhatsApp API',
-    clientQuote: '"Patient enquiries doubled and we stopped missing calls entirely."',
-    tech: ['React', 'OpenAI API', 'WhatsApp API', 'Node.js'],
-    category: 'React',
-    year: '2025',
-    accent: '#10B981',
-    solved: {
-      problem: 'Clinic missed 40% of incoming calls during busy hours — lost revenue and frustrated patients.',
-      solution: 'Built an AI receptionist on WhatsApp that handles booking, rescheduling, and common questions with natural conversation.',
-      result: 'Missed calls dropped 80%; appointment bookings increased 3x; staff focused on in-clinic care.',
-    },
-  },
-  {
-    id: 2,
-    name: 'GymFit – Modern Fitness Platform',
-    link: 'https://gym-orpin-two.vercel.app/',
-    img: PH('1534438327276-14e5300c3a48'),
-    video: DEMO_VIDEOS.gym,
-    desc: 'Modern gym and fitness website with responsive UI, workout-focused sections, membership plans, and high-converting landing experience.',
-    metric: 'Responsive fitness platform · Smooth UX · Conversion-focused',
-    complexity: '3 weeks · 10+ sections · Fully responsive',
-    clientQuote: '"The website finally gives our gym the premium look we wanted."',
-    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Vercel'],
-    category: 'Web Development',
-    year: '2026',
-    accent: '#22c55e',
-    solved: {
-      problem: 'Traditional gym websites feel outdated, slow, and fail to engage new members.',
-      solution: 'Designed a modern responsive fitness platform with strong branding, animated UI, and clear membership CTAs.',
-      result: 'Improved user engagement, mobile experience, and overall brand perception.',
-    },
-},
+// ─── Cursor Glow ──────────────────────────────────────
+const CursorGlow: React.FC<{ containerRef: React.RefObject<HTMLDivElement | null> }> = ({ containerRef }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 150, damping: 20 });
+  const sy = useSpring(y, { stiffness: 150, damping: 20 });
 
-{
-    id: 8,
-    name: 'Restaurant Website',
-    link: 'https://restaurant-ecru-two.vercel.app/',
-    img: PH('1555396273-367ea4eb4db5'),
-    video: DEMO_VIDEOS.food,
-    desc: 'Elegant restaurant landing page with menu showcase, reservation flow, and animated sections.',
-    metric: 'Sub-2s load · Fully responsive',
-    complexity: '2 weeks · Pixel-perfect · Animated',
-    clientQuote: '"Exactly the premium feel we were looking for."',
-    tech: ['React', 'Tailwind', 'Framer Motion'],
-    category: 'React',
-    year: '2025',
-    accent: '#f97316',
-    solved: {
-      problem: 'Restaurant had no online presence and was losing walk-in customers to competitors.',
-      solution: 'Built animated landing page with online menu, Google Maps embed, and reservation CTA.',
-      result: 'Online reservations started from day one; Google Maps ranking improved within 2 weeks.',
-    },
-  },
-  {
-    id: 11,
-    name: 'VibNote – AI Diary',
-    link: 'https://web-vibenote.vercel.app/',
-    img: PH('1620712943543-bcc4688e7485'),
-    video: DEMO_VIDEOS.tech,
-    desc: 'AI diary that detects human emotions from journal entries using NLP. Cross-platform web + React Native mobile.',
-    metric: 'Emotion detection ~87% accurate · Web + Mobile',
-    complexity: '8 weeks · 15+ screens · Real users',
-    clientQuote: '"It actually understands how I feel — nothing else does this."',
-    tech: ['React Native', 'Expo', 'OpenAI API', 'Firebase'],
-    category: 'React Native',
-    year: '2025',
-    accent: '#a855f7',
-    solved: {
-      problem: 'Users forget how they felt days ago — journaling is inconsistent and emotionless.',
-      solution: 'Built an NLP pipeline that reads each entry and maps emotions to a weekly mood graph.',
-      result: '87% emotion detection accuracy; users journaled 4× more frequently.',
-    },
-  },
-  {
-    id: 2,
-    name: 'Ecommerce App',
-    link: 'https://ecommerce-xi-five-58.vercel.app/',
-    img: PH('1556742049-0cfed4f6a45d'),
-    video: DEMO_VIDEOS.shop,
-    desc: 'Modern ecommerce platform with Redux cart, product filters, search, and full checkout flow.',
-    metric: '500+ daily users · 98 Lighthouse score',
-    complexity: '4 weeks · Full cart + checkout',
-    tech: ['React', 'Redux', 'Tailwind', 'REST API'],
-    category: 'React',
-    year: '2024',
-    accent: '#F7DF1E',
-    solved: {
-      problem: 'Client needed a fast, scalable storefront that worked perfectly on mobile.',
-      solution: 'Built Redux-powered cart with optimistic UI updates, lazy image loading, and filter system.',
-      result: '98 Lighthouse score; 500+ daily active users with <1.8s load time.',
-    },
-  },
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const handler = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect();
+      x.set(e.clientX - r.left);
+      y.set(e.clientY - r.top);
+    };
+    el.addEventListener('mousemove', handler);
+    return () => el.removeEventListener('mousemove', handler);
+  }, [containerRef, x, y]);
 
-  
-  {
-    id: 3,
-    name: 'Healthcare Dashboard',
-    link: 'https://healthcheck-nine.vercel.app/',
-    img: PH('1576091160550-2173dba999ef'),
-    video: DEMO_VIDEOS.health,
-    desc: 'Doctor appointment system with Firebase real-time data, patient records, and mobile-first responsive UI.',
-    metric: 'Reduced scheduling time 40% · Mobile-first',
-    complexity: '4 weeks · 12 screens · Production ready',
-    clientQuote: '"Patient enquiries doubled after the new site went live."',
-    tech: ['React', 'Firebase', 'MUI', 'Tailwind'],
-    category: 'React',
-    year: '2024',
-    accent: '#34d399',
-    solved: {
-      problem: 'Clinic used phone calls and paper to book appointments — high no-show rate.',
-      solution: 'Built a real-time booking system with Firebase, SMS confirmations, and patient dashboard.',
-      result: 'Scheduling time down 40%; appointment no-shows reduced by 25%.',
-    },
-  },
-  {
-    id: 4,
-    name: 'Tailored Studio – Virtual Try-On',
-    link: 'https://tailored-studio.vercel.app/',
-    img: PH('1441984904996-e0b6ba687e04'),
-    video: DEMO_VIDEOS.shop,
-    desc: 'AI virtual clothing try-on. Upload a photo, try on outfits digitally — zero physical samples.',
-    metric: 'Cuts return rates · AI overlay engine',
-    complexity: '5 weeks · Cutting-edge AI/ML',
-    tech: ['React', 'AI/ML', 'Tailwind', 'REST API'],
-    category: 'React',
-    year: '2025',
-    accent: '#f472b6',
-    solved: {
-      problem: 'Customers hesitate to buy clothes online without trying them first — high return rates.',
-      solution: 'Integrated an AI overlay API to render selected outfits on uploaded user photos in real time.',
-      result: 'Demonstrated 30% lower intent-to-return compared to standard product images.',
-    },
-  },
-  {
-    id: 5,
-    name: 'Bachat Gat – Finance App',
-    link: 'https://bachat-gat.vercel.app/login',
-    img: PH('1590283603385-17ffb3a7f29f'),
-    video: DEMO_VIDEOS.finance,
-    desc: 'Web app for village savings groups — tracks repayments, loans, and group finances with role-based access.',
-    metric: 'Real savings groups · Fully paperless',
-    complexity: '3 weeks · Role-based auth · Real users',
-    clientQuote: '"Replaced all our paper ledgers completely."',
-    tech: ['React', 'Firebase', 'Tailwind'],
-    category: 'Full Stack',
-    year: '2025',
-    accent: '#fb923c',
-    solved: {
-      problem: 'Village savings groups managed ₹lakhs through handwritten ledgers — error-prone and opaque.',
-      solution: 'Built role-based dashboards for group admins and members with automatic repayment calculations.',
-      result: 'Zero ledger errors since deployment; adopted by 3 active savings groups.',
-    },
-  },
-  
-  {
-    id: 6,
-    name: 'HRMS – Employee Management',
-    link: '#',
-    img: PH('1522071820081-009f0129c71c'),
-    video: DEMO_VIDEOS.finance,
-    desc: 'Full HR system — employee records, task assignment, shift rosters, and performance tracking.',
-    metric: 'Manages 100+ employees · 60% less HR overhead',
-    complexity: '6 weeks · 20+ screens · Live at Atum IT',
-    clientQuote: '"Saved our HR team hours every single week."',
-    tech: ['React', 'Node.js', 'MongoDB', 'MUI'],
-    category: 'Full Stack',
-    year: '2025',
-    accent: '#38BDF8',
-    solved: {
-      problem: 'HR managed 100+ employees across Excel sheets — error-prone and slow.',
-      solution: 'Designed a role-based dashboard with real-time task tracking and auto-generated rosters.',
-      result: '60% reduction in manual HR work; zero missed roster conflicts since launch.',
-    },
-  },
-  {
-    id: 7,
-    name: 'Stock Analyzer',
-    link: '#',
-    img: PH('1642790106117-e829e14a795f'),
-    video: DEMO_VIDEOS.finance,
-    desc: 'Real-time stock dashboard with candlestick charts, portfolio tracking, and AI buy/sell signals.',
-    metric: 'Tracks 50+ stocks · Real-time refresh',
-    complexity: '5 weeks · Live data feeds · TypeScript',
-    tech: ['React', 'Chart.js', 'REST API', 'TypeScript'],
-    category: 'React',
-    year: '2025',
-    accent: '#34d399',
-    solved: {
-      problem: 'Traders switching between 5+ tabs to track portfolio and signals — inefficient.',
-      solution: 'Unified all data into one dashboard with WebSocket price feeds and AI signal overlays on charts.',
-      result: 'Decision time per trade cut in half; all data visible in a single view.',
-    },
-  },
-  
-  {
-    id: 9,
-    name: 'Jollie Macaron',
-    link: 'https://jollie-macaron.vercel.app/',
-    img: PH('1509440159596-0249088772ff'),
-    video: DEMO_VIDEOS.food,
-    desc: 'Pastel-themed bakery website with product gallery, order form, and delightful micro-animations.',
-    metric: 'Brand launched online · 100% mobile',
-    complexity: '2 weeks · Brand identity · Micro-animations',
-    clientQuote: '"It captures our brand perfectly — customers love it."',
-    tech: ['React', 'Tailwind', 'Framer Motion'],
-    category: 'React',
-    year: '2025',
-    accent: '#f472b6',
-    solved: {
-      problem: 'Bakery brand existed only on Instagram with no dedicated site or order system.',
-      solution: 'Designed and built a pastel-themed site with a gallery, order form, and Instagram feed embed.',
-      result: 'Direct orders via website started week one; brand perceived as more premium.',
-    },
-  },
-  {
-    id: 10,
-    name: 'BackpackTales – Travel Blog',
-    link: 'https://back-packtales.vercel.app/',
-    img: PH('1469854523086-cc02fe5d8800'),
-    video: DEMO_VIDEOS.travel,
-    desc: 'Travel storytelling blog with immersive full-width layouts, destination cards, and editorial typography.',
-    metric: 'SEO-ready · Fast image loading',
-    complexity: '3 weeks · Editorial design · SEO',
-    tech: ['React', 'Tailwind', 'Framer Motion'],
-    category: 'React',
-    year: '2025',
-    accent: '#61DAFB',
-    solved: {
-      problem: 'Travel writer was publishing on Medium — no brand, no SEO control, no revenue.',
-      solution: 'Built a custom blog with structured data, lazy images, and individual article pages.',
-      result: 'First 3 articles indexed on Google within a week; newsletter signups started immediately.',
-    },
-  },
-];
-
-// ─── Tech chip colors ─────────────────────────────────
-const techColors: Record<string, string> = {
-  'React': '#61DAFB', 'React Native': '#61DAFB', 'Redux': '#a78bfa',
-  'Tailwind': '#38BDF8', 'Tailwind CSS': '#38BDF8', 'Firebase': '#fb923c',
-  'REST API': '#14b8a6', 'JavaScript': '#F7DF1E', 'TypeScript': '#3178C6',
-  'Node.js': '#6adf60', 'MongoDB': '#4DB33D', 'MUI': '#007FFF',
-  'OpenAI API': '#10a37f', 'Expo': '#fff', 'AI/ML': '#f472b6',
-  'Chart.js': '#34d399', 'Framer Motion': '#a855f7',
+  return (
+    <motion.div style={{
+      position: 'absolute', left: sx, top: sy,
+      width: 400, height: 400, borderRadius: '50%',
+      background: `radial-gradient(circle, ${t.teal}10 0%, transparent 70%)`,
+      transform: 'translate(-50%, -50%)',
+      pointerEvents: 'none', zIndex: 0,
+    }} />
+  );
 };
 
-const filters = ['All', 'React', 'React Native', 'Full Stack'];
+// ─── Hoverable Card Wrapper ───────────────────────────
+const GlowCard: React.FC<{
+  children: React.ReactNode;
+  color?: string;
+  style?: React.CSSProperties;
+}> = ({ children, color = t.teal, style }) => {
+  const [hovered, setHovered] = useState(false);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
-// ─── Browser mock frame ───────────────────────────────
-const BrowserFrame: React.FC<{
-  img: string; video?: string; accent: string; num: number; name: string; link: string;
-}> = ({ img, video, accent, num, name, link }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const onEnter = () => {
-    setIsHovered(true);
-    videoRef.current?.play().catch(() => {});
-  };
-  const onLeave = () => {
-    setIsHovered(false);
-    if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
-  };
+  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top });
+  }, []);
 
   return (
     <div
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      style={{ position: 'relative', width: '100%', height: '100%' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={onMove}
+      style={{
+        position: 'relative', overflow: 'hidden', transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        ...style,
+      }}
     >
-      {/* Faded number watermark */}
+      {/* Cursor glow */}
       <div style={{
-        position: 'absolute', top: 12, left: 16, zIndex: 2,
-        fontSize: 80, fontWeight: 900, fontFamily: 'monospace',
-        color: accent, opacity: 0.06, lineHeight: 1, pointerEvents: 'none',
-        userSelect: 'none',
-      }}>
-        {String(num).padStart(2, '0')}
-      </div>
-
-      {/* Browser chrome bar */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, zIndex: 4,
-        height: 32, background: 'rgba(10,20,30,0.95)',
-        borderBottom: `1px solid rgba(255,255,255,0.06)`,
-        display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px',
-        backdropFilter: 'blur(8px)',
-      }}>
-        {/* Traffic lights */}
-        {['#ff5f57', '#febc2e', '#28c840'].map((c, i) => (
-          <span key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c, display: 'inline-block', flexShrink: 0 }} />
-        ))}
-        {/* URL bar */}
-        <div style={{
-          flex: 1, height: 18, borderRadius: 4,
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          display: 'flex', alignItems: 'center', paddingLeft: 8, gap: 6,
-        }}>
-          <svg width="8" height="8" fill="none" stroke={accent} strokeWidth="2" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" />
-          </svg>
-          <span style={{ fontSize: 9, color: '#334155', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
-            {name.toLowerCase().replace(/\s+/g, '-')}.vercel.app
-          </span>
-        </div>
-      </div>
-
-      {/* Screenshot (shown when not hovering or no video) */}
-      <img
-        src={img}
-        alt={name}
-        loading="lazy"
-        style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: 'top',
-          filter: `brightness(${isHovered && video ? 0 : 0.75})`,
-          transition: 'filter 0.4s ease, transform 0.6s ease',
-          transform: isHovered ? 'scale(1.04)' : 'scale(1)',
-        }}
-        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80'; }}
-      />
-
-      {/* Video overlay */}
-      {video && (
-        <video
-          ref={videoRef}
-          src={video}
-          muted loop playsInline
-          style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'top',
-            opacity: isHovered ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-            zIndex: 1,
-          }}
-        />
-      )}
-
-      {/* Gradient fade at bottom */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, zIndex: 3,
-        background: 'linear-gradient(to top, rgba(10,16,28,1) 0%, transparent 100%)',
-        pointerEvents: 'none',
+        position: 'absolute', left: mouse.x, top: mouse.y,
+        width: 200, height: 200, borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}20 0%, transparent 70%)`,
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 1 : 0, transition: 'opacity 0.3s',
       }} />
-
-      {/* "View Live" pulse button — revealed on hover */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.a
-            href={link !== '#' ? link : undefined}
-            target={link !== '#' ? '_blank' : undefined}
-            rel={link !== '#' ? 'noopener noreferrer' : undefined}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.25 }}
-            style={{
-              position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)',
-              zIndex: 5, display: 'flex', alignItems: 'center', gap: 8,
-              padding: '9px 20px', borderRadius: 50,
-              background: accent,
-              boxShadow: `0 0 24px ${accent}80`,
-              fontSize: 12, fontWeight: 700, color: '#fff',
-              letterSpacing: '0.04em', whiteSpace: 'nowrap', textDecoration: 'none',
-              cursor: link !== '#' ? 'pointer' : 'default',
-              animation: 'viewPulse 2s ease-in-out infinite',
-            }}
-            onClick={(e) => {
-              if (link === '#') e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.8)', display: 'inline-block' }} />
-            View Live ↗
-          </motion.a>
-        )}
-      </AnimatePresence>
+      {/* Corner glow */}
+      <div style={{
+        position: 'absolute', top: -20, right: -20,
+        width: 80, height: 80, borderRadius: '50%',
+        background: color, filter: 'blur(30px)',
+        pointerEvents: 'none', zIndex: 0,
+        opacity: hovered ? 0.12 : 0, transition: 'opacity 0.4s',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
     </div>
   );
 };
 
-// ─── Expand panel (3 things solved) ──────────────────
-const SolvedPanel: React.FC<{ solved: Solved; accent: string; open: boolean }> = ({ solved, accent, open }) => (
-  <AnimatePresence initial={false}>
-    {open && (
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 'auto', opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        style={{ overflow: 'hidden' }}
-      >
-        <div style={{
-          borderTop: `1px solid ${accent}25`,
-          marginTop: 12, paddingTop: 14,
-          display: 'flex', flexDirection: 'column', gap: 10,
-        }}>
-          {[
-            { label: 'Problem', value: solved.problem, icon: '⚡' },
-            { label: 'Solution', value: solved.solution, icon: '🔧' },
-            { label: 'Result', value: solved.result, icon: '📈' },
-          ].map((s) => (
-            <div key={s.label} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 12, flexShrink: 0, marginTop: 1 }}>{s.icon}</span>
-              <div>
-                <span style={{ fontSize: 10, fontFamily: 'monospace', color: accent, letterSpacing: '0.08em', display: 'block', marginBottom: 2 }}>
-                  {s.label.toUpperCase()}
-                </span>
-                <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0, lineHeight: 1.6 }}>{s.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
-
-// ─── Project Card ─────────────────────────────────────
-const ProjectCard: React.FC<{ item: Project; idx: number; large?: boolean }> = ({ item, idx, large }) => {
-  const [expanded, setExpanded] = useState(false);
-  const imgHeight = large ? 320 : 200;
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ delay: idx * 0.05, duration: 0.5 }}
-    >
-      <motion.div
-        style={{
-          borderRadius: 20, overflow: 'hidden',
-          background: 'rgba(10,18,34,0.9)',
-          border: `1px solid ${item.accent}20`,
-          boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px ${item.accent}10`,
-          display: 'flex', flexDirection: 'column',
-          transition: 'box-shadow 0.3s',
-        }}
-        whileHover={{ boxShadow: `0 30px 80px rgba(0,0,0,0.6), 0 0 30px ${item.accent}20, 0 0 0 1px ${item.accent}30` }}
-      >
-        {/* Browser frame + image/video */}
-        <div style={{ position: 'relative', height: imgHeight, overflow: 'hidden', paddingTop: 32 }}>
-          <BrowserFrame img={item.img} video={item.video} accent={item.accent} num={item.id} name={item.name} link={item.link} />
-        </div>
-
-        {/* Card body */}
-        <div style={{ padding: '18px 20px 20px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-          {/* Name + year */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-            <h3 style={{ fontSize: large ? 17 : 14, fontWeight: 700, color: '#f1f5f9', margin: 0, lineHeight: 1.3 }}>
-              {item.name}
-            </h3>
-            <span style={{ fontSize: 10, color: '#334155', fontFamily: 'monospace', whiteSpace: 'nowrap', paddingTop: 2, flexShrink: 0 }}>
-              {item.year}
-            </span>
-          </div>
-
-          {/* Complexity tag */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-            <span style={{
-              fontSize: 10, fontFamily: 'monospace', padding: '3px 10px', borderRadius: 20,
-              background: `${item.accent}12`, border: `1px solid ${item.accent}30`, color: item.accent,
-              letterSpacing: '0.05em',
-            }}>
-              {item.complexity}
-            </span>
-          </div>
-
-          {/* Description */}
-          <p style={{
-            fontSize: 12, color: '#94a3b8', lineHeight: 1.65, margin: 0,
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          }}>
-            {item.desc}
-          </p>
-
-          {/* Client quote */}
-          {item.clientQuote && (
-            <p style={{
-              fontSize: 11, color: '#5eead4', margin: 0, fontStyle: 'italic',
-              paddingLeft: 10, borderLeft: `2px solid ${item.accent}60`, lineHeight: 1.5,
-            }}>
-              {item.clientQuote}
-            </p>
-          )}
-
-          {/* Metric */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: item.accent, display: 'inline-block', flexShrink: 0, marginTop: 5 }} />
-            <p style={{ fontSize: 11, color: item.accent, margin: 0, fontFamily: 'monospace', lineHeight: 1.5, opacity: 0.9 }}>{item.metric}</p>
-          </div>
-
-          {/* Tech chips */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-            {item.tech.map((t) => {
-              const c = techColors[t] ?? '#94a3b8';
-              return (
-                <span key={t} style={{
-                  fontSize: 9, fontFamily: 'monospace', letterSpacing: '0.06em',
-                  padding: '3px 8px', borderRadius: 20,
-                  color: c, background: `${c}12`, border: `1px solid ${c}30`, fontWeight: 600,
-                }}>
-                  {t}
-                </span>
-              );
-            })}
-          </div>
-
-          {/* Expand toggle */}
-          <button
-            onClick={(e) => { e.stopPropagation(); setExpanded((p) => !p); }}
-            style={{
-              marginTop: 4, padding: '7px 0', background: 'none', border: 'none',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-              fontSize: 11, color: expanded ? item.accent : '#334155',
-              fontFamily: 'monospace', letterSpacing: '0.06em',
-              transition: 'color 0.2s',
-            }}
-          >
-            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}
-              style={{ display: 'inline-block', lineHeight: 1 }}>▾</motion.span>
-            {expanded ? 'Hide details' : '3 things I solved'}
-          </button>
-
-          <SolvedPanel solved={item.solved} accent={item.accent} open={expanded} />
-
-          {/* Action row */}
-          {item.link !== '#' && (
-            <motion.a
-              href={item.link} target="_blank" rel="noopener noreferrer"
-              whileHover={{ scale: 1.03, boxShadow: `0 0 20px ${item.accent}50` }}
-              whileTap={{ scale: 0.97 }}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                marginTop: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                padding: '10px', borderRadius: 12,
-                background: `${item.accent}14`, border: `1px solid ${item.accent}30`,
-                color: item.accent, fontSize: 12, fontWeight: 600,
-                textDecoration: 'none', letterSpacing: '0.04em',
-                transition: 'box-shadow 0.3s',
-              }}
-            >
-              Open Live Site ↗
-            </motion.a>
-          )}
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-// ─── Spotlight (full-width hero card) ────────────────
-const Spotlight: React.FC<{ item: Project }> = ({ item }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [hovered, setHovered] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
-      onMouseEnter={() => { setHovered(true); videoRef.current?.play().catch(() => {}); }}
-      onMouseLeave={() => { setHovered(false); if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; } }}
-      style={{
-        borderRadius: 24, overflow: 'hidden', position: 'relative',
-        background: 'rgba(8,16,30,0.95)',
-        border: `1px solid ${item.accent}30`,
-        boxShadow: `0 40px 100px rgba(0,0,0,0.6), 0 0 40px ${item.accent}15`,
-        marginBottom: 56, cursor: 'default',
-      }}
-    >
-      {/* Cinematic image/video row */}
-      <div style={{ position: 'relative', height: 420, overflow: 'hidden', paddingTop: 36 }}>
-        {/* Browser chrome */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 36, zIndex: 4,
-          background: 'rgba(6,14,26,0.98)',
-          borderBottom: `1px solid rgba(255,255,255,0.05)`,
-          display: 'flex', alignItems: 'center', gap: 8, padding: '0 16px',
-        }}>
-          {['#ff5f57','#febc2e','#28c840'].map((c,i) => (
-            <span key={i} style={{ width: 12, height: 12, borderRadius: '50%', background: c, display: 'inline-block' }} />
-          ))}
-          <div style={{
-            flex: 1, maxWidth: 380, height: 20, borderRadius: 6,
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
-            display: 'flex', alignItems: 'center', paddingLeft: 10, gap: 6,
-          }}>
-            <svg width="9" height="9" fill="none" stroke={item.accent} strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" />
-            </svg>
-            <span style={{ fontSize: 10, color: '#334155', fontFamily: 'monospace' }}>
-              {item.link !== '#' ? item.link.replace('https://', '') : 'private-project.app'}
-            </span>
-          </div>
-          <span style={{
-            fontSize: 10, color: item.accent, fontFamily: 'monospace',
-            padding: '3px 10px', borderRadius: 20,
-            background: `${item.accent}15`, border: `1px solid ${item.accent}30`,
-          }}>★ SPOTLIGHT</span>
-        </div>
-
-        {/* Large faded number */}
-        <div style={{
-          position: 'absolute', top: 40, right: 24, zIndex: 2,
-          fontSize: 160, fontWeight: 900, fontFamily: 'monospace',
-          color: item.accent, opacity: 0.04, lineHeight: 1, pointerEvents: 'none', userSelect: 'none',
-        }}>01</div>
-
-        <img src={item.img} alt={item.name}
-          style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'top',
-            filter: `brightness(${hovered && item.video ? 0 : 0.6})`,
-            transition: 'filter 0.5s ease, transform 0.7s ease',
-            transform: hovered ? 'scale(1.03)' : 'scale(1)',
-          }}
-          onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80'; }}
-        />
-
-        {item.video && (
-          <video ref={videoRef} src={item.video} muted loop playsInline
-            style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%',
-              objectFit: 'cover', objectPosition: 'top',
-              opacity: hovered ? 1 : 0, transition: 'opacity 0.5s ease', zIndex: 1,
-            }}
-          />
-        )}
-
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, zIndex: 3,
-          background: 'linear-gradient(to top, rgba(8,16,30,1) 0%, transparent 100%)',
-          pointerEvents: 'none',
-        }} />
-
-        {/* Hover pulse button */}
-        <AnimatePresence>
-          {hovered && item.link !== '#' && (
-            <motion.a
-              href={item.link} target="_blank" rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
-              style={{
-                position: 'absolute', bottom: 24, right: 24, zIndex: 5,
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '12px 24px', borderRadius: 50,
-                background: item.accent, color: '#fff', fontWeight: 700, fontSize: 13,
-                textDecoration: 'none', letterSpacing: '0.04em',
-                boxShadow: `0 0 30px ${item.accent}80`,
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              View Live Site ↗
-            </motion.a>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Info row */}
-      <div style={{
-        padding: '28px 32px 32px',
-        display: 'grid', gridTemplateColumns: '1fr auto', gap: 24, alignItems: 'start',
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <h2 style={{ fontSize: 'clamp(1.4rem,3vw,2rem)', fontWeight: 800, color: '#f1f5f9', margin: 0 }}>
-              {item.name}
-            </h2>
-            <span style={{
-              fontSize: 11, fontFamily: 'monospace', padding: '4px 12px', borderRadius: 20,
-              background: `${item.accent}15`, border: `1px solid ${item.accent}35`, color: item.accent,
-            }}>{item.complexity}</span>
-          </div>
-
-          <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.75, margin: 0, maxWidth: 580 }}>
-            {item.desc}
-          </p>
-
-          {item.clientQuote && (
-            <p style={{
-              fontSize: 13, color: '#5eead4', fontStyle: 'italic',
-              paddingLeft: 14, borderLeft: `2px solid ${item.accent}60`, margin: 0, lineHeight: 1.6,
-            }}>{item.clientQuote}</p>
-          )}
-
-          {/* Outcome bullets */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 4 }}>
-            {[item.solved.problem, item.solved.solution, item.solved.result].map((pt, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                <span style={{
-                  width: 18, height: 18, borderRadius: '50%', flexShrink: 0, marginTop: 1,
-                  background: `${item.accent}18`, border: `1px solid ${item.accent}40`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 9, color: item.accent, fontWeight: 700,
-                }}>
-                  {['!', '→', '✓'][i]}
-                </span>
-                <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0, lineHeight: 1.6 }}>{pt}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Tech chips */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
-            {item.tech.map((t) => {
-              const c = techColors[t] ?? '#94a3b8';
-              return (
-                <span key={t} style={{
-                  fontSize: 10, fontFamily: 'monospace', letterSpacing: '0.06em',
-                  padding: '4px 10px', borderRadius: 20,
-                  color: c, background: `${c}12`, border: `1px solid ${c}30`, fontWeight: 600,
-                }}>{t}</span>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right stat panel */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', gap: 12, minWidth: 160,
-          padding: '20px', borderRadius: 16,
-          background: `${item.accent}08`, border: `1px solid ${item.accent}18`,
-        }}>
-          <p style={{ fontSize: 10, color: '#334155', fontFamily: 'monospace', letterSpacing: '0.1em', margin: 0 }}>OUTCOMES</p>
-          {item.metric.split(' · ').map((m, i) => (
-            <div key={i}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: item.accent, margin: 0, fontFamily: 'monospace' }}>{m}</p>
-            </div>
-          ))}
-          <div style={{ height: 1, background: `${item.accent}15` }} />
-          <p style={{ fontSize: 11, color: '#334155', margin: 0 }}>{item.year}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// ─── Main component ───────────────────────────────────
 const Projects: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [focusIdx, setFocusIdx] = useState(0);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const biz = businesses.find((b) => b.id === Number(id));
 
-  const filtered = projects.filter((p) => activeFilter === 'All' || p.category === activeFilter);
-  const spotlight = filtered[0];
-  const rest = filtered.slice(1);
-
-  // Keyboard navigation
-  const onKey = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'ArrowRight') setFocusIdx((i) => Math.min(i + 1, filtered.length - 1));
-    if (e.key === 'ArrowLeft')  setFocusIdx((i) => Math.max(i - 1, 0));
-  }, [filtered.length]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onKey]);
-
-  // Bento: first two "large", rest normal
-  const largePairs = rest.slice(0, 2);
-  const normalGrid = rest.slice(2);
+  if (!biz) { navigate('/', { replace: true }); return null; }
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #020d0a 0%, #050f10 40%, #02100d 100%)',
-      minHeight: '100vh', color: '#e2e8f0', position: 'relative', overflow: 'hidden',
+    <div ref={sectionRef} style={{
+      background: `linear-gradient(135deg, ${t.bg} 0%, ${t.bgAlt} 40%, ${t.bgDeep} 100%)`,
+      minHeight: '100vh', color: t.body, position: 'relative', overflow: 'hidden',
     }}>
       <SEO
-        title="Projects | React & React Native Developer | Amit Sarode"
-        description="Frontend and full-stack projects — AI tools, HRMS, ecommerce, mobile apps. Built with React, Firebase, and Tailwind."
-        path="/projects"
+        title={`${biz.title} | AI Automation Solutions | Amit Sarode`}
+        description={biz.description}
+        path={`/projects/${biz.id}`}
       />
 
       {/* Grid lines */}
@@ -833,171 +123,287 @@ const Projects: React.FC = () => {
         WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%)',
       }} />
 
-      {/* Ambient glow orbs */}
-      <motion.div
-        animate={{ x: [0, 30, -20, 0], y: [0, -20, 30, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      {/* Ambient orbs */}
+      <motion.div animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0] }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         style={{
-          position: 'fixed',
-          top: '10%',
-          left: '8%',
-          width: 400,
-          height: 400,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-      <motion.div
-        animate={{ x: [0, -25, 15, 0], y: [0, 25, -15, 0] }}
-        transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          position: 'fixed', top: '8%', left: '5%', width: 500, height: 500, borderRadius: '50%',
+          background: `radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 70%)`,
+          filter: 'blur(80px)', zIndex: 0, pointerEvents: 'none',
+        }} />
+      <motion.div animate={{ x: [0, -30, 25, 0], y: [0, 25, -20, 0] }}
+        transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
         style={{
-          position: 'fixed',
-          bottom: '10%',
-          right: '12%',
-          width: 350,
-          height: 350,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)',
-          filter: 'blur(50px)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-      <motion.div
-        animate={{ x: [0, 20, -15, 0], y: [0, -15, 20, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 300,
-          height: 300,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)',
-          filter: 'blur(50px)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
+          position: 'fixed', bottom: '8%', right: '8%', width: 450, height: 450, borderRadius: '50%',
+          background: `radial-gradient(circle, ${biz.color}08 0%, transparent 70%)`,
+          filter: 'blur(70px)', zIndex: 0, pointerEvents: 'none',
+        }} />
 
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', position: 'relative', zIndex: 1 }}>
+      <section style={{
+        maxWidth: 800, margin: '0 auto',
+        padding: 'clamp(80px, 12vw, 140px) 24px clamp(60px, 8vw, 100px)',
+        position: 'relative', zIndex: 1,
+      }}>
+        <CursorGlow containerRef={sectionRef} />
 
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
-          style={{ marginBottom: 56 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}> / WORK</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <h1 style={{
-              fontSize: 'clamp(2.5rem,6vw,4rem)', fontWeight: 700, lineHeight: 1.1, margin: 0,
-              background: 'linear-gradient(135deg,#f1f5f9 30%,#94a3b8 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}>Selected Works</h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#1e3a35', padding: '4px 10px', borderRadius: 20, border: '1px solid rgba(20,184,166,0.1)', background: 'rgba(20,184,166,0.04)' }}>
-                ← → keyboard nav
-              </span>
-              <span style={{ fontFamily: 'monospace', fontSize: 13, color: '#334155' }}>
-                {filtered.length} projects
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}
-          style={{ display: 'flex', gap: 8, marginBottom: 52, flexWrap: 'wrap' }}>
-          {filters.map((f) => (
-            <motion.button key={f} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              onClick={() => { setActiveFilter(f); setFocusIdx(0); }}
-              style={{
-                padding: '8px 20px', borderRadius: 50, fontSize: 13, fontWeight: 500,
-                fontFamily: 'monospace', letterSpacing: '0.04em', cursor: 'pointer', transition: 'all 0.25s',
-                border: activeFilter === f ? '1px solid rgba(20,184,166,0.4)' : '1px solid rgba(255,255,255,0.07)',
-                background: activeFilter === f ? 'rgba(20,184,166,0.12)' : 'rgba(255,255,255,0.02)',
-                color: activeFilter === f ? '#5eead4' : '#475569',
-              }}
-            >{f}</motion.button>
-          ))}
-        </motion.div>
-
-        {/* Spotlight */}
-        <AnimatePresence mode="wait">
-          {spotlight && <Spotlight key={spotlight.id} item={spotlight} />}
-        </AnimatePresence>
-
-        {/* Bento row — 2 large cards side by side */}
-        {largePairs.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, marginBottom: 24 }}>
-            <AnimatePresence mode="popLayout">
-              {largePairs.map((item, idx) => (
-                <ProjectCard key={item.id} item={item} idx={idx} large />
-              ))}
-            </AnimatePresence>
-          </div>
-        )}
-
-        {/* Normal grid */}
-        {normalGrid.length > 0 && (
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '8px 0 28px' }}>
-              <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right,transparent,rgba(20,184,166,0.12),transparent)' }} />
-              <span style={{ fontSize: 11, color: '#1e3a35', fontFamily: 'monospace', letterSpacing: '0.1em' }}>MORE WORK</span>
-              <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right,transparent,rgba(20,184,166,0.12),transparent)' }} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 18 }}>
-              <AnimatePresence mode="popLayout">
-                {normalGrid.map((item, idx) => (
-                  <ProjectCard key={item.id} item={item} idx={idx} />
-                ))}
-              </AnimatePresence>
-            </div>
-          </>
-        )}
-
-        {/* Case study CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+        {/* Back */}
+        <motion.button
+          initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+          whileHover={{ x: -4, boxShadow: `0 0 20px ${t.teal}20` }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ duration: 0.4 }}
+          onClick={() => navigate('/')}
           style={{
-            marginTop: 60, padding: '28px 32px', borderRadius: 20,
-            background: 'rgba(20,184,166,0.04)', border: '1px solid rgba(20,184,166,0.12)',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '8px 16px', borderRadius: 10,
+            background: 'rgba(255,255,255,0.04)', border: `1px solid ${t.cardBorder}`,
+            color: t.mutedMid, fontSize: 13, cursor: 'pointer',
+            marginBottom: 32, fontFamily: 'monospace', letterSpacing: '0.04em',
           }}
         >
-          <div>
-            <p style={{ fontSize: 15, fontWeight: 600, color: '#f1f5f9', margin: '0 0 4px' }}>Deep dive: Healthcare App</p>
-            <p style={{ fontSize: 13, color: '#475569', margin: 0 }}>Problem → approach → tech decisions → measurable outcome.</p>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Back to Industries
+        </motion.button>
+
+        {/* Hero Image + Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          whileHover={{ boxShadow: `0 30px 80px rgba(0,0,0,0.5), 0 0 50px ${biz.color}15` }}
+          transition={{ duration: 0.6 }}
+          style={{
+            position: 'relative', height: 320, borderRadius: 20, overflow: 'hidden',
+            border: `1px solid ${biz.color}25`, marginBottom: 40, cursor: 'default',
+          }}
+        >
+          <img src={biz.image} alt={biz.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.4)', transition: 'transform 0.6s' }} />
+          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)` }} />
+          {/* Glow accent on image */}
+          <div style={{
+            position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%',
+            background: biz.color, filter: 'blur(60px)', opacity: 0.08, pointerEvents: 'none',
+          }} />
+          <div style={{ position: 'absolute', bottom: 24, left: 28, right: 28, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span style={{ fontSize: 48 }}>{biz.icon}</span>
+            <div>
+              <h1 style={{
+                fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 800,
+                color: t.heading, margin: 0, fontFamily: "'Syne', sans-serif",
+              }}>
+                {biz.title}
+              </h1>
+              <p style={{ fontSize: 15, color: t.muted, margin: '6px 0 0' }}>{biz.description}</p>
+            </div>
           </div>
-          <Link to="/case-study/healthcare" style={{
-            padding: '10px 22px', borderRadius: 50,
-            background: 'linear-gradient(135deg,#14b8a6,#0d9488)',
-            color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.02em',
-          }}>Read Case Study →</Link>
         </motion.div>
 
-        {/* Empty state */}
-        <AnimatePresence>
-          {filtered.length === 0 && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              style={{ textAlign: 'center', padding: '80px 0', color: '#334155', fontFamily: 'monospace' }}>
-              No projects in this category yet.
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
+        {/* Business Impact */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }} style={{ marginBottom: 40 }}>
+          <SectionLabel text="IMPACT" />
+          <h2 style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 800,
+            fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', color: t.heading, margin: '0 0 20px', lineHeight: 1.2,
+          }}>Business Impact</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+            {biz.impact.map((item, i) => (
+              <GlowCard key={i} color={biz.color} style={{
+                borderRadius: 14, background: `${biz.color}08`, border: `1px solid ${biz.color}20`,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px' }}>
+                  <span style={{
+                    width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
+                    background: `${biz.color}18`, border: `1px solid ${biz.color}40`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, color: biz.color, fontWeight: 700,
+                  }}>✓</span>
+                  <span style={{ fontSize: 14, color: t.body, lineHeight: 1.5 }}>{item}</span>
+                </div>
+              </GlowCard>
+            ))}
+          </div>
+        </motion.div>
 
-      <style>{`
-        @keyframes viewPulse {
-          0%,100% { box-shadow: 0 0 16px currentColor; }
-          50% { box-shadow: 0 0 32px currentColor; }
-        }
-      `}</style>
+        {/* Tech Stack */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }} style={{ marginBottom: 40 }}>
+          <SectionLabel text="TECH" />
+          <h2 style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 800,
+            fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', color: t.heading, margin: '0 0 20px', lineHeight: 1.2,
+          }}>Tech Stack</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {biz.tech.map((tech, i) => (
+              <motion.span key={i}
+                whileHover={{ scale: 1.08, borderColor: `${biz.color}60`, boxShadow: `0 0 16px ${biz.color}25`, y: -2 }}
+                style={{
+                  padding: '8px 18px', borderRadius: 10,
+                  background: 'rgba(255,255,255,0.04)', border: `1px solid ${t.cardBorder}`,
+                  fontSize: 13, color: t.body, fontFamily: 'monospace', letterSpacing: '0.04em',
+                  fontWeight: 500, cursor: 'default', transition: 'background 0.3s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = `${biz.color}10`; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Key Features */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }} style={{ marginBottom: 40 }}>
+          <SectionLabel text="FEATURES" />
+          <h2 style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 800,
+            fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', color: t.heading, margin: '0 0 20px', lineHeight: 1.2,
+          }}>Key Features</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {biz.features.map((f, i) => (
+              <GlowCard key={i} color={biz.color} style={{
+                borderRadius: 14, background: t.surface, border: `1px solid ${t.cardBorder}`,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
+                    background: `${biz.color}15`, border: `1px solid ${biz.color}35`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, color: biz.color, fontWeight: 700,
+                  }}>{i + 1}</span>
+                  <span style={{ fontSize: 14, color: t.body, lineHeight: 1.6 }}>{f}</span>
+                </div>
+              </GlowCard>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Architecture / Workflow */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }} style={{ marginBottom: 48 }}>
+          <SectionLabel text="WORKFLOW" />
+          <h2 style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 800,
+            fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', color: t.heading, margin: '0 0 20px', lineHeight: 1.2,
+          }}>Architecture / Workflow</h2>
+          <div style={{
+            padding: '24px', borderRadius: 16,
+            background: 'rgba(255,255,255,0.02)', border: `1px solid ${t.cardBorder}`,
+            overflow: 'auto',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {biz.workflow.map((step, i) => (
+                <React.Fragment key={i}>
+                  <motion.div
+                    whileHover={{ scale: 1.08, boxShadow: `0 0 20px ${biz.color}30`, y: -3 }}
+                    style={{
+                      padding: '10px 18px', borderRadius: 10,
+                      background: i === biz.workflow.length - 1 ? `${biz.color}15` : 'rgba(255,255,255,0.04)',
+                      border: `1px solid ${i === biz.workflow.length - 1 ? `${biz.color}40` : t.cardBorder}`,
+                      fontSize: 13, color: i === biz.workflow.length - 1 ? biz.color : t.body,
+                      fontWeight: i === biz.workflow.length - 1 ? 700 : 500,
+                      whiteSpace: 'nowrap', fontFamily: 'monospace', letterSpacing: '0.02em',
+                      cursor: 'default', transition: 'background 0.3s',
+                    }}
+                    onMouseEnter={(e) => { if (i !== biz.workflow.length - 1) e.currentTarget.style.background = `${biz.color}10`; }}
+                    onMouseLeave={(e) => { if (i !== biz.workflow.length - 1) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                  >
+                    {step.replace(/\s*→\s*$/, '')}
+                  </motion.div>
+                  {i < biz.workflow.length - 1 && (
+                    <motion.svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={biz.color} strokeWidth="2"
+                      strokeLinecap="round" strokeLinejoin="round"
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                      style={{ flexShrink: 0, margin: '0 4px', opacity: 0.5 }}
+                    >
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </motion.svg>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Links CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          style={{
+            position: 'relative', borderRadius: 20, overflow: 'hidden',
+            padding: 'clamp(32px, 5vw, 48px)',
+            background: `${t.teal}08`, border: `1px solid ${t.teal}20`,
+            textAlign: 'center',
+          }}
+        >
+          {/* Animated glow blobs */}
+          <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute', top: '50%', left: '50%',
+              width: 350, height: 350, borderRadius: '50%',
+              background: `radial-gradient(circle, ${t.teal}18 0%, transparent 70%)`,
+              transform: 'translate(-50%, -50%)', pointerEvents: 'none',
+            }} />
+          <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.05, 0.12, 0.05] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            style={{
+              position: 'absolute', top: '30%', left: '70%',
+              width: 200, height: 200, borderRadius: '50%',
+              background: `radial-gradient(circle, ${biz.color}15 0%, transparent 70%)`,
+              transform: 'translate(-50%, -50%)', pointerEvents: 'none',
+            }} />
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <h2 style={{
+              fontFamily: "'Syne', sans-serif", fontWeight: 800,
+              fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', color: t.heading,
+              margin: '0 0 20px', lineHeight: 1.2,
+            }}>Interested in This Project?</h2>
+            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+              {biz.link && (
+                <motion.a href={biz.link} target="_blank" rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05, boxShadow: `0 0 40px ${biz.color}60` }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    padding: '14px 32px', borderRadius: 12,
+                    background: biz.color, color: '#fff', fontSize: 15, fontWeight: 700,
+                    border: 'none', cursor: 'pointer', letterSpacing: '0.02em',
+                    textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8,
+                  }}
+                >Live Demo ↗</motion.a>
+              )}
+              {biz.github && (
+                <motion.a href={biz.github} target="_blank" rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05, borderColor: t.teal, boxShadow: `0 0 20px ${t.teal}20` }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    padding: '14px 32px', borderRadius: 12,
+                    background: 'transparent', color: t.body, fontSize: 15, fontWeight: 600,
+                    border: `1px solid rgba(148,163,184,0.2)`, cursor: 'pointer',
+                    letterSpacing: '0.02em', textDecoration: 'none',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}
+                >GitHub ↗</motion.a>
+              )}
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: `0 0 40px ${t.teal}50` }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/contact')}
+                style={{
+                  padding: '14px 32px', borderRadius: 12,
+                  background: `linear-gradient(135deg, ${t.teal}, ${t.tealDark})`,
+                  color: '#fff', fontSize: 15, fontWeight: 700,
+                  border: 'none', cursor: 'pointer', letterSpacing: '0.02em',
+                }}
+              >Book Free Demo</motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </section>
     </div>
   );
 };

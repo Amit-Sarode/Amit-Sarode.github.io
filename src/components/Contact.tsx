@@ -7,9 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import SEO from './SEO';
 
 const apiKeysEMailJS = {
-  serviceID: 'service_p5ch6gj',
-  templateID: 'template_fpbkzxq',
-  publicKey: 'qWazhUDDDz2hUMVb7',
+  serviceID: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  templateID: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
 };
 
 /* ─── Floating orb background ─── */

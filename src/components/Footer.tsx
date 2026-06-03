@@ -3,8 +3,9 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 const navLinks = [
-  { label: 'Home', to: '/' },
-  { label: 'Projects', to: '/projects' },
+   { label: 'Home', to: '/' },
+  { label: 'About', to: '/about' },
+  { label: 'Pricing', to: '/pricing' },
   { label: 'Certificates', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ]

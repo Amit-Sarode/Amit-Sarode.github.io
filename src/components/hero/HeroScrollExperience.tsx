@@ -182,7 +182,7 @@ const HeroScrollExperience: React.FC = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
-          onClick={() => navigate('/projects')}
+          onClick={() => { navigate('/'); setTimeout(() => window.scrollTo({ top: document.body.scrollHeight * 0.65, behavior: 'smooth' }), 100); }}
           style={{
             padding: '14px 36px',
             borderRadius: 50,

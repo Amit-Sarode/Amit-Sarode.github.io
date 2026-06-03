@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 import resume from '/assets/Amit Sarode -resume (1).pdf';
 
 /* ─── Hooks ─── */
@@ -28,12 +29,11 @@ export const useClickOutside = (handler: () => void) => {
 
 /* ─── Nav items ─── */
 const navItems = [
-  { name: 'Projects', path: '/projects' },
   { name: 'About', path: '/about' },
+  { name: 'Pricing', path: '/pricing' },
   { name: 'Contact', path: '/contact' },
   { name: 'LinkedIn', path: 'https://www.linkedin.com/in/amit-sarode/', external: true },
   { name: 'GitHub', path: 'https://github.com/Amit-Sarode', external: true },
-  // { name: 'Chatgpt', path: '/chatgpt' },
 ];
 
 const Navbar: React.FC = () => {
@@ -41,6 +41,7 @@ const Navbar: React.FC = () => {
   const width = useWindowSize();
   const [mobile, setMobile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, toggleTheme, isDark } = useTheme();
 
   const closeMobile = useCallback(() => setMobile(false), []);
   const menuRef = useClickOutside(closeMobile);
@@ -108,13 +109,13 @@ const Navbar: React.FC = () => {
           justifyContent: 'space-between',
           padding: '0 32px',
           background: scrolled
-            ? 'rgba(2, 13, 10, 0.92)'
-            : 'rgba(2, 13, 10, 0.6)',
+            ? 'var(--bg-nav-scrolled)'
+            : 'var(--bg-nav)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: scrolled
-            ? '1px solid rgba(20,184,166,0.12)'
-            : '1px solid transparent',
+            ? '1px solid var(--border-nav-scrolled)'
+            : '1px solid var(--border-nav)',
           transition: 'background 0.4s, border-color 0.4s',
         }}
       >
@@ -138,7 +139,7 @@ const Navbar: React.FC = () => {
                 fontWeight: 800,
                 color: '#fff',
                 fontFamily: 'monospace',
-                boxShadow: '0 0 16px rgba(20,184,166,0.35)',
+                boxShadow: isDark ? '0 0 16px rgba(20,184,166,0.35)' : '0 0 16px rgba(13,148,136,0.25)',
                 flexShrink: 0,
               }}
             >
@@ -184,7 +185,7 @@ const Navbar: React.FC = () => {
                   padding: '6px 14px',
                   borderRadius: 8,
                   fontSize: 14,
-                  color: '#64748b',
+                  color: 'var(--text-muted)',
                   textDecoration: 'none',
                   fontWeight: 500,
                   transition: 'color 0.2s',
@@ -192,8 +193,8 @@ const Navbar: React.FC = () => {
                   alignItems: 'center',
                   gap: 5,
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#5eead4')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#64748b')}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-light)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
               >
                 {item.name}
                 <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -210,35 +211,74 @@ const Navbar: React.FC = () => {
                 <Link
                   to={item.path}
                   style={{
-                    padding: '6px 14px',
-                    borderRadius: 8,
-                    fontSize: 14,
-                    color: active ? '#14b8a6' : '#64748b',
-                    textDecoration: 'none',
-                    fontWeight: active ? 600 : 500,
-                    background: active ? 'rgba(20,184,166,0.08)' : 'transparent',
-                    display: 'block',
-                    transition: 'color 0.2s, background 0.2s',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.color = '#5eead4';
-                      e.currentTarget.style.background = 'rgba(20,184,166,0.05)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) {
-                      e.currentTarget.style.color = '#64748b';
-                      e.currentTarget.style.background = 'transparent';
-                    }
-                  }}
+                  padding: '6px 14px',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  color: active ? 'var(--accent)' : 'var(--text-muted)',
+                  textDecoration: 'none',
+                  fontWeight: active ? 600 : 500,
+                  background: active ? 'var(--accent-bg)' : 'transparent',
+                  display: 'block',
+                  transition: 'color 0.2s, background 0.2s',
+                  position: 'relative',
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.color = 'var(--accent-light)';
+                    e.currentTarget.style.background = 'var(--accent-bg)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.color = 'var(--text-muted)';
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
                 >
                   {item.name}
                 </Link>
               </motion.div>
             );
           })}
+
+          {/* Theme toggle */}
+          {/* <motion.button
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              width: 34, height: 34, borderRadius: 10,
+              border: '1px solid var(--border-default)',
+              background: 'var(--bg-card)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: 'var(--accent)', fontSize: 16,
+              transition: 'all 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-hover)';
+              e.currentTarget.style.background = 'var(--bg-card-hover)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-default)';
+              e.currentTarget.style.background = 'var(--bg-card)';
+            }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isDark ? (
+                <motion.svg key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }} width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" strokeLinecap="round" />
+                </motion.svg>
+              ) : (
+                <motion.svg key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }} width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" strokeLinecap="round" strokeLinejoin="round" />
+                </motion.svg>
+              )}
+            </AnimatePresence>
+          </motion.button> */}
 
           {/* Resume download */}
           <motion.button
@@ -252,7 +292,7 @@ const Navbar: React.FC = () => {
               padding: '6px 14px',
               borderRadius: 8,
               fontSize: 14,
-              color: '#64748b',
+              color: 'var(--text-muted)',
               fontWeight: 500,
               background: 'none',
               border: 'none',
@@ -262,8 +302,8 @@ const Navbar: React.FC = () => {
               alignItems: 'center',
               gap: 5,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#5eead4')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#64748b')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-light)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
           >
             Resume
             <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -272,7 +312,7 @@ const Navbar: React.FC = () => {
           </motion.button>
 
           {/* Divider */}
-          <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.08)', margin: '0 8px' }} />
+          <div style={{ width: 1, height: 20, background: 'var(--border-default)', margin: '0 8px' }} />
 
           {/* Call CTA */}
           <motion.a
@@ -286,8 +326,8 @@ const Navbar: React.FC = () => {
               padding: '8px 20px',
               borderRadius: 50,
               background: 'transparent',
-              border: '1px solid rgba(20,184,166,0.3)',
-              color: '#14b8a6',
+              border: '1px solid var(--accent-border)',
+              color: 'var(--accent)',
               fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',
@@ -322,7 +362,7 @@ const Navbar: React.FC = () => {
             style={{
               padding: '8px 20px',
               borderRadius: 50,
-              background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+              background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
               color: '#fff',
               fontSize: 13,
               fontWeight: 600,
@@ -346,12 +386,12 @@ const Navbar: React.FC = () => {
               height: 38,
               borderRadius: 10,
               border: '1px solid rgba(255,255,255,0.08)',
-              background: mobile ? 'rgba(20,184,166,0.1)' : 'rgba(255,255,255,0.03)',
+              background: mobile ? 'var(--accent-bg)' : 'var(--bg-card)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: mobile ? '#14b8a6' : '#94a3b8',
+              color: mobile ? 'var(--accent)' : 'var(--text-secondary)',
               transition: 'all 0.25s',
             }}
             aria-label="Toggle menu"
@@ -396,9 +436,9 @@ const Navbar: React.FC = () => {
                   top: 48,
                   right: 0,
                   width: 220,
-                  background: 'rgba(5, 15, 16, 0.98)',
+                  background: 'var(--bg-nav)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(20,184,166,0.15)',
+                  border: '1px solid var(--border-hover)',
                   borderRadius: 16,
                   padding: '12px 8px',
                   boxShadow: '0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03)',
@@ -424,18 +464,18 @@ const Navbar: React.FC = () => {
                           justifyContent: 'space-between',
                           padding: '10px 14px',
                           borderRadius: 10,
-                          color: '#64748b',
+                          color: 'var(--text-muted)',
                           fontSize: 14,
                           textDecoration: 'none',
                           fontWeight: 500,
                           transition: 'all 0.2s',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.color = '#5eead4';
-                          e.currentTarget.style.background = 'rgba(20,184,166,0.06)';
+                          e.currentTarget.style.color = 'var(--accent-light)';
+                          e.currentTarget.style.background = 'var(--accent-bg)';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.color = '#64748b';
+                          e.currentTarget.style.color = 'var(--text-muted)';
                           e.currentTarget.style.background = 'transparent';
                         }}
                       >
@@ -453,22 +493,22 @@ const Navbar: React.FC = () => {
                           alignItems: 'center',
                           padding: '10px 14px',
                           borderRadius: 10,
-                          color: isActive(item.path) ? '#14b8a6' : '#64748b',
+                          color: isActive(item.path) ? 'var(--accent)' : 'var(--text-muted)',
                           fontSize: 14,
                           textDecoration: 'none',
                           fontWeight: isActive(item.path) ? 600 : 500,
-                          background: isActive(item.path) ? 'rgba(20,184,166,0.08)' : 'transparent',
+                          background: isActive(item.path) ? 'var(--accent-bg)' : 'transparent',
                           transition: 'all 0.2s',
                         }}
                         onMouseEnter={(e) => {
                           if (!isActive(item.path)) {
-                            e.currentTarget.style.color = '#5eead4';
-                            e.currentTarget.style.background = 'rgba(20,184,166,0.06)';
+                            e.currentTarget.style.color = 'var(--accent-light)';
+                            e.currentTarget.style.background = 'var(--accent-bg)';
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (!isActive(item.path)) {
-                            e.currentTarget.style.color = '#64748b';
+                            e.currentTarget.style.color = 'var(--text-muted)';
                             e.currentTarget.style.background = 'transparent';
                           }
                         }}
@@ -478,6 +518,44 @@ const Navbar: React.FC = () => {
                     )}
                   </motion.div>
                 ))}
+
+                {/* Mobile theme toggle */}
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.06 }}
+                  style={{ padding: '6px 8px' }}
+                >
+                  <button
+                    onClick={() => { toggleTheme(); closeMobile(); }}
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      padding: '10px 14px',
+                      borderRadius: 10,
+                      color: 'var(--text-secondary)',
+                      fontSize: 14,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 500,
+                      transition: 'all 0.2s',
+                      textAlign: 'left',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'var(--accent-light)';
+                      e.currentTarget.style.background = 'var(--accent-bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'var(--text-secondary)';
+                      e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                  </button>
+                </motion.div>
 
                 {/* Mobile resume */}
                 <motion.div

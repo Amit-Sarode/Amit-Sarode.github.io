@@ -19,7 +19,7 @@ const CaseStudyHealthcare: React.FC = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4 }}
         whileHover={{ x: -4 }}
-        onClick={() => navigate('/projects')}
+        onClick={() => navigate('/')}
         style={{
           display: 'flex',
           alignItems: 'center',

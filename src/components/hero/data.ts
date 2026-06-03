@@ -217,6 +217,174 @@ export const industries = [
   { name: 'SaaS & Startups', desc: 'MVPs, AI features & growth tools', icon: '🚀', color: '#3B82F6' },
 ];
 
+export interface BusinessCategory {
+  id: number;
+  icon: string;
+  title: string;
+  description: string;
+  color: string;
+  impact: string[];
+  tech: string[];
+  features: string[];
+  workflow: string[];
+  image: string;
+  link?: string;
+  github?: string;
+}
+
+export const businesses: BusinessCategory[] = [
+  {
+    id: 1,
+    icon: '🏋️',
+    title: 'Gym Member Acquisition Platform',
+    description: 'Automated lead capture, qualification, and membership conversion system for fitness businesses.',
+    color: '#10B981',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
+    link: 'https://gym-orpin-two.vercel.app/',
+    impact: ['80% fewer missed leads', '3x faster member onboarding', '45% increase in trial-to-paid conversion'],
+    tech: ['React', 'Node.js', 'WhatsApp API', 'Firebase'],
+    features: ['AI-powered lead scoring', 'Automated trial booking sequences', 'WhatsApp engagement workflows', 'Member retention dashboards'],
+    workflow: ['Website Form →', 'AI Qualification →', 'CRM Update →', 'WhatsApp Follow-up →', 'Member Onboarding'],
+  },
+  {
+    id: 2,
+    icon: '🩺',
+    title: 'AI Healthcare Receptionist',
+    description: '24/7 AI-powered patient booking, FAQ handling, and appointment management for clinics.',
+    color: '#3B82F6',
+    image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&q=80',
+    link: 'https://healthcheck-nine.vercel.app/',
+    impact: ['80% reduction in missed calls', '24/7 availability', '3x faster patient booking'],
+    tech: ['React', 'OpenAI API', 'WhatsApp API', 'Node.js'],
+    features: ['AI chatbot for symptom pre-screening', 'Automated appointment reminders', 'Digital patient intake', 'Post-visit follow-up automation'],
+    workflow: ['Patient Enquiry →', 'AI Chatbot →', 'Appointment Booking →', 'SMS/WhatsApp Reminder →', 'Feedback Collection'],
+  },
+  {
+    id: 3,
+    icon: '🍰',
+    title: 'Bakery Order & Delivery Platform',
+    description: 'Online ordering, portfolio showcase, and delivery management for bakeries and cake shops.',
+    color: '#F472B6',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80',
+    link: 'https://jollie-macaron.vercel.app/',
+    impact: ['Direct orders from day one', '100% mobile responsive', 'Brand perceived as more premium'],
+    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Vercel'],
+    features: ['Product gallery with order form', 'Automated order confirmation', 'SEO-optimized for local discovery', 'Instagram feed integration'],
+    workflow: ['Browse Menu →', 'Custom Order Form →', 'Payment →', 'Order Confirmation →', 'Delivery Tracking'],
+  },
+  {
+    id: 4,
+    icon: '💇',
+    title: 'Salon Booking Automation',
+    description: 'Smart scheduling, client retention, and staff management system for beauty studios.',
+    color: '#A855F7',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
+     link: 'https://saloon-web-app.vercel.app/',
+    impact: ['60% fewer empty slots', '40% improvement in client retention', 'Automated rebooking workflows'],
+    tech: ['React', 'Firebase', 'WhatsApp API', 'Node.js'],
+    features: ['Smart booking with waitlist', 'Automated re-engagement for lapsed clients', 'Staff schedule optimization', 'Before/after gallery integration'],
+    workflow: ['Online Booking →', 'AI Slot Optimization →', 'Reminder Notifications →', 'Service Delivery →', 'Review Collection'],
+  },
+  {
+    id: 5,
+    icon: '🍽️',
+    title: 'Restaurant Digital Experience',
+    description: 'Elegant landing page with menu showcase, reservation system, and customer engagement.',
+    color: '#F97316',
+    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80',
+    link: 'https://restaurant-ecru-two.vercel.app/',
+    impact: ['Sub-2s load time', 'Fully responsive design', 'Online reservations from day one'],
+    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Node.js'],
+    features: ['Interactive menu with categories', 'Table reservation system', 'Google Maps integration', 'Customer feedback management'],
+    workflow: ['Visit Website →', 'Browse Menu →', 'Reserve Table →', 'Confirmation SMS →', 'Post-visit Review'],
+  },
+  {
+    id: 6,
+    icon: '🐜',
+    title: 'Pest Control Lead Engine',
+    description: 'Automated lead generation, quote system, and service scheduling for pest control businesses.',
+    color: '#84CC16',
+    image: 'https://images.unsplash.com/photo-1585016495485-4833bad04e33?w=800&q=80',
+    impact: ['24/7 lead capture', 'Instant quote generation', 'Automated service scheduling'],
+    tech: ['React', 'Node.js', 'WhatsApp API', 'Firebase'],
+    features: ['AI chatbot for instant quotes', 'Seasonal campaign automation', 'Service area mapping', 'Automated follow-up sequences'],
+    workflow: ['Customer Enquiry →', 'AI Quote Generation →', 'Booking Confirmation →', 'Service Scheduling →', 'Follow-up & Reviews'],
+  },
+  {
+    id: 7,
+    icon: '🔧',
+    title: 'Garage Management System',
+    description: 'Digital garage operations with service tracking, invoicing, and customer loyalty features.',
+    color: '#64748B',
+    image: 'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=800&q=80',
+    impact: ['Real-time service updates', 'Digital invoicing', 'Automated maintenance reminders'],
+    tech: ['React', 'Node.js', 'MongoDB', 'WhatsApp API'],
+    features: ['Real-time service status tracking', 'Online booking with service selection', 'Digital invoicing and payments', 'Maintenance reminder system'],
+    workflow: ['Book Service →', 'Vehicle Check-in →', 'Service Tracking →', 'Digital Invoice →', 'Maintenance Reminders'],
+  },
+  {
+    id: 8,
+    icon: '✈️',
+    title: 'Travel Booking Automation',
+    description: 'AI-powered travel recommendations, booking management, and personalized itinerary builder.',
+    color: '#06B6D4',
+    image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
+    link: 'https://back-packtales.vercel.app/',
+    impact: ['Automated itinerary generation', 'Personalized recommendations', 'Post-trip rebooking system'],
+    tech: ['React', 'Tailwind CSS', 'OpenAI API', 'Node.js'],
+    features: ['AI travel recommendation engine', 'Automated quote generation', 'Dynamic pricing based on demand', 'Post-trip feedback system'],
+    workflow: ['Travel Inquiry →', 'AI Package Builder →', 'Quote Delivery →', 'Booking Confirmation →', 'Post-trip Follow-up'],
+  },
+  {
+    id: 9,
+    icon: '🧘',
+    title: 'Wellness Class Management',
+    description: 'Smart class scheduling, member engagement, and community building for yoga studios.',
+    color: '#8B5CF6',
+    image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&q=80',
+    impact: ['40% fewer no-shows', 'Automated wellness communication', 'Improved community engagement'],
+    tech: ['React', 'Firebase', 'WhatsApp API', 'Node.js'],
+    features: ['Smart class scheduling with reminders', 'Waitlist management', 'Wellness challenge automation', 'Student progress tracking'],
+    workflow: ['Class Booking →', 'AI Reminder System →', 'Waitlist Management →', 'Session Delivery →', 'Progress Tracking'],
+  },
+  {
+    id: 10,
+    icon: '🛠️',
+    title: 'Handyman Job Booking System',
+    description: 'AI-powered job capture, technician dispatch, and automated review collection platform.',
+    color: '#F59E0B',
+    image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80',
+    impact: ['24/7 job capture', 'Automated technician dispatch', '5x more reviews collected'],
+    tech: ['React', 'Node.js', 'WhatsApp API', 'Firebase'],
+    features: ['AI chatbot for job capture', 'Online booking with categories', 'Technician route optimization', 'Automated review requests'],
+    workflow: ['Customer Request →', 'AI Job Matching →', 'Technician Dispatch →', 'Job Completion →', 'Review Collection'],
+  },
+  {
+    id: 11,
+    icon: '🏠',
+    title: 'Real Estate Lead Pipeline',
+    description: 'Automated lead qualification, property matching, and CRM pipeline for real estate agencies.',
+    color: '#EF4444',
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
+    impact: ['Instant lead response', 'Automated property matching', '50% faster deal closures'],
+    tech: ['React', 'Node.js', 'OpenAI API', 'CRM API'],
+    features: ['AI lead qualification', 'Smart property matching', 'Automated follow-up sequences', 'Lead scoring dashboard'],
+    workflow: ['Lead Capture →', 'AI Qualification →', 'Property Matching →', 'Automated Follow-up →', 'Deal Closure'],
+  },
+  {
+    id: 12,
+    icon: '🎓',
+    title: 'Education Enrollment Automation',
+    description: 'AI-powered enquiry handling, student enrollment, and progress tracking for coaching centers.',
+    color: '#14B8A6',
+    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80',
+    impact: ['Instant enquiry response', 'Automated enrollment pipeline', '40% improvement in retention'],
+    tech: ['React', 'Node.js', 'OpenAI API', 'Firebase'],
+    features: ['AI enquiry handling', 'Course recommendation engine', 'Automated class reminders', 'Student progress dashboard'],
+    workflow: ['Student Enquiry →', 'AI Course Matching →', 'Enrollment Process →', 'Class Reminders →', 'Progress Reports'],
+  },
+];
+
 export const processSteps = [
   {
     step: '01',

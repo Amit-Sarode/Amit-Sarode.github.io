@@ -16,19 +16,13 @@
     "@emailjs/browser": "^4.4.1",
     "@mlc-ai/web-llm": "^0.2.78",
     "@tailwindcss/vite": "^4.1.4",
-    "body-parser": "^2.2.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
     "gsap": "^3.12.7",
     "motion": "^12.7.4",
-    "nodemailer": "^6.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.5.3",
     "react-toastify": "^11.0.5",
-    "slick-carousel": "^1.8.1",
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
@@ -36,7 +30,6 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@types/react-slick": "^0.23.13",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -47,5 +40,5 @@
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "npm"
 }
