@@ -177,7 +177,7 @@ const Projects: React.FC = () => {
             border: `1px solid ${biz.color}25`, marginBottom: 40, cursor: 'default',
           }}
         >
-          <img src={biz.image} alt={biz.title}
+          <img src={biz.image} alt={biz.title} loading="lazy"
             style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.4)', transition: 'transform 0.6s' }} />
           <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)` }} />
           {/* Glow accent on image */}

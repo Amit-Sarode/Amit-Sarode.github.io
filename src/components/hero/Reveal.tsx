@@ -12,7 +12,7 @@ const Reveal: React.FC<{ children: React.ReactNode; delay?: number; className?: 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: isMobile ? '-40px' : '-80px' }}
       transition={{ duration: isMobile ? 0.5 : 0.75, delay: isMobile ? 0 : delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      style={{ willChange: 'transform, opacity' }}
+      style={isMobile ? {} : { willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>

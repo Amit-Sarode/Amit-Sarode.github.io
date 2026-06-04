@@ -77,10 +77,11 @@ const HeroScrollExperience: React.FC = () => {
           }}
         >
           <img
-            className="rounded-full h-44 w-44 object-cover"
-            style={{ display: 'block', background: '#0f172a' }}
+            className="rounded-full object-cover"
+            style={{ display: 'block', background: '#0f172a', width: 'clamp(120px, 30vw, 176px)', height: 'clamp(120px, 30vw, 176px)' }}
             src={profileImg}
             alt="Amit Sarode"
+            loading="lazy"
           />
         </motion.div>
       </Tilt3D>

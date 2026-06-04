@@ -1,10 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { AnimatePresence } from 'motion/react';
 import Loader from './components/Loader';
 import Footer from './components/Footer';
 import HireMeButton from './components/HireMeButton';
 import ScrollToTop from './components/ScrollToTop';
+import CustomCursor from './components/CustomCursor';
+import ClickParticles from './components/ClickParticles';
+import PageTransition from './components/PageTransition';
 
 const Contact    = lazy(() => import('./components/Contact'));
 const Navbar     = lazy(() => import('./components/Navbar'));
@@ -16,14 +19,19 @@ const Pricing    = lazy(() => import('./components/Pricing'));
 const CaseStudyHealthcare = lazy(() => import('./components/CaseStudyHealthcare'));
 
 function App() {
+  const location = useLocation();
+
   return (
-    <ThemeProvider>
+   <>
+      <CustomCursor />
+      <ClickParticles />
       <div
         style={{
           background: 'linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 40%, var(--bg-tertiary) 100%)',
           minHeight: '100vh',
           color: 'var(--text-primary)',
           transition: 'background 0.4s, color 0.4s',
+          cursor: 'none',
         }}
       >
         <Suspense fallback={null}>
@@ -33,22 +41,26 @@ function App() {
 
         <div style={{ paddingTop: 64 }}>
           <Suspense fallback={<Loader />}>
-            <Routes>
-              <Route path="/"         element={<Hero />} />
-              <Route path="/projects/:id" element={<Projects />} />
-              <Route path="/pricing"  element={<Pricing />} />
-              <Route path="/contact"  element={<Contact />} />
-              <Route path="/about"    element={<About />} />
-              <Route path="/chatgpt"  element={<Chatgpt />} />
-              <Route path="/case-study/healthcare" element={<CaseStudyHealthcare />} />
-            </Routes>
+            <AnimatePresence mode="wait">
+              <PageTransition>
+                <Routes location={location} key={location.pathname}>
+                  <Route path="/"         element={<Hero />} />
+                  <Route path="/projects/:id" element={<Projects />} />
+                  <Route path="/pricing"  element={<Pricing />} />
+                  <Route path="/contact"  element={<Contact />} />
+                  <Route path="/about"    element={<About />} />
+                  <Route path="/chatgpt"  element={<Chatgpt />} />
+                  <Route path="/case-study/healthcare" element={<CaseStudyHealthcare />} />
+                </Routes>
+              </PageTransition>
+            </AnimatePresence>
           </Suspense>
         </div>
 
         <HireMeButton />
         <Footer />
       </div>
-    </ThemeProvider>
+  </>
   );
 }
 

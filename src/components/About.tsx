@@ -5,6 +5,8 @@ import React, { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import profileImg from '/assets/img/profileImg.png'
 import SEO from './SEO'
+import TextReveal from './TextReveal'
+import AnimatedCounter from './AnimatedCounter'
 import { skills } from './hero/data'
 import SkillCard from './hero/SkillCard'
 
@@ -179,7 +181,7 @@ const About: React.FC = () => {
               marginBottom: 60,
             }}
           >
-            About Me
+            <TextReveal as="span">About Me</TextReveal>
           </h2>
         </Reveal>
 
@@ -198,7 +200,8 @@ const About: React.FC = () => {
             <img
               src={profileImg}
               alt="Amit Sarode"
-              style={{ width: 120, height: 120, borderRadius: '9999px', objectFit: 'cover', marginBottom: 20, border: '2px solid rgba(20,184,166,0.4)' }}
+              loading="lazy"
+              style={{ width: 'clamp(80px, 20vw, 120px)', height: 'clamp(80px, 20vw, 120px)', borderRadius: '9999px', objectFit: 'cover', marginBottom: 20, border: '2px solid rgba(20,184,166,0.4)' }}
             />
             <p
               style={{
@@ -237,52 +240,57 @@ const About: React.FC = () => {
           <Reveal delay={0.2}>
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 16,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              gap: 12,
               }}
             >
-              {stats.map((s, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
-                  whileHover={{ y: -4 }}
-                  style={{
-                    padding: '24px 20px',
-                    borderRadius: 16,
-                    background: 'rgba(20,184,166,0.04)',
-                    border: '1px solid rgba(20,184,166,0.12)',
-                    textAlign: 'center',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
+              {stats.map((s, i) => {
+                const numVal = parseInt(s.value);
+                const suffix = s.value.replace(/[\d]/g, '');
+                const actualNum = numVal || 0;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
+                    whileHover={{ y: -4 }}
                     style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%)',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                  <p
-                    style={{
-                      fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
-                      fontWeight: 800,
-                      color: '#14b8a6',
-                      lineHeight: 1,
-                      marginBottom: 8,
-                      fontFamily: 'monospace',
+                      padding: '24px 20px',
+                      borderRadius: 16,
+                      background: 'rgba(20,184,166,0.04)',
+                      border: '1px solid rgba(20,184,166,0.12)',
+                      textAlign: 'center',
+                      position: 'relative',
+                      overflow: 'hidden',
                     }}
                   >
-                    {s.value}
-                  </p>
-                  <p style={{ fontSize: 12, color: '#475569', letterSpacing: '0.06em' }}>{s.label}</p>
-                </motion.div>
-              ))}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%)',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
+                        fontWeight: 800,
+                        color: '#14b8a6',
+                        lineHeight: 1,
+                        marginBottom: 8,
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
+                    </p>
+                    <p style={{ fontSize: 12, color: '#475569', letterSpacing: '0.06em' }}>{s.label}</p>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Availability card */}
@@ -345,7 +353,9 @@ const About: React.FC = () => {
             background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
             marginBottom: 12,
-          }}>What I Build</h3>
+          }}>
+            <TextReveal as="span" stagger={0.04}>What I Build</TextReveal>
+          </h3>
           <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.75, marginBottom: 40, maxWidth: 520 }}>
             End-to-end AI solutions and digital products — from chatbots to full-stack platforms.
           </p>
@@ -431,7 +441,7 @@ const About: React.FC = () => {
                 alt={cert.name}
                 style={{
                   width: '100%',
-                  height: 200,
+                  aspectRatio: '16 / 10',
                   objectFit: 'cover',
                   display: 'block',
                   filter: 'brightness(0.75) saturate(0.6)',

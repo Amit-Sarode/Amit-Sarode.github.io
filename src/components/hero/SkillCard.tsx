@@ -36,7 +36,7 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) 
         overflow: 'hidden',
         cursor: 'default',
         transition: 'border-color 0.25s',
-        willChange: 'transform, opacity',
+        ...(isMobile ? {} : { willChange: 'transform, opacity' }),
       }}
       className="skill-card group"
     >
@@ -81,7 +81,7 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) 
           border: `1px solid ${colorBorder}`, display: 'flex',
           alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
-          <img src={skill.icon} alt={skill.name} style={{
+          <img src={skill.icon} alt={skill.name} loading="lazy" style={{
             width: 22, height: 22, objectFit: 'contain',
             filter: 'brightness(0) invert(1)', opacity: 0.85,
           }} />

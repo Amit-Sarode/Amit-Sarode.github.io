@@ -2,6 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from './SEO';
+import TextReveal from './TextReveal';
+import AnimatedCounter from './AnimatedCounter';
+import MagneticButton from './MagneticButton';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 import HeroScrollExperience from './hero/HeroScrollExperience';
 import SkillCard from './hero/SkillCard';
@@ -11,12 +14,16 @@ import {
   caseStudies, processSteps, stats, businesses, type BusinessCategory,
 } from './hero/data';
 
+const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
 // ─── Industry Card with Glow ──────────────────────────
 const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate: (id: number) => void }> = ({ biz, index, onNavigate }) => {
   const [hovered, setHovered] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   }, []);
@@ -153,6 +160,7 @@ const GlowCard: React.FC<{
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice) return;
     const r = e.currentTarget.getBoundingClientRect();
     setMouse({ x: e.clientX - r.left, y: e.clientY - r.top });
   }, []);
@@ -235,7 +243,9 @@ const Hero: React.FC = () => {
               <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>PROCESS</span>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>How I Work</h2>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
+              <TextReveal as="span" delay={0.2}>How I Work</TextReveal>
+            </h2>
             <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 56, maxWidth: 480, lineHeight: 1.75 }}>
               A proven 3-step process to turn your business challenges into automated solutions.
             </p>
@@ -265,7 +275,9 @@ const Hero: React.FC = () => {
             <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
             <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>02 / STORY</span>
           </div>
-          <h2 className="font-bold mb-10" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>The Journey</h2>
+          <h2 className="font-bold mb-10" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <TextReveal as="span" delay={0.2}>The Journey</TextReveal>
+          </h2>
         </Reveal>
         <div className="grid md:grid-cols-2 gap-10 items-stretch">
           <Reveal delay={0.15}>
@@ -294,13 +306,15 @@ const Hero: React.FC = () => {
               <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>03 / CLIENTS</span>
             </div>
-            <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Trusted By</h2>
+            <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              <TextReveal as="span" delay={0.2}>Trusted By</TextReveal>
+            </h2>
             <p style={{ color: '#334155', fontSize: 14, marginBottom: 48, fontFamily: 'monospace' }}>Businesses I've automated and scaled</p>
           </Reveal>
           <div style={{ position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #020d0a, transparent)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #020d0a, transparent)', pointerEvents: 'none' }} />
-            <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', gap: 16, width: 'max-content', willChange: 'transform' }}>
+            <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', gap: 16, width: 'max-content', ...(isMobile ? {} : { willChange: 'transform' }) }}>
               {[...clients, ...clients].map((client, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 28px', borderRadius: 50, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', whiteSpace: 'nowrap', flexShrink: 0, transition: 'border-color 0.3s, background 0.3s' }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.25)'; e.currentTarget.style.background = 'rgba(20,184,166,0.05)'; }}
@@ -316,14 +330,21 @@ const Hero: React.FC = () => {
           </div>
           <Reveal delay={0.2} className="mt-16">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
-              {stats.map((s, i) => (
-                <GlowCard key={i} color="#14b8a6" hoverY={-4} style={{ padding: 0, textAlign: 'center' }}>
-                  <div style={{ padding: '20px 16px' }}>
-                    <p style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 800, color: '#14b8a6', margin: '0 0 4px', fontFamily: 'monospace' }}>{s.value}</p>
-                    <p style={{ fontSize: 12, color: '#475569', margin: 0 }}>{s.label}</p>
-                  </div>
-                </GlowCard>
-              ))}
+              {stats.map((s, i) => {
+                const numVal = parseInt(s.value);
+                const suffix = s.value.replace(/[\d]/g, '');
+                const actualNum = numVal || 0;
+                return (
+                  <GlowCard key={i} color="#14b8a6" hoverY={-4} style={{ padding: 0, textAlign: 'center' }}>
+                    <div style={{ padding: '20px 16px' }}>
+                      <p style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 800, color: '#14b8a6', margin: '0 0 4px', fontFamily: 'monospace' }}>
+                        <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
+                      </p>
+                      <p style={{ fontSize: 12, color: '#475569', margin: 0 }}>{s.label}</p>
+                    </div>
+                  </GlowCard>
+                );
+              })}
             </div>
           </Reveal>
         </div>
@@ -337,7 +358,9 @@ const Hero: React.FC = () => {
               <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>INDUSTRIES</span>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>Industries I Serve</h2>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
+              <TextReveal as="span" delay={0.2}>Industries I Serve</TextReveal>
+            </h2>
             <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 48, maxWidth: 520, lineHeight: 1.75 }}>
               Deep domain expertise across multiple verticals. Each industry has unique workflows — I build automation that fits.
             </p>
@@ -358,7 +381,9 @@ const Hero: React.FC = () => {
               <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>04 / TESTIMONIALS</span>
             </div>
-            <h2 className="font-bold mb-16" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>What Clients Say</h2>
+            <h2 className="font-bold mb-16" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              <TextReveal as="span" delay={0.2}>What Clients Say</TextReveal>
+            </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <motion.div whileHover={{ y: -4 }} style={{ padding: '36px 40px', borderRadius: 24, background: 'rgba(20,184,166,0.05)', border: '1px solid rgba(20,184,166,0.18)', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
@@ -414,7 +439,9 @@ const Hero: React.FC = () => {
               <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>RESULTS</span>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>Case Studies</h2>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
+              <TextReveal as="span" delay={0.2}>Case Studies</TextReveal>
+            </h2>
             <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 48, maxWidth: 520, lineHeight: 1.75 }}>Real projects, real impact. Here's what automation looks like in practice.</p>
           </Reveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

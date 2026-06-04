@@ -7,6 +7,7 @@ const AmbientBackground: React.FC = () => {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     let raf: number;
+    let hidden = false;
 
     const isMobile = window.innerWidth < 768;
     const orbCount = isMobile ? 3 : 6;
@@ -17,6 +18,13 @@ const AmbientBackground: React.FC = () => {
     };
     resize();
     window.addEventListener('resize', resize);
+
+    const onVisibility = () => {
+      hidden = document.hidden;
+      if (hidden) cancelAnimationFrame(raf);
+      else raf = requestAnimationFrame(draw);
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     const orbs = Array.from({ length: orbCount }, (_, i) => ({
       x: Math.random() * window.innerWidth,
@@ -31,6 +39,7 @@ const AmbientBackground: React.FC = () => {
     const interval = isMobile ? 32 : 0;
 
     const draw = (time: number) => {
+      if (hidden) return;
       raf = requestAnimationFrame(draw);
       if (isMobile && time - lastTime < interval) return;
       lastTime = time;
@@ -58,6 +67,7 @@ const AmbientBackground: React.FC = () => {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
@@ -69,7 +79,7 @@ const AmbientBackground: React.FC = () => {
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        willChange: 'transform',
+        // willChange omitted — canvas elements don't benefit from it
       }}
     />
   );

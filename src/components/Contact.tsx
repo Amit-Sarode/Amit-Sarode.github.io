@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SEO from './SEO';
+import MagneticButton from './MagneticButton';
 
 const apiKeysEMailJS = {
   serviceID: import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -402,7 +403,7 @@ const Contact = () => {
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,0.07)',
             borderRadius: 24,
-            padding: '40px 36px',
+            padding: 'clamp(24px, 5vw, 40px) clamp(20px, 5vw, 36px)',
             boxShadow: '0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
             position: 'relative',
             overflow: 'hidden',
@@ -428,7 +429,7 @@ const Contact = () => {
             onSubmit={sendEmail}
             style={{ display: 'flex', flexDirection: 'column', gap: 20, position: 'relative' }}
           >
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div className="form-grid-2">
               <Field
                 label="YOUR NAME"
                 name="from_name"
@@ -448,7 +449,7 @@ const Contact = () => {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <div className="form-grid-2">
               <SelectField
                 label="WHAT DO YOU NEED?"
                 name="project_type"
@@ -501,11 +502,9 @@ const Contact = () => {
               placeholder="Describe your current workflow, pain points, and what you'd like to automate..."
             />
 
-            <motion.button
+            <MagneticButton
               type="submit"
               disabled={sending}
-              whileHover={!sending ? { scale: 1.02, boxShadow: '0 0 30px rgba(20,184,166,0.5)' } : {}}
-              whileTap={!sending ? { scale: 0.98 } : {}}
               style={{
                 padding: '16px 32px',
                 borderRadius: 14,
@@ -523,6 +522,7 @@ const Contact = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
+                width: '100%',
               }}
             >
               {sending ? (
@@ -537,7 +537,7 @@ const Contact = () => {
               ) : (
                 'Get Free Proposal →'
               )}
-            </motion.button>
+            </MagneticButton>
           </form>
         </motion.div>
 
@@ -635,6 +635,19 @@ const Contact = () => {
           </div>
         </motion.div>
       </section>
+
+      <style>{`
+        .form-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+        @media (max-width: 500px) {
+          .form-grid-2 {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 };

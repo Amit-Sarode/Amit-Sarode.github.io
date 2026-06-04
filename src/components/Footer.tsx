@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import MagneticButton from './MagneticButton'
 
 const navLinks = [
    { label: 'Home', to: '/' },
@@ -280,9 +281,7 @@ const Footer: React.FC = () => {
               to="/contact"
               style={{ textDecoration: 'none', display: 'inline-block' }}
             >
-              <motion.div
-                whileHover={{ scale: 1.04, boxShadow: '0 0 24px rgba(20,184,166,0.35)' }}
-                whileTap={{ scale: 0.97 }}
+              <MagneticButton
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -295,10 +294,11 @@ const Footer: React.FC = () => {
                   fontWeight: 600,
                   letterSpacing: '0.03em',
                   cursor: 'pointer',
+                  border: 'none',
                 }}
               >
                 Say Hello →
-              </motion.div>
+              </MagneticButton>
             </Link>
 
             {/* Back to top */}

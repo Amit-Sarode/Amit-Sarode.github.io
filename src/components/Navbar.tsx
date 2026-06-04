@@ -103,11 +103,11 @@ const Navbar: React.FC = () => {
           left: 0,
           right: 0,
           zIndex: 50,
-          height: 64,
+          height: 60,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 32px',
+          padding: '0 clamp(12px, 4vw, 32px)',
           background: scrolled
             ? 'var(--bg-nav-scrolled)'
             : 'var(--bg-nav)',
@@ -435,7 +435,7 @@ const Navbar: React.FC = () => {
                   position: 'absolute',
                   top: 48,
                   right: 0,
-                  width: 220,
+                  width: 'min(260px, calc(100vw - 32px))',
                   background: 'var(--bg-nav)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid var(--border-hover)',
@@ -672,6 +672,27 @@ const Navbar: React.FC = () => {
         @media (min-width: 768px) {
           .md-nav { display: flex !important; }
           .mobile-nav-wrapper { display: none !important; }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .md-nav {
+            gap: 2px !important;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+          .md-nav::-webkit-scrollbar { display: none; }
+          .md-nav a, .md-nav button, .md-nav div > a {
+            font-size: 12px !important;
+            padding: 5px 10px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .mobile-nav-wrapper > button {
+            width: 34px !important;
+            height: 34px !important;
+          }
         }
       `}</style>
     </>

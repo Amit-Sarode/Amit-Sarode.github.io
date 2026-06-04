@@ -1,7 +1,9 @@
-import { useRef } from "react"
+import { useRef, useMemo } from "react"
 import { motion, useSpring, useMotionValue } from "framer-motion"
 
 import { ReactNode } from "react";
+
+const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
 interface Tilt3DProps {
   children: ReactNode;
@@ -19,8 +21,8 @@ const Tilt3D = ({ children, className = "", perspective = 1000, rotateFactor = 1
   const rotateX = useSpring(y, { stiffness: 200, damping: 20 })
   const rotateY = useSpring(x, { stiffness: 200, damping: 20 })
 
-  const handleMouseMove = (e:any) => {
-    if (!ref.current) return;
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isTouch || !ref.current) return;
     const rect = ref.current.getBoundingClientRect()
     const offsetX = e.clientX - rect.left
     const offsetY = e.clientY - rect.top
@@ -36,9 +38,12 @@ const Tilt3D = ({ children, className = "", perspective = 1000, rotateFactor = 1
   }
 
   const handleMouseLeave = () => {
+    if (isTouch) return;
     x.set(0)
     y.set(0)
   }
+
+  if (isTouch) return <div className={className}>{children}</div>;
 
   return (
     <motion.div
