@@ -2,14 +2,22 @@ import React, { useEffect, useRef } from 'react';
 
 const AmbientBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // Track mouse position for the glow effect
+  const mousePos = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let raf: number;
     let hidden = false;
 
     const isMobile = window.innerWidth < 768;
+    // Fewer orbs on mobile for performance
     const orbCount = isMobile ? 3 : 6;
 
     const resize = () => {
@@ -18,6 +26,20 @@ const AmbientBackground: React.FC = () => {
     };
     resize();
     window.addEventListener('resize', resize);
+
+    // Update mouse position reference
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePos.current = { x: e.clientX, y: e.clientY };
+    };
+    // Hide glow when mouse leaves window
+    const handleMouseLeave = () => {
+      mousePos.current = { x: -1000, y: -1000 }; 
+    };
+
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseleave', handleMouseLeave);
+    }
 
     const onVisibility = () => {
       hidden = document.hidden;
@@ -45,6 +67,8 @@ const AmbientBackground: React.FC = () => {
       lastTime = time;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // 1. Draw floating ambient orbs
       for (const o of orbs) {
         const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
         g.addColorStop(0, `hsla(${o.hue}, 70%, 55%, 0.12)`);
@@ -61,12 +85,34 @@ const AmbientBackground: React.FC = () => {
         if (o.y < -o.r) o.y = canvas.height + o.r;
         if (o.y > canvas.height + o.r) o.y = -o.r;
       }
+
+      // 2. Draw Mouse Follow Glow (Desktop Only)
+      if (!isMobile && mousePos.current.x > -100) {
+        const { x, y } = mousePos.current;
+        const glowRadius = 400; // Size of the mouse glow
+        
+        const mouseGlow = ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+        // Using your theme's teal color (#14b8a6) with low opacity
+        mouseGlow.addColorStop(0, 'rgba(20, 184, 166, 0.15)'); 
+        mouseGlow.addColorStop(0.5, 'rgba(20, 184, 166, 0.05)');
+        mouseGlow.addColorStop(1, 'rgba(20, 184, 166, 0)');
+
+        ctx.fillStyle = mouseGlow;
+        ctx.beginPath();
+        ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
     };
+    
     raf = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      if (!isMobile) {
+        window.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseleave', handleMouseLeave);
+      }
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
@@ -79,16 +125,15 @@ const AmbientBackground: React.FC = () => {
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        // willChange omitted — canvas elements don't benefit from it
       }}
     />
   );
 };
 
 const NoiseOverlay: React.FC = () => {
-  if (typeof window !== 'undefined' && window.innerWidth < 768) return null;
   return (
     <div
+      className="hidden md:block"
       style={{
         position: 'fixed',
         inset: 0,
@@ -103,9 +148,9 @@ const NoiseOverlay: React.FC = () => {
 };
 
 const GridLines: React.FC = () => {
-  if (typeof window !== 'undefined' && window.innerWidth < 768) return null;
   return (
     <div
+      className="hidden md:block"
       style={{
         position: 'fixed',
         inset: 0,

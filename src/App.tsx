@@ -16,7 +16,7 @@ const Chatgpt    = lazy(() => import('./components/Chatgpt'));
 const Projects   = lazy(() => import('./components/Projects'));
 const Hero       = lazy(() => import('./components/Hero'));
 const Pricing    = lazy(() => import('./components/Pricing'));
-const CaseStudyHealthcare = lazy(() => import('./components/CaseStudyHealthcare'));
+
 
 function App() {
   const location = useLocation();
@@ -50,7 +50,7 @@ function App() {
                   <Route path="/contact"  element={<Contact />} />
                   <Route path="/about"    element={<About />} />
                   <Route path="/chatgpt"  element={<Chatgpt />} />
-                  <Route path="/case-study/healthcare" element={<CaseStudyHealthcare />} />
+               
                 </Routes>
               </PageTransition>
             </AnimatePresence>

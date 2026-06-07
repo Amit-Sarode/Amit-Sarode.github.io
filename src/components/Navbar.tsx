@@ -519,43 +519,6 @@ const Navbar: React.FC = () => {
                   </motion.div>
                 ))}
 
-                {/* Mobile theme toggle */}
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.06 }}
-                  style={{ padding: '6px 8px' }}
-                >
-                  <button
-                    onClick={() => { toggleTheme(); closeMobile(); }}
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '10px 14px',
-                      borderRadius: 10,
-                      color: 'var(--text-secondary)',
-                      fontSize: 14,
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontWeight: 500,
-                      transition: 'all 0.2s',
-                      textAlign: 'left',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = 'var(--accent-light)';
-                      e.currentTarget.style.background = 'var(--accent-bg)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--text-secondary)';
-                      e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
-                  </button>
-                </motion.div>
 
                 {/* Mobile resume */}
                 <motion.div

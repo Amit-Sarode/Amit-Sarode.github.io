@@ -121,7 +121,7 @@ export const testimonials = [
     name: 'Rahul M.',
     role: 'Founder · Chariot Bar',
     text: 'Amit built our website exactly the way we imagined it. Clean, fast, and professional. Our online presence improved significantly after launch.',
-    stars: 5,
+    stars: 4,
     initials: 'R',
     color: '#f59e0b',
     source: 'Google',
@@ -410,28 +410,29 @@ export const processSteps = [
 ];
 
 export const pricingPlans = [
-  {
+ {
     tier: 'Starter',
-    price: '₹10,000',
-    period: 'starting at',
+    priceINR: 10000,
+    priceUSD: 150,
     desc: 'Perfect for a single automation or chatbot MVP',
-    features: ['1 AI chatbot or workflow', 'WhatsApp / Web integration', '2 weeks delivery', '2 weeks post-launch support',"1 Year Free Hostinger Subscription"
-],
+    features: ['1 AI chatbot or workflow', 'WhatsApp / Web integration', '2 weeks delivery', '1 Year Free Hostinger Subscription'],
     color: '#14b8a6',
     featured: false,
   },
   {
     tier: 'Growth',
-    price: '₹17,500',
-    period: 'starting at',
+    priceINR: 25000, // Base price
+    priceUSD: 360,   // Base price
+    discount: 0.30,  // 30%
     desc: 'Full-stack AI solution with integrations',
-    features: ['Custom AI application', 'API integrations & dashboards', '1 month post-launch support', 'Weekly progress demos', '1 Year Free Hostinger Subscription', '30% Discount Applied'],
+    features: ['Custom AI application', 'API integrations', '1 month support', 'Weekly demos', '1 Year Free Hostinger Subscription'],
     color: '#8B5CF6',
     featured: true,
   },
   {
     tier: 'Enterprise',
     price: 'Custom',
+    usdPrice: '',
     period: '',
     desc: 'Ongoing automation partnership for scaling teams',
     features: ['Multiple AI systems', 'Dedicated monthly retainer', 'Priority support & SLA', 'Architecture & strategy consulting', 'Quarterly optimization reviews'],
@@ -443,6 +444,6 @@ export const pricingPlans = [
 export const stats = [
   { value: '15+', label: 'Projects Delivered' },
   { value: '10+', label: 'Happy Clients' },
-  { value: '2+', label: 'Years Experience' },
-  { value: '100%', label: 'On-time Delivery' },
+  { value: '3+', label: 'Years Building' },
+  { value: '99%', label: 'On-time Delivery' },
 ];

@@ -1,5 +1,5 @@
 import emailjs from '@emailjs/browser';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,86 +7,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import SEO from './SEO';
 import MagneticButton from './MagneticButton';
 
+import { getCalApi } from "@calcom/embed-react";
+
+// 1. Import the beautiful backgrounds from HeroBackground
+import { AmbientBackground, GridLines } from './hero/HeroBackground';
+
 const apiKeysEMailJS = {
   serviceID: import.meta.env.VITE_EMAILJS_SERVICE_ID,
   templateID: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
 };
-
-/* ─── Floating orb background ─── */
-const AmbientBackground: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
-    let raf: number;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const orbs = [
-      { x: window.innerWidth * 0.2, y: window.innerHeight * 0.3, r: 280, dx: 0.3, dy: 0.2, hue: 168 },
-      { x: window.innerWidth * 0.8, y: window.innerHeight * 0.7, r: 220, dx: -0.25, dy: 0.3, hue: 190 },
-      { x: window.innerWidth * 0.5, y: window.innerHeight * 0.1, r: 160, dx: 0.2, dy: 0.4, hue: 175 },
-    ];
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (const o of orbs) {
-        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-        g.addColorStop(0, `hsla(${o.hue}, 70%, 55%, 0.1)`);
-        g.addColorStop(1, `hsla(${o.hue}, 70%, 55%, 0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-        ctx.fill();
-
-        o.x += o.dx;
-        o.y += o.dy;
-        if (o.x < -o.r) o.x = canvas.width + o.r;
-        if (o.x > canvas.width + o.r) o.x = -o.r;
-        if (o.y < -o.r) o.y = canvas.height + o.r;
-        if (o.y > canvas.height + o.r) o.y = -o.r;
-      }
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}
-    />
-  );
-};
-
-/* ─── Grid lines ─── */
-const GridLines: React.FC = () => (
-  <div
-    style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 1,
-      pointerEvents: 'none',
-      backgroundImage: `
-        linear-gradient(rgba(20, 184, 166, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20, 184, 166, 0.025) 1px, transparent 1px)
-      `,
-      backgroundSize: '80px 80px',
-    }}
-  />
-);
 
 /* ─── Input field component ─── */
 const Field: React.FC<{
@@ -259,6 +189,19 @@ const Contact = () => {
     });
   }, []);
 
+  // Fixed Cal.com Initialization
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi();
+      cal("ui", {
+        theme: "dark", 
+        styles: { branding: { brandColor: "#14b8a6" } }, 
+        hideEventTypeDetails: false,
+        layout: "month_view"
+      });
+    })();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -327,6 +270,7 @@ const Contact = () => {
         description="Tell us about your automation goals. Get a free discovery call and custom proposal for AI chatbots, workflow automation, or custom AI applications."
         path="/contact"
       />
+      
       <AmbientBackground />
       <GridLines />
 
@@ -607,22 +551,25 @@ const Contact = () => {
               <span style={{ fontSize: 16 }}>💬</span>
               WhatsApp
             </a>
-            <a
-              href="https://cal.com/"
-              target="_blank"
-              rel="noreferrer"
+            
+           {/* Fixed Button - Added type="button" and removed broken namespace */}
+           <button
+              type="button"
+              data-cal-link="amit-sarode-vb2eq3/quick-chat" 
+              data-cal-config='{"layout":"month_view"}'
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 padding: '14px 20px', borderRadius: 14,
                 background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)',
                 color: '#8B5CF6', fontSize: 13, textDecoration: 'none', transition: 'border-color 0.3s',
+                cursor: 'pointer'
               }}
               onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)')}
               onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(139,92,246,0.15)')}
             >
               <span style={{ fontSize: 16 }}>📅</span>
               Book a Call
-            </a>
+            </button>
           </div>
 
           <p style={{ color: '#334155', fontSize: 12, letterSpacing: '0.12em', fontFamily: 'monospace', marginBottom: 20 }}>
@@ -630,7 +577,7 @@ const Contact = () => {
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <SocialLink href="https://www.instagram.com/amit_sarode__/" label="Instagram" icon="📸" />
-            <SocialLink href="https://linkedin.com/" label="LinkedIn" icon="in" />
+            <SocialLink href="https://www.linkedin.com/in/amit-sarode/" label="LinkedIn" icon="in" />
             <SocialLink href="https://github.com/Amit-Sarode" label="GitHub" icon="⌨" />
           </div>
         </motion.div>

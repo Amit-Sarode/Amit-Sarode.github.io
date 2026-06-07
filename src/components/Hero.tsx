@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import SEO from './SEO';
 import TextReveal from './TextReveal';
 import AnimatedCounter from './AnimatedCounter';
@@ -10,7 +10,7 @@ import HeroScrollExperience from './hero/HeroScrollExperience';
 import SkillCard from './hero/SkillCard';
 import { Reveal, Divider } from './hero/Reveal';
 import {
-  skills, clients, testimonials,
+  clients, testimonials,
   caseStudies, processSteps, stats, businesses, type BusinessCategory,
 } from './hero/data';
 
@@ -56,7 +56,6 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
         aria-label={`Learn more about ${biz.title}`}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigate(biz.id); } }}
       >
-        {/* Cursor-following glow */}
         <div style={{
           position: 'absolute',
           left: mouse.x, top: mouse.y,
@@ -69,7 +68,6 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
           transition: 'opacity 0.4s',
         }} />
 
-        {/* Top gradient bar on hover */}
         <motion.div
           animate={{ opacity: hovered ? 1 : 0, scaleX: hovered ? 1 : 0.3 }}
           transition={{ duration: 0.4 }}
@@ -81,7 +79,6 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
           }}
         />
 
-        {/* Corner glow blob */}
         <motion.div
           animate={{ opacity: hovered ? 0.15 : 0, scale: hovered ? 1 : 0.5 }}
           transition={{ duration: 0.5 }}
@@ -102,7 +99,7 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
             {biz.icon}
           </motion.span>
           <h4 style={{
-            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: hovered ? '#f1f5f9' : '#e2e8f0',
+            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: hovered ? '#ffffff' : '#f8fafc',
             margin: 0, lineHeight: 1.3, transition: 'color 0.3s',
           }}>
             {biz.title}
@@ -114,7 +111,7 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                style={{ fontSize: 13, color: '#94a3b8', margin: 0, lineHeight: 1.6, overflow: 'hidden' }}
+                style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.6, overflow: 'hidden' }}
               >
                 {biz.description}
               </motion.p>
@@ -136,7 +133,7 @@ const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate:
           </svg>
           {biz.link && (
             <span style={{
-              fontSize: 10, color: hovered ? '#94a3b8' : '#475569',
+              fontSize: 10, color: hovered ? '#cbd5e1' : '#94a3b8',
               fontFamily: 'monospace', letterSpacing: '0.06em', transition: 'color 0.3s',
             }}>
               Has live site ↗
@@ -174,13 +171,12 @@ const GlowCard: React.FC<{
       className={className}
       style={{
         position: 'relative', overflow: 'hidden', borderRadius: 20,
-        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
-        border: `1px solid ${hovered ? `${color}40` : 'rgba(255,255,255,0.06)'}`,
+        background: hovered ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${hovered ? `${color}50` : 'rgba(255,255,255,0.08)'}`,
         transition: 'background 0.4s, border-color 0.4s',
         ...style,
       }}
     >
-      {/* Cursor glow */}
       <div style={{
         position: 'absolute', left: mouse.x, top: mouse.y,
         width: 220, height: 220, borderRadius: '50%',
@@ -189,15 +185,13 @@ const GlowCard: React.FC<{
         pointerEvents: 'none', zIndex: 0,
         opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
       }} />
-      {/* Corner glow blob */}
       <div style={{
         position: 'absolute', top: -25, right: -25,
         width: 100, height: 100, borderRadius: '50%',
         background: color, filter: 'blur(35px)',
         pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 0.12 : 0, transition: 'opacity 0.5s',
+        opacity: hovered ? 0.15 : 0, transition: 'opacity 0.5s',
       }} />
-      {/* Top gradient bar */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 2,
         background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
@@ -212,13 +206,62 @@ const GlowCard: React.FC<{
 const Hero: React.FC = () => {
   const navigate = useNavigate();
 
+  // ─── Carousel State ───
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
+
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 800 : -800,
+      opacity: 0,
+      scale: 0.9,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (dir: number) => ({
+      zIndex: 0,
+      x: dir < 0 ? 800 : -800,
+      opacity: 0,
+      scale: 0.9,
+    }),
+  };
+
+  const paginate = useCallback((newDirection: number) => {
+    setDirection(newDirection);
+    setCurrent((prev) => (prev + newDirection + testimonials.length) % testimonials.length);
+    setAutoPlay(false);
+  }, []);
+
+  const currentTestimonial = testimonials[current];
+
+  useEffect(() => {
+    if (testimonials.length === 0) return;
+
+    if (!autoPlay) {
+      const timer = setTimeout(() => setAutoPlay(true), 8000);
+      return () => clearTimeout(timer);
+    }
+
+    const interval = setInterval(() => {
+      setDirection(1);
+      setCurrent((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [autoPlay, testimonials.length]);
+
   return (
     <div
       className="overflow-x-hidden"
       style={{
         background: 'linear-gradient(135deg, #020d0a 0%, #050f10 40%, #02100d 100%)',
         minHeight: '100vh',
-        color: '#e2e8f0',
+        color: '#f8fafc',
         position: 'relative',
       }}
     >
@@ -235,30 +278,62 @@ const Hero: React.FC = () => {
       {/* ── CINEMATIC HERO ── */}
       <HeroScrollExperience />
 
+      <Divider />
       {/* ── HOW I WORK ── */}
+      
       <section style={{ position: 'relative', zIndex: 10, padding: '112px 24px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
           <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>PROCESS</span>
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                 <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>PROCESS</span>
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
+              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
+       
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+            How I Work
+            </motion.h2>
+    
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 500, margin: '0 auto', lineHeight: 1.75 }}>
+                A proven 3-step process to turn your business challenges into automated solutions.
+              </p>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
-              <TextReveal as="span" delay={0.2}>How I Work</TextReveal>
-            </h2>
-            <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 56, maxWidth: 480, lineHeight: 1.75 }}>
-              A proven 3-step process to turn your business challenges into automated solutions.
-            </p>
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
             {processSteps.map((item, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <GlowCard color={item.color} style={{ padding: 0 }}>
                   <div style={{ padding: '32px 28px' }}>
-                    <div style={{ fontFamily: 'monospace', fontSize: 11, color: item.color, letterSpacing: '0.1em', marginBottom: 16, opacity: 0.7 }}>STEP {item.step}</div>
+                    <div style={{ fontFamily: 'monospace', fontSize: 12, color: item.color, letterSpacing: '0.1em', marginBottom: 16, opacity: 0.9 }}>STEP {item.step}</div>
                     <div style={{ fontSize: 32, marginBottom: 16 }}>{item.icon}</div>
-                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 20, color: '#f1f5f9', margin: '0 0 10px' }}>{item.title}</h3>
-                    <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 20, color: '#ffffff', margin: '0 0 10px' }}>{item.title}</h3>
+                    <p style={{ fontSize: 14, color: '#cbd5e1', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
                   </div>
                 </GlowCard>
               </Reveal>
@@ -266,63 +341,123 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </section>
-
+      
+<Divider />
       {/* ── JOURNEY ── */}
       <section className="relative z-10 py-28 max-w-6xl mx-auto px-6">
-        <Divider />
         <Reveal delay={0.1} className="mt-16">
-          <div className="flex items-center gap-3 mb-2">
-            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>02 / STORY</span>
+          <div className="flex flex-col items-center text-center mb-16">
+            <div className="flex items-center justify-center gap-3 mb-4">
+                 <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>STORY</span>
+                <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+            </div>
+            <h2 className="font-bold mb-2" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
+         
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+        The Journey
+            </motion.h2>
+          
+            </h2>
           </div>
-          <h2 className="font-bold mb-10" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-            <TextReveal as="span" delay={0.2}>The Journey</TextReveal>
-          </h2>
         </Reveal>
         <div className="grid md:grid-cols-2 gap-10 items-stretch">
           <Reveal delay={0.15}>
-            <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', lineHeight: 1.85, color: '#94a3b8' }}>
+            <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', lineHeight: 1.85, color: '#cbd5e1' }}>
               From a Non Technical background to founding an <span style={{ color: '#5eead4', fontWeight: 600 }}>AI Automation Agency</span>. My journey
               is defined by turning complex AI capabilities into practical business solutions — building production-grade automation systems that save companies time, money, and human effort.
             </p>
           </Reveal>
           <Reveal delay={0.25}>
-            <div style={{ padding: 28, borderRadius: 20, background: 'rgba(20,184,166,0.04)', border: '1px solid rgba(20,184,166,0.15)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: -30, left: -30, width: 100, height: 100, borderRadius: '50%', background: 'rgba(20,184,166,0.15)', filter: 'blur(30px)', pointerEvents: 'none' }} />
+            <div style={{ padding: 28, borderRadius: 20, background: 'rgba(20,184,166,0.06)', border: '1px solid rgba(20,184,166,0.2)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: -30, left: -30, width: 100, height: 100, borderRadius: '50%', background: 'rgba(20,184,166,0.2)', filter: 'blur(30px)', pointerEvents: 'none' }} />
               <span style={{ fontSize: 30, color: '#14b8a6', lineHeight: 1, display: 'block', marginBottom: 12 }}>"</span>
-              <p style={{ fontStyle: 'italic', color: '#cbd5e1', lineHeight: 1.7, fontSize: 15 }}>
+              <p style={{ fontStyle: 'italic', color: '#f8fafc', lineHeight: 1.7, fontSize: 16 }}>
                 I don't just build software; I design intelligent systems that automate repetitive work — freeing businesses to focus on what actually matters.
               </p>
             </div>
           </Reveal>
         </div>
       </section>
-
+<Divider />
       {/* ── CLIENTS ── */}
       <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="max-w-6xl mx-auto">
           <Reveal>
-            <div className="flex items-center gap-3 mb-2">
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>03 / CLIENTS</span>
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                   <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>CLIENTS</span>
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
+              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
+               <Reveal>
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+         Trusted By
+            </motion.h2>
+            </Reveal>
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: 15, fontFamily: 'monospace', margin: '0 auto' }}>Businesses I've automated and scaled</p>
             </div>
-            <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              <TextReveal as="span" delay={0.2}>Trusted By</TextReveal>
-            </h2>
-            <p style={{ color: '#334155', fontSize: 14, marginBottom: 48, fontFamily: 'monospace' }}>Businesses I've automated and scaled</p>
           </Reveal>
           <div style={{ position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #020d0a, transparent)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #020d0a, transparent)', pointerEvents: 'none' }} />
             <motion.div animate={{ x: ['0%', '-50%'] }} transition={{ duration: 28, repeat: Infinity, ease: 'linear' }} style={{ display: 'flex', gap: 16, width: 'max-content', ...(isMobile ? {} : { willChange: 'transform' }) }}>
               {[...clients, ...clients].map((client, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 28px', borderRadius: 50, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', whiteSpace: 'nowrap', flexShrink: 0, transition: 'border-color 0.3s, background 0.3s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.25)'; e.currentTarget.style.background = 'rgba(20,184,166,0.05)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 28px', borderRadius: 50, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', whiteSpace: 'nowrap', flexShrink: 0, transition: 'border-color 0.3s, background 0.3s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.3)'; e.currentTarget.style.background = 'rgba(20,184,166,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}>
                   <span style={{ fontSize: 20 }}>{client.emoji}</span>
                   <div>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#cbd5e1', margin: 0 }}>{client.name}</p>
-                    <p style={{ fontSize: 11, color: '#334155', margin: 0, fontFamily: 'monospace' }}>{client.type}</p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{client.name}</p>
+                    <p style={{ fontSize: 12, color: '#cbd5e1', margin: 0, fontFamily: 'monospace' }}>{client.type}</p>
                   </div>
                 </div>
               ))}
@@ -340,7 +475,7 @@ const Hero: React.FC = () => {
                       <p style={{ fontSize: 'clamp(1.6rem,4vw,2.2rem)', fontWeight: 800, color: '#14b8a6', margin: '0 0 4px', fontFamily: 'monospace' }}>
                         <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
                       </p>
-                      <p style={{ fontSize: 12, color: '#475569', margin: 0 }}>{s.label}</p>
+                      <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0 }}>{s.label}</p>
                     </div>
                   </GlowCard>
                 );
@@ -349,21 +484,52 @@ const Hero: React.FC = () => {
           </Reveal>
         </div>
       </section>
+      <Divider />
 
       {/* ── INDUSTRIES ── */}
       <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
           <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>INDUSTRIES</span>
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>INDUSTRIES</span>
+                 <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
+              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
+                <Reveal>
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+           Industries I Serve
+            </motion.h2>
+            </Reveal>
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
+                Deep domain expertise across multiple verticals. Each industry has unique workflows — I build automation that fits.
+              </p>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
-              <TextReveal as="span" delay={0.2}>Industries I Serve</TextReveal>
-            </h2>
-            <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 48, maxWidth: 520, lineHeight: 1.75 }}>
-              Deep domain expertise across multiple verticals. Each industry has unique workflows — I build automation that fits.
-            </p>
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
             {businesses.map((biz, i) => (
@@ -373,91 +539,289 @@ const Hero: React.FC = () => {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="max-w-6xl mx-auto">
-          <Reveal>
-            <div className="flex items-center gap-3 mb-2">
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>04 / TESTIMONIALS</span>
+      <Divider />
+
+      {/* ── TESTIMONIALS (DRAG-TO-SWIPE) ── */}
+      <section 
+        className="relative z-10 py-32 px-6 overflow-hidden"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(20,184,166,0.03) 0%, transparent 100%)' }}
+      >
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center text-center mb-16"
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
+                CLIENT SUCCESS
+              </span>
+              <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
             </div>
-            <h2 className="font-bold mb-16" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', background: 'linear-gradient(120deg, #f1f5f9, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              <TextReveal as="span" delay={0.2}>What Clients Say</TextReveal>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <motion.div whileHover={{ y: -4 }} style={{ padding: '36px 40px', borderRadius: 24, background: 'rgba(20,184,166,0.05)', border: '1px solid rgba(20,184,166,0.18)', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, borderRadius: '50%', background: 'rgba(20,184,166,0.12)', filter: 'blur(40px)', pointerEvents: 'none' }} />
-              <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
-                {[...Array(5)].map((_, i) => (<span key={i} style={{ color: '#14b8a6', fontSize: 16 }}>★</span>))}
+            <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+              What Clients Say
+            </motion.h2>
+          </motion.div>
+   
+          {/* Main Carousel Container */}
+          {testimonials.length > 0 && (
+            <div style={{ position: 'relative', width: '100%', maxWidth: 850, margin: '0 auto' }}>
+              
+              <div style={{ display: 'grid', gridTemplateAreas: '"stack"' }}>
+                <AnimatePresence initial={false} custom={direction}>
+                  <motion.div
+                    key={current}
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ type: 'spring', stiffness: 220, damping: 25, mass: 1 }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.2}
+                    onDragEnd={(e, { offset }) => {
+                      const swipeThreshold = 50;
+                      if (offset.x < -swipeThreshold) {
+                        paginate(1);
+                      } else if (offset.x > swipeThreshold) {
+                        paginate(-1);
+                      }
+                    }}
+                    style={{
+                      gridArea: 'stack',
+                      width: '100%',
+                      padding: isMobile ? '36px 24px' : '56px 64px',
+                      borderRadius: 32,
+                      background: 'rgba(20,184,166,0.06)',
+                      border: '1px solid rgba(20,184,166,0.2)',
+                      backdropFilter: 'blur(10px)',
+                      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      touchAction: 'pan-y', 
+                      cursor: 'grab'
+                    }}
+                    whileTap={{ cursor: 'grabbing' }}
+                  >
+                    <div style={{
+                      position: 'absolute', top: -50, right: -50, width: 250, height: 250,
+                      borderRadius: '50%', background: `radial-gradient(circle, ${currentTestimonial?.color}30 0%, transparent 70%)`,
+                      filter: 'blur(40px)', pointerEvents: 'none'
+                    }} />
+
+                    <span style={{ 
+                      position: 'absolute', top: 20, left: 30, fontSize: 120, lineHeight: 1, 
+                      color: 'rgba(255,255,255,0.05)', fontFamily: 'serif', pointerEvents: 'none' 
+                    }}>
+                      "
+                    </span>
+       
+                    <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        style={{ display: 'flex', gap: 4, marginBottom: 24 }}
+                      >
+                        {[...Array(currentTestimonial?.stars || 5)].map((_, s) => (
+                          <span key={s} style={{ color: '#f59e0b', fontSize: 18 }}>★</span>
+                        ))}
+                      </motion.div>
+         
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        style={{
+                          fontSize: 'clamp(1.15rem, 3vw, 1.5rem)',
+                          color: '#ffffff',
+                          lineHeight: 1.7,
+                          fontWeight: 300,
+                          marginBottom: 40,
+                        }}
+                      >
+                        "{currentTestimonial?.text}"
+                      </motion.p>
+         
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 16 }}
+                      >
+                        <div style={{
+                          width: 56, height: 56, borderRadius: '50%', flexShrink: 0,
+                          background: `linear-gradient(135deg, ${currentTestimonial?.color}90, ${currentTestimonial?.color}40)`,
+                          border: `2px solid ${currentTestimonial?.color}60`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 20, fontWeight: 700, color: '#fff',
+                        }}>
+                          {currentTestimonial?.initials}
+                        </div>
+                        <div>
+                          <p style={{ fontSize: 16, fontWeight: 700, color: '#ffffff', margin: '0 0 4px' }}>
+                            {currentTestimonial?.name}
+                          </p>
+                          <p style={{ fontSize: 13, color: '#cbd5e1', margin: 0, fontFamily: 'monospace' }}>
+                            {currentTestimonial?.role}
+                          </p>
+                        </div>
+                        {currentTestimonial?.source && (
+                          <div style={{
+                            marginLeft: 'auto', padding: '6px 14px', borderRadius: 20,
+                            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                            fontSize: 11, color: '#e2e8f0', fontFamily: 'monospace', letterSpacing: '0.05em'
+                          }}>
+                            {currentTestimonial?.source}
+                          </div>
+                        )}
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
-              <p style={{ fontSize: 'clamp(1rem, 2vw, 1.15rem)', color: '#cbd5e1', lineHeight: 1.8, fontStyle: 'italic', marginBottom: 28, position: 'relative' }}>
-                "Amit delivered our HRMS portal ahead of schedule and the quality exceeded our expectations. His understanding of complex business logic, clean code, and attention to UI detail is rare for a developer his age. He's been a key contributor to our product team at Atum IT."
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'linear-gradient(135deg, #14b8a6, #0d9488)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: '#fff', flexShrink: 0 }}>A</div>
-                <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', margin: '0 0 2px' }}>Atum IT Pvt. Ltd.</p>
-                  <p style={{ fontSize: 12, color: '#475569', margin: 0, fontFamily: 'monospace' }}>Technology Company · Nagpur, India</p>
+     
+              {/* Pagination Dots and Buttons */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40, gap: 32 }}>
+                
+                <motion.button
+                  onClick={() => paginate(-1)}
+                  whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.15)' }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(20,184,166,0.3)',
+                    background: 'rgba(20,184,166,0.05)', cursor: 'pointer', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', color: '#14b8a6', fontSize: 24, transition: 'all 0.3s ease',
+                  }}
+                >
+                  ←
+                </motion.button>
+
+                <div style={{ display: 'flex', gap: 10 }}>
+                  {testimonials.map((_, i) => (
+                    <motion.button
+                      key={i}
+                      onClick={() => { setCurrent(i); setAutoPlay(false); }}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      animate={{ 
+                        width: i === current ? 32 : 10,
+                        background: i === current ? '#14b8a6' : 'rgba(20,184,166,0.2)'
+                      }}
+                      style={{ height: 10, borderRadius: 5, border: 'none', cursor: 'pointer' }}
+                    />
+                  ))}
                 </div>
-                <div style={{ marginLeft: 'auto', padding: '5px 14px', borderRadius: 20, background: 'rgba(20,184,166,0.1)', border: '1px solid rgba(20,184,166,0.2)', fontSize: 11, color: '#5eead4', fontFamily: 'monospace' }}>Employer</div>
+     
+                <motion.button
+                  onClick={() => paginate(1)}
+                  whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.15)' }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    width: 48, height: 48, borderRadius: '50%', border: '1px solid rgba(20,184,166,0.3)',
+                    background: 'rgba(20,184,166,0.05)', cursor: 'pointer', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', color: '#14b8a6', fontSize: 24, transition: 'all 0.3s ease',
+                  }}
+                >
+                  →
+                </motion.button>
+
               </div>
-            </motion.div>
-          </Reveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
-            {testimonials.map((t, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <GlowCard color={t.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', gap: 0 }}>
-                  <div style={{ padding: '24px 26px', display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
-                    <div style={{ display: 'flex', gap: 3 }}>
-                      {[...Array(t.stars)].map((_, s) => (<span key={s} style={{ color: '#f59e0b', fontSize: 13 }}>★</span>))}
-                    </div>
-                    <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.75, margin: 0, fontStyle: 'italic', flex: 1 }}>"{t.text}"</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, ${t.color}40, ${t.color}20)`, border: `1px solid ${t.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: t.color }}>{t.initials}</div>
-                      <div>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', margin: '0 0 2px' }}>{t.name}</p>
-                        <p style={{ fontSize: 11, color: '#334155', margin: 0, fontFamily: 'monospace' }}>{t.role}</p>
-                      </div>
-                      {t.source && (
-                        <div style={{ marginLeft: 'auto', padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', fontSize: 10, color: '#334155', fontFamily: 'monospace' }}>{t.source}</div>
-                      )}
-                    </div>
-                  </div>
-                </GlowCard>
-              </Reveal>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
+
+
+      <Divider />
 
       {/* ── CASE STUDIES ── */}
       <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
           <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>RESULTS</span>
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>RESULTS</span>
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
+              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
+                <Reveal>
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+          Case Studies
+            </motion.h2>
+            </Reveal>
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
+                Real projects, real impact. Here's what automation looks like in practice.
+              </p>
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.8rem)', color: '#f1f5f9', margin: '0 0 12px', lineHeight: 1.1 }}>
-              <TextReveal as="span" delay={0.2}>Case Studies</TextReveal>
-            </h2>
-            <p style={{ color: '#64748b', fontSize: 14, fontWeight: 300, marginBottom: 48, maxWidth: 520, lineHeight: 1.75 }}>Real projects, real impact. Here's what automation looks like in practice.</p>
           </Reveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {caseStudies.map((cs, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <GlowCard color={cs.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}15`, border: `1px solid ${cs.color}30`, marginBottom: 16 }}>
+                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}20`, border: `1px solid ${cs.color}40`, marginBottom: 16 }}>
                       <span style={{ fontSize: 12, fontWeight: 600, color: cs.color }}>↗ {cs.result}</span>
                     </div>
-                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: '#f1f5f9', margin: '0 0 4px', lineHeight: 1.3 }}>{cs.title}</h3>
-                    <p style={{ fontSize: 12, color: '#475569', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
-                    <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 18, color: '#ffffff', margin: '0 0 6px', lineHeight: 1.3 }}>{cs.title}</h3>
+                    <p style={{ fontSize: 13, color: '#cbd5e1', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
+                    <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {cs.tags.map((tag) => (
-                        <span key={tag} style={{ fontSize: 10, letterSpacing: '0.05em', padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.04)', color: '#64748b', border: '1px solid rgba(255,255,255,0.06)' }}>{tag}</span>
+                        <span key={tag} style={{ fontSize: 11, letterSpacing: '0.05em', padding: '4px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>{tag}</span>
                       ))}
                     </div>
                   </div>

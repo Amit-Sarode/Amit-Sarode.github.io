@@ -151,8 +151,7 @@ const Footer: React.FC = () => {
                 maxWidth: 240,
               }}
             >
-              Frontend Developer specialized in React and React Native. Building digital experiences
-              with precision and passion.
+              Full-stack developer building AI-powered web applications, SaaS platforms, and workflow automation tools. Available for freelance worldwide.
             </p>
 
             {/* Social icons */}

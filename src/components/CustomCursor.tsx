@@ -11,11 +11,11 @@ const CustomCursor = () => {
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
-  const cursorX = useSpring(mouseX, { stiffness: 200, damping: 25 });
-  const cursorY = useSpring(mouseY, { stiffness: 200, damping: 25 });
+  const cursorX = useSpring(mouseX, { stiffness: 300, damping: 25 });
+  const cursorY = useSpring(mouseY, { stiffness: 300, damping: 25 });
 
-  const glowX = useSpring(mouseX, { stiffness: 100, damping: 30 });
-  const glowY = useSpring(mouseY, { stiffness: 100, damping: 30 });
+  const glowX = useSpring(mouseX, { stiffness: 200, damping: 25 });
+  const glowY = useSpring(mouseY, { stiffness: 200, damping: 25 });
 
   useEffect(() => {
     if (isTouch) return;
