@@ -65,13 +65,18 @@ const GlowCard: React.FC<{
 };
 
 // Reusable Toggle Button Component
-const TogglePill = ({ options, active, onChange, color }) => (
+const TogglePill: React.FC<{
+  options: { label: string; value: string }[];
+  active: string;
+  onChange: (value: any) => void;
+  color: string;
+}> = ({ options, active, onChange, color }) => (
   <div style={{
     display: 'flex', background: 'rgba(255,255,255,0.03)', 
     border: '1px solid rgba(255,255,255,0.08)', borderRadius: 100, 
     padding: 4, position: 'relative'
   }}>
-    {options.map((opt) => (
+    {options.map((opt: { label: string; value: string }) => (
       <button
         key={opt.value}
         onClick={() => onChange(opt.value)}
@@ -204,8 +209,8 @@ const Pricing: React.FC = () => {
                          {
   Math.floor(
     currency === 'USD'
-      ? plan.priceUSD * (1 - (plan.discount || 0))
-      : plan.priceINR * (1 - (plan.discount || 0))
+      ? plan.priceUSD! * (1 - (plan.discount || 0))
+      : plan.priceINR! * (1 - (plan.discount || 0))
   )
 }
                         </span>

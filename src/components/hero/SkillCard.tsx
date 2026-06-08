@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface Skill {
   name: string;
@@ -19,14 +19,16 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) 
   const colorBg = `${color}14`;
   const colorBorder = `${color}28`;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const barRef = useRef<HTMLDivElement>(null);
+  const barInView = useInView(barRef, { once: true, margin: '-20px' });
 
   return (
     <motion.div
       initial={{ opacity: 0, y: isMobile ? 16 : 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: isMobile ? Math.min(index * 0.04, 0.2) : index * 0.07, duration: isMobile ? 0.4 : 0.6, ease: 'easeOut' }}
-      whileHover={isMobile ? undefined : { y: -6, scale: 1.015 }}
+      whileHover={isMobile ? undefined : { y: -6, scale: 1.015, borderColor: color }}
       style={{
         position: 'relative',
         padding: '22px 24px',
@@ -35,32 +37,32 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) 
         border: '1px solid rgba(255,255,255,0.06)',
         overflow: 'hidden',
         cursor: 'default',
-        transition: 'border-color 0.25s',
         ...(isMobile ? {} : { willChange: 'transform, opacity' }),
       }}
-      className="skill-card group"
     >
-      <style>{`
-        .skill-card::before {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, ${color}, transparent);
-          opacity: 0;
-          transition: opacity 0.3s;
-          pointer-events: none;
-        }
-        .skill-card:hover::before { opacity: 1; }
-        .skill-card:hover { border-color: ${color} !important; }
-      `}</style>
+      {/* Top gradient line */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+          background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Corner glow */}
-      <div style={{
-        position: 'absolute', top: -40, right: -40, width: 130, height: 130,
-        borderRadius: '50%', background: color, opacity: 0.04,
-        filter: 'blur(32px)', pointerEvents: 'none', transition: 'opacity 0.3s',
-      }} className="group-hover:opacity-[0.09]" />
+      <motion.div
+        initial={{ opacity: 0.04 }}
+        whileHover={{ opacity: 0.12 }}
+        transition={{ duration: 0.3 }}
+        style={{
+          position: 'absolute', top: -40, right: -40, width: 130, height: 130,
+          borderRadius: '50%', background: color,
+          filter: 'blur(32px)', pointerEvents: 'none',
+        }}
+      />
 
       {/* Featured badge */}
       {skill.featured && (
@@ -139,15 +141,14 @@ const SkillCard: React.FC<{ skill: Skill; index: number }> = ({ skill, index }) 
       )}
 
       {/* Progress bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div ref={barRef} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{
           flex: 1, height: 3, borderRadius: 3,
           background: 'rgba(255,255,255,0.05)', overflow: 'hidden',
         }}>
           <motion.div
             initial={{ width: 0 }}
-            whileInView={{ width: `${skill.level}%` }}
-            viewport={{ once: true }}
+            animate={barInView ? { width: `${skill.level}%` } : { width: 0 }}
             transition={{ duration: 1.5, ease: 'easeOut', delay: index * 0.08 }}
             style={{
               height: '100%', borderRadius: 3, background: color,

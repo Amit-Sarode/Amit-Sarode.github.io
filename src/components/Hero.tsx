@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import SEO from './SEO';
-import TextReveal from './TextReveal';
+
 import AnimatedCounter from './AnimatedCounter';
 import MagneticButton from './MagneticButton';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';

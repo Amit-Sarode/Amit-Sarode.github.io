@@ -154,7 +154,7 @@ export const testimonials = [
     source: 'Direct',
   },
   {
-    name: 'Anjali R.',
+    name: 'Atul W.',
     role: 'HR Lead · Atum IT Pvt. Ltd.',
     text: 'The HRMS system Amit built internally has saved our HR team hours every week. Task management, rosters, and performance tracking all in one place.',
     stars: 5,
