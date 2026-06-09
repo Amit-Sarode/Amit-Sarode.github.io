@@ -113,7 +113,7 @@ const TranslatingWord: React.FC<{
           visible: { transition: { staggerChildren: 0.04 } },
           exit: { transition: { staggerChildren: 0.02 } },
         }}
-        style={{ display: 'inline-flex', ...(isJp ? { fontSize: '0.72em' } : {}) }}
+        style={{ display: 'inline-flex', ...(isJp ? { fontSize: '0.72em' } : {letterSpacing: '0.05em',}) }}
       >
         {text.split('').map((char, i) => (
           <motion.span
@@ -278,6 +278,7 @@ const HeroScrollExperience: React.FC = () => {
           alignItems: 'baseline',
           flexWrap: 'nowrap',
           whiteSpace: 'nowrap',
+         
           textShadow: '0 20px 40px rgba(0,0,0,0.5)',
         }}
       >

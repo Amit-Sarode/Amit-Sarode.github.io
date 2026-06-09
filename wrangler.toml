@@ -1,0 +1,6 @@
+name = "portfolio-openrouter-proxy"
+main = "worker/src/index.ts"
+compatibility_date = "2025-06-01"
+
+[placement]
+mode = "smart"

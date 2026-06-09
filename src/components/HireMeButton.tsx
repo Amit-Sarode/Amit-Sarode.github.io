@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCalApi } from "@calcom/embed-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { pricingPlans } from './hero/data';
 
 interface Message {
@@ -18,7 +20,7 @@ interface Message {
 
 
 const BOOKING_CAL_LINK = "amit-sarode-vb2eq3/quick-chat";
-const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || '';
+const OPENROUTER_PROXY_URL = import.meta.env.VITE_OPENROUTER_PROXY_URL;
 const OPENROUTER_MODEL = 'openai/gpt-oss-120b:free';
 
 const SYSTEM_PROMPT = `You are an AI booking & sales assistant for Amit Sarode — an AI Automation Agency that builds chatbots, automations, and custom AI applications.
@@ -27,7 +29,7 @@ YOUR CAPABILITIES:
 1. **Pricing** — Share detailed pricing plans (Starter, Growth, Enterprise) with exact prices and features.
 2. **Book a Call** — When someone wants to discuss a project, say: "Let me help you book a quick call!" and ask for their preferred time. They can book directly using the "Book a Call" button below.
 3. **Services** — Explain services: AI Chatbots, Workflow Automation, Custom AI Apps, Document Processing (RAG), Full Stack Web, Frontend/UI.
-4. **Contact** — Share WhatsApp (wa.me/9322137885), email, or direct them to the contact form.
+4. **Contact** — Share WhatsApp (wa.me/9322137885), email (sarodeamit990@gmail.com), or direct them to the contact form.
 
 CURRENT PRICING (share these when asked):
 ${JSON.stringify(pricingPlans.map(p => ({
@@ -95,7 +97,7 @@ function HireMeButton() {
   const handleSendMessage = useCallback(async () => {
     if (!input.trim() || isTyping) return;
 
-    if (!OPENROUTER_API_KEY) {
+    if (!OPENROUTER_PROXY_URL) {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'The AI assistant is not available right now. Please contact me directly using the contact form or book a call!' }]);
       setInput('');
       return;
@@ -111,13 +113,10 @@ function HireMeButton() {
     const timeout = setTimeout(() => controller.abort(), 45000);
 
     try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const res = await fetch(OPENROUTER_PROXY_URL, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': window.location.origin,
-          'X-Title': 'Amit Sarode Portfolio',
         },
         body: JSON.stringify({
           model: OPENROUTER_MODEL,
@@ -175,12 +174,13 @@ function HireMeButton() {
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : 'Unknown error';
-      console.error('OpenRouter error:', errMsg);
+      console.error('Proxy error:', errMsg);
+      const isTimeout = errMsg.includes('abor') || errMsg.includes('timeout');
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: errMsg.includes('abor') || errMsg.includes('timeout')
+        { role: 'assistant', content: isTimeout
           ? 'The request is taking too long. Please try again — free models can be slow.'
-          : `I hit an error: ${errMsg}. Please try again or contact me directly.` },
+          : 'Something went wrong. Please try again or contact me directly.' },
       ]);
     } finally {
       clearTimeout(timeout);
@@ -481,13 +481,33 @@ function HireMeButton() {
                           boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
                         }}
                       >
-                        <p style={{
+                        <div style={{
                           fontSize: 13, color: '#e2e8f0', margin: 0,
-                          lineHeight: 1.6, whiteSpace: 'pre-wrap',
-                          wordBreak: 'break-word',
+                          lineHeight: 1.6, wordBreak: 'break-word',
                         }}>
-                          {message.content}
-                        </p>
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              table({ children }) {
+                                return <div style={{ overflowX: 'auto' }}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 12 }}>{children}</table></div>;
+                              },
+                              th({ children }) {
+                                return <th style={{ border: '1px solid rgba(20,184,166,0.2)', padding: '6px 8px', textAlign: 'left', background: 'rgba(20,184,166,0.08)' }}>{children}</th>;
+                              },
+                              td({ children }) {
+                                return <td style={{ border: '1px solid rgba(20,184,166,0.12)', padding: '6px 8px' }}>{children}</td>;
+                              },
+                              br() {
+                                return <br />;
+                              },
+                              p({ children }) {
+                                return <p style={{ margin: '0 0 6px' }}>{children}</p>;
+                              },
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
