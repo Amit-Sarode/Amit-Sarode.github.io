@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as webllm from '@mlc-ai/web-llm';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEO from './SEO';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -107,6 +108,11 @@ const Chatgpt: React.FC = () => {
         overflow: 'hidden',
       }}
     >
+      <SEO
+        title="AI Chat | Local LLM | Amit Sarode"
+        description="Run a local AI language model directly in your browser. Powered by WebLLM, no server required."
+        path="/chatgpt"
+      />
       {/* Grid lines */}
       <div
         style={{

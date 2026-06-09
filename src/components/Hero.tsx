@@ -16,131 +16,225 @@ import {
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-// ─── Industry Card with Glow ──────────────────────────
-const IndustryCard: React.FC<{ biz: BusinessCategory; index: number; onNavigate: (id: number) => void }> = ({ biz, index, onNavigate }) => {
-  const [hovered, setHovered] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+// ─── 3D Coverflow Carousel ────────────────────────────
+const CoverflowCarousel: React.FC<{ projects: BusinessCategory[]; onFocus: (id: number) => void }> = ({ projects, onFocus }) => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [focusIdx, setFocusIdx] = useState(0);
+  const total = projects.length;
+  const cardW = isMobile ? 130 : 190;
+  const cardH = isMobile ? 180 : 260;
+  const gap = isMobile ? 6 : 12;
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouchDevice) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  const items = [...projects, ...projects];
+
+  const getRealIdx = useCallback((displayIdx: number) => displayIdx % total, [total]);
+
+  const goTo = useCallback((idx: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const parent = track.parentElement;
+    if (!parent) return;
+    const viewCenter = parent.clientWidth / 2;
+    const cardEl = track.children[idx] as HTMLElement;
+    if (!cardEl) return;
+    const targetLeft = cardEl.offsetLeft + cardEl.offsetWidth / 2 - viewCenter;
+    parent.scrollTo({ left: targetLeft, behavior: 'smooth' });
   }, []);
 
+  const syncFocus = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const parent = track.parentElement;
+    if (!parent) return;
+    const viewCenter = parent.scrollLeft + parent.clientWidth / 2;
+    let closest = 0;
+    let minDist = Infinity;
+    for (let i = 0; i < items.length; i++) {
+      const c = track.children[i] as HTMLElement;
+      if (!c) continue;
+      const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - viewCenter);
+      if (d < minDist) { minDist = d; closest = i; }
+    }
+    setFocusIdx(closest);
+    if (closest >= total) {
+      const jumpIdx = closest - total;
+      const jumpEl = track.children[jumpIdx] as HTMLElement;
+      if (jumpEl) {
+        const targetLeft = jumpEl.offsetLeft + jumpEl.offsetWidth / 2 - parent.clientWidth / 2;
+        parent.scrollLeft = targetLeft;
+      }
+    }
+  }, [items.length, total]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const parent = track.parentElement;
+    if (!parent) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => { syncFocus(); ticking = false; });
+      }
+    };
+    parent.addEventListener('scroll', onScroll, { passive: true });
+    syncFocus();
+    return () => parent.removeEventListener('scroll', onScroll);
+  }, [syncFocus]);
+
   return (
-    <Reveal delay={index * 0.05}>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-        whileHover={{ y: -8 }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onMouseMove={handleMouseMove}
-        onClick={() => onNavigate(biz.id)}
-        style={{
-          position: 'relative', width: '100%', minHeight: 200,
-          borderRadius: 18, cursor: 'pointer', overflow: 'hidden',
-          background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
-          border: `1px solid ${hovered ? `${biz.color}50` : 'rgba(255,255,255,0.06)'}`,
-          boxShadow: hovered
-            ? `0 25px 70px rgba(0,0,0,0.5), 0 0 40px ${biz.color}20, inset 0 1px 0 ${biz.color}15`
-            : '0 4px 20px rgba(0,0,0,0.3)',
-          transition: 'background 0.4s, border-color 0.4s, box-shadow 0.4s',
-          display: 'flex', flexDirection: 'column', padding: 28, justifyContent: 'space-between',
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label={`Learn more about ${biz.title}`}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigate(biz.id); } }}
-      >
-        <div style={{
-          position: 'absolute',
-          left: mouse.x, top: mouse.y,
-          width: 250, height: 250,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${biz.color}18 0%, transparent 70%)`,
-          transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none', zIndex: 0,
-          opacity: hovered ? 1 : 0,
-          transition: 'opacity 0.4s',
-        }} />
+    <div style={{ position: 'relative', perspective: '1000px', perspectiveOrigin: '50% 50%' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 50, zIndex: 10, pointerEvents: 'none', background: 'linear-gradient(to right, #020d0a, transparent)' }} />
+      <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 50, zIndex: 10, pointerEvents: 'none', background: 'linear-gradient(to left, #020d0a, transparent)' }} />
 
-        <motion.div
-          animate={{ opacity: hovered ? 1 : 0, scaleX: hovered ? 1 : 0.3 }}
-          transition={{ duration: 0.4 }}
+      <div style={{
+        overflowX: 'auto', overflowY: 'hidden',
+        scrollbarWidth: 'none', msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch',
+        padding: `${isMobile ? 40 : 60}px 0`,
+        cursor: 'grab',
+      }} className="hide-scrollbar">
+        <div
+          ref={trackRef}
           style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: `linear-gradient(90deg, transparent, ${biz.color}, transparent)`,
-            transformOrigin: 'center',
-            zIndex: 1,
-          }}
-        />
-
-        <motion.div
-          animate={{ opacity: hovered ? 0.15 : 0, scale: hovered ? 1 : 0.5 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            position: 'absolute', top: -30, right: -30,
-            width: 120, height: 120, borderRadius: '50%',
-            background: biz.color, filter: 'blur(40px)',
-            pointerEvents: 'none', zIndex: 0,
-          }}
-        />
-
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
-          <motion.span
-            animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? 5 : 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' }}
-            style={{ fontSize: 40, lineHeight: 1, display: 'block', width: 'fit-content' }}
-          >
-            {biz.icon}
-          </motion.span>
-          <h4 style={{
-            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: hovered ? '#ffffff' : '#f8fafc',
-            margin: 0, lineHeight: 1.3, transition: 'color 0.3s',
-          }}>
-            {biz.title}
-          </h4>
-          <AnimatePresence>
-            {hovered && (
-              <motion.p
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                style={{ fontSize: 13, color: '#cbd5e1', margin: 0, lineHeight: 1.6, overflow: 'hidden' }}
-              >
-                {biz.description}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <motion.div
-          animate={{ opacity: hovered ? 1 : 0.4, x: hovered ? 4 : 0 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            position: 'relative', zIndex: 1, marginTop: 14,
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            display: 'flex', alignItems: 'center',
+            gap, padding: `0 ${isMobile ? 60 : 120}px`,
+            height: cardH,
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={hovered ? biz.color : '#14b8a6'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            style={{ transition: 'stroke 0.3s' }}>
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-          {biz.link && (
-            <span style={{
-              fontSize: 10, color: hovered ? '#cbd5e1' : '#94a3b8',
-              fontFamily: 'monospace', letterSpacing: '0.06em', transition: 'color 0.3s',
-            }}>
-              Has live site ↗
-            </span>
-          )}
-        </motion.div>
-      </motion.div>
-    </Reveal>
+          {items.map((p, i) => {
+            const offset = i - focusIdx;
+            const absOff = Math.abs(offset);
+            const maxOff = 4;
+            const n = Math.min(absOff / maxOff, 1);
+
+            const s = 0.72 + 0.28 * n;
+            const ry = -offset * 12;
+            const tz = -absOff * 30;
+
+            const transform = `perspective(1000px) translateZ(${tz}px) rotateY(${ry}deg) scale(${s})`;
+
+            return (
+              <motion.div
+                key={`${p.id}-${i}`}
+                onClick={() => { goTo(i); onFocus(p.id); }}
+                animate={{ opacity: 0.5 + 0.5 * n }}
+                transition={{ type: 'spring', stiffness: 150, damping: 20 }}
+                style={{
+                  minWidth: cardW, height: cardH,
+                  borderRadius: 18, overflow: 'hidden',
+                  cursor: 'pointer', flexShrink: 0,
+                  position: 'relative',
+                  transform,
+                  boxShadow: `0 ${10 + absOff * 6}px ${30 + absOff * 10}px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,${0.03 + n * 0.06})`,
+                  willChange: 'transform',
+                  transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                }}
+              >
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: `linear-gradient(135deg, rgba(2,13,10,0.75) 0%, ${p.color}15 50%, rgba(2,13,10,0.75) 100%)`,
+                  pointerEvents: 'none',
+                }} />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center',
+                  padding: isMobile ? '10px' : '16px',
+                  pointerEvents: 'none',
+                  textAlign: 'center',
+                }}>
+                  <div style={{
+                    fontSize: isMobile ? 8 : 10, color: p.color,
+                    fontFamily: 'monospace', letterSpacing: '0.08em',
+                    fontWeight: 600, marginBottom: 6,
+                    display: 'flex', alignItems: 'center', gap: 5,
+                  }}>
+                    <span style={{ width: 14, height: 1.5, background: p.color, display: 'inline-block', flexShrink: 0 }} />
+                    {p.impact[0]}
+                  </div>
+                  <p style={{
+                    fontSize: isMobile ? 11 : 14, fontWeight: 700,
+                    color: '#fff', margin: 0, lineHeight: 1.3,
+                    fontFamily: "'Syne', sans-serif", maxWidth: '90%',
+                  }}>
+                    {p.title}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginTop: 12 }}>
+        <motion.button
+          whileHover={{ scale: 1.08, background: 'rgba(20,184,166,0.12)' }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => goTo(Math.max(0, focusIdx - 1))}
+          style={{
+            width: 38, height: 38, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.03)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#94a3b8',
+          }}
+        >
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </motion.button>
+
+        {total > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            {projects.slice(0, Math.min(6, total)).map((p, i) => (
+              <motion.button
+                key={p.id}
+                onClick={() => goTo(focusIdx >= total ? i + total : i)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                animate={{ color: getRealIdx(focusIdx) === i ? p.color : '#475569' }}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  gap: 3, padding: 0, fontFamily: 'monospace',
+                }}
+              >
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.04em' }}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span style={{
+                  fontSize: 9, color: getRealIdx(focusIdx) === i ? '#94a3b8' : '#334155',
+                  letterSpacing: '0.02em', whiteSpace: 'nowrap',
+                  transition: 'color 0.3s',
+                }}>
+                  {p.title.split(' ').slice(0, 2).join(' ')}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        )}
+
+        <motion.button
+          whileHover={{ scale: 1.08, background: 'rgba(20,184,166,0.12)' }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => goTo(Math.min(items.length - 1, focusIdx + 1))}
+          style={{
+            width: 38, height: 38, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.03)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#94a3b8',
+          }}
+        >
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </motion.button>
+      </div>
+    </div>
   );
 };
 
@@ -204,18 +298,6 @@ const GlowCard: React.FC<{
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
-
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-const scrollCarousel = (direction: 'left' | 'right') => {
-  if (carouselRef.current) {
-    const scrollAmount = window.innerWidth > 768 ? 400 : 280; // Scroll width based on screen size
-    carouselRef.current.scrollBy({ 
-      left: direction === 'left' ? -scrollAmount : scrollAmount, 
-      behavior: 'smooth' 
-    });
-  }
-};
 
   // ─── Carousel State ───
   const [current, setCurrent] = useState(0);
@@ -487,139 +569,100 @@ const scrollCarousel = (direction: 'left' | 'right') => {
       </section>
       <Divider />
 
-      {/* ── INDUSTRIES ── */}
-     <section id="industries" className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-  <div style={{ maxWidth: 1280, margin: '0 auto' }}> {/* Slightly widened to accommodate horizontal scrolling */}
-    
-    <Reveal>
-      <div className="flex flex-col items-center text-center mb-12">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <motion.span 
-            initial={{ width: 0 }}
-            whileInView={{ width: 32 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-          />
-          <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-            CASE STUDIES
-          </span>
-          <motion.span 
-            initial={{ width: 0 }}
-            whileInView={{ width: 32 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-          />
+      {/* ── FEATURED WORK (Coverflow Carousel) ── */}
+      <section style={{
+        position: 'relative', zIndex: 10,
+        padding: '100px 0',
+        overflow: 'hidden',
+      }}>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Eyebrow */}
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 12 }}>
+              <span style={{
+                color: '#14b8a6', fontFamily: 'monospace', fontSize: 13,
+                letterSpacing: '0.16em', fontWeight: 600, textTransform: 'uppercase',
+              }}>
+                Behind the Projects
+              </span>
+            </div>
+          </Reveal>
+
+          {/* Heading */}
+          <Reveal delay={0.1}>
+            <h2 style={{
+              textAlign: 'center',
+              fontSize: 'clamp(2.4rem, 6vw, 4rem)',
+              fontWeight: 800,
+              color: '#ffffff',
+              lineHeight: 1.1,
+              margin: '0 auto 16px',
+              maxWidth: 700,
+              padding: '0 24px',
+              letterSpacing: '-0.02em',
+            }}>
+              Featured Work<br />&amp; Impact
+            </h2>
+          </Reveal>
+
+          {/* Description */}
+          <Reveal delay={0.15}>
+            <p style={{
+              textAlign: 'center',
+              fontSize: 15,
+              color: '#64748b',
+              lineHeight: 1.7,
+              maxWidth: 520,
+              margin: '0 auto 28px',
+              padding: '0 24px',
+            }}>
+              Real projects that solve real problems. Each case study details the architecture, decisions, and measurable outcomes.
+            </p>
+          </Reveal>
+
+          {/* CTA Button */}
+          <Reveal delay={0.2}>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <motion.a
+                href="#case-studies"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  padding: '12px 24px 12px 28px',
+                  borderRadius: 50,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: '#e2e8f0',
+                  textDecoration: 'none',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  letterSpacing: '0.02em',
+                  transition: 'all 0.3s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.4)'; e.currentTarget.style.background = 'rgba(20,184,166,0.06)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+              >
+                Explore All Projects
+                <span style={{
+                  width: 28, height: 28, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </motion.a>
+            </div>
+          </Reveal>
+
+          {/* 3D Coverflow Carousel */}
+          <Reveal delay={0.25}>
+            <CoverflowCarousel projects={businesses} onFocus={(id) => navigate(`/projects/${id}`)} />
+          </Reveal>
         </div>
-        
-        <Reveal>
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="font-bold mb-4"
-            style={{ 
-              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-              background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              lineHeight: 1.2,
-              fontFamily: "'Syne', sans-serif" 
-            }}
-          >
-            Featured Work & Impact
-          </motion.h2>
-        </Reveal>
-        
-        <p style={{ color: '#94a3b8', fontSize: 16, fontWeight: 300, maxWidth: 580, margin: '0 auto', lineHeight: 1.75 }}>
-          I don't just write code; I solve business problems. Explore the architecture, technical decisions, and real-world metrics behind my recent projects.
-        </p>
-
-        {/* Carousel Navigation Arrows */}
-        <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
-          <motion.button 
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(20, 184, 166, 0.1)' }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => scrollCarousel('left')}
-            style={{
-              width: 44, height: 44, borderRadius: '50%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.03)',
-              color: '#fff', cursor: 'pointer', transition: 'border 0.3s'
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(20, 184, 166, 0.1)' }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => scrollCarousel('right')}
-            style={{
-              width: 44, height: 44, borderRadius: '50%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.03)',
-              color: '#fff', cursor: 'pointer', transition: 'border 0.3s'
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </motion.button>
-        </div>
-      </div>
-    </Reveal>
-
-    {/* Carousel Container Wrapper (Provides edge fade effect) */}
-    <div style={{ position: 'relative' }}>
-      
-      {/* Optional: Left/Right Gradient Masks to indicate scrolling */}
-      <div style={{
-        position: 'absolute', top: 0, bottom: 0, left: 0, width: 40,
-        background: 'linear-gradient(to right, #020d0a 0%, transparent 100%)', // Match your bg color here
-        zIndex: 2, pointerEvents: 'none'
-      }} />
-      <div style={{
-        position: 'absolute', top: 0, bottom: 0, right: 0, width: 40,
-        background: 'linear-gradient(to left, #020d0a 0%, transparent 100%)', // Match your bg color here
-        zIndex: 2, pointerEvents: 'none'
-      }} />
-
-      {/* The Scrolling Flex Container */}
-      <div 
-        ref={carouselRef}
-        className="hide-scrollbar"
-        style={{ 
-          display: 'flex', 
-          overflowX: 'auto', 
-          gap: 24, 
-          padding: '10px 40px 40px 40px', // Extra padding for box-shadows on hover
-          scrollSnapType: 'x mandatory',
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch'
-        }}
-      >
-        {businesses.map((biz, i) => (
-          <div 
-            key={biz.id} 
-            style={{ 
-              minWidth: 'clamp(280px, 80vw, 360px)', // Ensures cards stay a consistent size
-              scrollSnapAlign: 'start',
-              flexShrink: 0 
-            }}
-          >
-            <IndustryCard 
-              biz={biz} 
-              index={i} 
-              onNavigate={(id) => navigate(`/projects/${id}`)} 
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       <Divider />
 

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Reveal, Divider } from './hero/Reveal';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 import { pricingPlans } from './hero/data';
+import SEO from './SEO';
 const GlowCard: React.FC<{
   children: React.ReactNode;
   color?: string;
@@ -116,6 +117,11 @@ const Pricing: React.FC = () => {
       background: 'linear-gradient(135deg, #020d0a 0%, #050f10 40%, #02100d 100%)',
       overflow: 'hidden',
     }}>
+      <SEO
+        title="Pricing | AI Automation & Web Development Services | Amit Sarode"
+        description="Transparent pricing for AI automation, web development, and SaaS solutions. Freelance, project-based, and retainer options available."
+        path="/pricing"
+      />
       <AmbientBackground />
       <GridLines />
       <NoiseOverlay />

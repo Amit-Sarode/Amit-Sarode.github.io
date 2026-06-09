@@ -16,6 +16,7 @@ const Chatgpt    = lazy(() => import('./components/Chatgpt'));
 const Projects   = lazy(() => import('./components/Projects'));
 const Hero       = lazy(() => import('./components/Hero'));
 const Pricing    = lazy(() => import('./components/Pricing'));
+const ErrorPage  = lazy(() => import('./components/ErrorPage'));
 
 
 function App() {
@@ -50,7 +51,9 @@ function App() {
                   <Route path="/contact"  element={<Contact />} />
                   <Route path="/about"    element={<About />} />
                   <Route path="/chatgpt"  element={<Chatgpt />} />
-               
+                  <Route path="/500" element={<ErrorPage code={500} />} />
+                  <Route path="/502" element={<ErrorPage code={502} />} />
+                  <Route path="*" element={<ErrorPage code={404} />} />
                 </Routes>
               </PageTransition>
             </AnimatePresence>

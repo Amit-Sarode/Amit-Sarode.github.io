@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://amit-sarode.github.io/sitemap.xml
