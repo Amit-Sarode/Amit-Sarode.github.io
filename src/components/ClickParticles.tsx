@@ -14,10 +14,11 @@ interface Particle {
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
 const ClickParticles = () => {
-  if (isTouch) return null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
   const raf = useRef<number>(0);
+
+  if (isTouch) return null;
 
   const spawn = useCallback((e: MouseEvent) => {
     const count = 8;

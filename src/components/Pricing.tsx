@@ -136,19 +136,32 @@ const Pricing: React.FC = () => {
             </motion.button>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.14em' }}>INVESTMENT</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
+            <motion.span 
+                                         initial={{ width: 0 }}
+                                         whileInView={{ width: 32 }}
+                                         transition={{ duration: 0.8, delay: 0.2 }}
+                                         style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                                       />
+                         <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
+                           INVESTMENTS
+                         </span>
+                          <motion.span 
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: 32 }}
+                                        transition={{ duration: 0.8, delay: 0.2 }}
+                                        style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                                      />
           </div>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, marginBottom: 56 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 24, marginBottom: 56 }}>
             <div>
               <h1 style={{
                 fontFamily: "'Syne', sans-serif", fontWeight: 800,
                 fontSize: 'clamp(2rem, 5vw, 3.2rem)', color: '#f1f5f9',
                 margin: '0 0 12px', lineHeight: 1.1,
               }}>Pricing</h1>
-              <p style={{ color: '#64748b', fontSize: 15, fontWeight: 300, margin: 0, maxWidth: 460, lineHeight: 1.75 }}>
+              <p style={{ color: '#64748b', fontSize: 15, fontWeight: 300, margin: '0 auto', maxWidth: 460, lineHeight: 1.75 }}>
                 Transparent pricing to help you plan. Every project includes a discovery call, weekly demos, and post-launch support.
               </p>
             </div>
@@ -161,7 +174,7 @@ const Pricing: React.FC = () => {
                 color="#334155"
                 options={[ { label: 'USD', value: 'USD' }, { label: 'INR', value: 'INR' } ]} 
               />
-           
+            
             </div>
           </div>
         </Reveal>
@@ -176,7 +189,7 @@ const Pricing: React.FC = () => {
                 border: plan.featured ? '1px solid rgba(139, 92, 246, 0.25)' : undefined,
               }}>
                 <div style={{ padding: '36px 32px', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative' }}>
-                  {plan.featured && (
+                  {/* {plan.featured && (
                     <div style={{
                       position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
                       padding: '6px 20px', borderRadius: '0 0 16px 16px', 
@@ -184,7 +197,7 @@ const Pricing: React.FC = () => {
                       fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', color: 'white', textTransform: 'uppercase',
                       boxShadow: '0 10px 20px -5px rgba(139, 92, 246, 0.4)'
                     }}>Most Popular</div>
-                  )}
+                  )} */}
                   
                   <p style={{ fontSize: 13, fontWeight: 600, color: plan.color, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px', fontFamily: 'monospace' }}>
                     {plan.tier}
@@ -194,14 +207,14 @@ const Pricing: React.FC = () => {
                   <div style={{ margin: '12px 0 16px', display: 'flex', alignItems: 'baseline', gap: '10px' }}>
                     {plan.tier === 'Enterprise' ? (
                       <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#f8fafc' }}>
-                        {plan.price}
+                        {plan.price }
                       </span>
                     ) : (
                       <>
                         {plan.discount && (
                           <span style={{ fontSize: '1.25rem', color: '#64748b', textDecoration: 'line-through' }}>
                             {currency === 'USD' ? '$' : '₹'}
-                            {currency === 'USD' ? plan.priceUSD : plan.priceINR}
+                            {currency === 'USD' ? plan.priceUSD : plan.priceINR} 
                           </span>
                         )}
                         <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.02em' }}>
@@ -213,6 +226,8 @@ const Pricing: React.FC = () => {
       : plan.priceINR! * (1 - (plan.discount || 0))
   )
 }
+<span style={{fontWeight:200 , fontSize:24}}
+> /project</span>
                         </span>
                       </>
                     )}

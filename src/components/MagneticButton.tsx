@@ -1,5 +1,5 @@
 import { useRef, useState, useMemo } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 

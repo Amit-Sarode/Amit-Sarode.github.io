@@ -1,13 +1,20 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'motion/react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
+const HOVER_SELECTOR = 'a, button, [role="button"], input, textarea, select';
+
+const isHoverTarget = (el: EventTarget | null): boolean => {
+  if (!el || !(el instanceof Element)) return false;
+  return el.matches(HOVER_SELECTOR) || el.closest(HOVER_SELECTOR) !== null;
+};
 
 const CustomCursor = () => {
   const [visible, setVisible] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
-  const mounted = useRef(true);
+  const hoverRef = useRef(false);
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
@@ -23,38 +30,41 @@ const CustomCursor = () => {
     const handleMouse = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
+      setVisible(true);
     };
 
-    const handleEnter = () => setVisible(true);
     const handleLeave = () => setVisible(false);
     const handleDown = () => setIsClicking(true);
     const handleUp = () => setIsClicking(false);
 
+    const handleMouseOver = (e: MouseEvent) => {
+      if (isHoverTarget(e.target)) {
+        setIsHovering(true);
+        hoverRef.current = true;
+      }
+    };
+
+    const handleMouseOut = (e: MouseEvent) => {
+      if (hoverRef.current && (!e.relatedTarget || !isHoverTarget(e.relatedTarget))) {
+        setIsHovering(false);
+        hoverRef.current = false;
+      }
+    };
+
     window.addEventListener('mousemove', handleMouse);
-    document.addEventListener('mouseenter', handleEnter);
     document.addEventListener('mouseleave', handleLeave);
     document.addEventListener('mousedown', handleDown);
     document.addEventListener('mouseup', handleUp);
-
-    const hoverTargets = document.querySelectorAll('a, button, [role="button"], input, textarea, select');
-    const addHover = () => setIsHovering(true);
-    const removeHover = () => setIsHovering(false);
-
-    hoverTargets.forEach((el) => {
-      el.addEventListener('mouseenter', addHover);
-      el.addEventListener('mouseleave', removeHover);
-    });
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       window.removeEventListener('mousemove', handleMouse);
-      document.removeEventListener('mouseenter', handleEnter);
       document.removeEventListener('mouseleave', handleLeave);
       document.removeEventListener('mousedown', handleDown);
       document.removeEventListener('mouseup', handleUp);
-      hoverTargets.forEach((el) => {
-        el.removeEventListener('mouseenter', addHover);
-        el.removeEventListener('mouseleave', removeHover);
-      });
+      document.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseout', handleMouseOut);
     };
   }, [mouseX, mouseY]);
 

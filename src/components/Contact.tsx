@@ -305,11 +305,21 @@ const Contact = () => {
           style={{ textAlign: 'center', marginBottom: 52 }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
-            <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em' }}>
-              CONTACT
-            </span>
-            <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+            <motion.span 
+                                                     initial={{ width: 0 }}
+                                                     whileInView={{ width: 32 }}
+                                                     transition={{ duration: 0.8, delay: 0.2 }}
+                                                     style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                                                   />
+                                     <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
+                                       CONTACT
+                                     </span>
+                                      <motion.span 
+                                                    initial={{ width: 0 }}
+                                                    whileInView={{ width: 32 }}
+                                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                                    style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                                                  />
           </div>
 
           <h1
@@ -600,3 +610,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

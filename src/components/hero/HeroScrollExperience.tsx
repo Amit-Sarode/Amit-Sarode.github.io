@@ -404,11 +404,12 @@ const HeroScrollExperience: React.FC = () => {
           whileHover={prefersReduced ? {} : { scale: 1.04, background: 'rgba(255,255,255,0.05)' }}
           whileTap={prefersReduced ? {} : { scale: 0.96 }}
           onClick={() => {
-            navigate('/');
-            setTimeout(
-              () => window.scrollTo({ top: document.body.scrollHeight * 0.65, behavior: 'smooth' }),
-              100
-            );
+            const el = document.getElementById('industries');
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              navigate('/', { state: { scrollTo: 'industries' } });
+            }
           }}
           aria-label="View my recent projects and results"
           style={{

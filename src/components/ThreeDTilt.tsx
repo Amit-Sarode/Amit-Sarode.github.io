@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react"
+import { useRef } from "react"
 import { motion, useSpring, useMotionValue } from "framer-motion"
 
 import { ReactNode } from "react";

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import profileImg from '/assets/img/profileImg.png'
 import SEO from './SEO'
 import AnimatedCounter from './AnimatedCounter'
@@ -9,7 +10,7 @@ import SkillCard from './hero/SkillCard'
 
 // 1. Import the dynamic background components
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground'
-import { Divider } from './hero/Reveal'
+import { Reveal, Divider } from './hero/Reveal'
 
 const certificates = [
   { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },
@@ -27,20 +28,6 @@ const stats = [
   { value: '7', label: 'Certifications' },
   // { value: '∞', label: 'Lines of Code' },
 ]
-
-const Reveal: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({
-  children, delay = 0, className,
-}) => (
-  <motion.div
-    className={className}
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-60px' }}
-    transition={{ duration: 0.75, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-  >
-    {children}
-  </motion.div>
-)
 
 const GlowCard: React.FC<{
   children: React.ReactNode
@@ -90,6 +77,8 @@ const GlowCard: React.FC<{
 }
 
 const About: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -121,15 +110,42 @@ const About: React.FC = () => {
           zIndex: 1,
         }}
       >
+        {/* ── Back button ── */}
+        <Reveal>
+          <div style={{ marginBottom: 12 }}>
+            <motion.button
+              whileHover={{ x: -3 }}
+              onClick={() => navigate('/')}
+              style={{
+                background: 'none', border: 'none', color: '#475569', fontSize: 13,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: 'monospace', padding: 0,
+              }}
+            >
+              <span style={{ fontSize: 16 }}>←</span> Back to Home
+            </motion.button>
+          </div>
+        </Reveal>
+
         {/* ── Section label ── */}
         <Reveal>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 60 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+                <motion.span 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: 32 }}
+                              transition={{ duration: 0.8, delay: 0.2 }}
+                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                            />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
                 ABOUT
               </span>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+               <motion.span 
+                             initial={{ width: 0 }}
+                             whileInView={{ width: 32 }}
+                             transition={{ duration: 0.8, delay: 0.2 }}
+                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                           />
             </div>
 
          <motion.h2 
@@ -151,7 +167,7 @@ const About: React.FC = () => {
           </div>
         </Reveal>
 
-        {/* ── Bio + stats layout ── */}
+        {/* ── Bio + Image layout ── */}
         <div
           style={{
             display: 'grid',
@@ -161,14 +177,8 @@ const About: React.FC = () => {
             marginBottom: 80,
           }}
         >
-          {/* Bio text */}
+          {/* Left: Bio text */}
           <Reveal delay={0.1}>
-            <img
-              src={profileImg}
-              alt="Amit Sarode"
-              loading="lazy"
-              style={{ width: 'clamp(80px, 20vw, 120px)', height: 'clamp(80px, 20vw, 120px)', borderRadius: '9999px', objectFit: 'cover', marginBottom: 20, border: '2px solid rgba(20,184,166,0.4)' }}
-            />
             <p
               style={{
                 fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
@@ -199,72 +209,66 @@ const About: React.FC = () => {
             </blockquote>
           </Reveal>
 
-          {/* Stats grid */}
+          {/* Right: Image with overlay stats */}
           <Reveal delay={0.2}>
-            <div
-              style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-              gap: 12,
-              }}
-            >
-              {stats.map((s, i) => {
-                const numVal = parseInt(s.value);
-                const suffix = s.value.replace(/[\d]/g, '');
-                const actualNum = numVal || 0;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
-                    whileHover={{ y: -4 }}
-                    style={{
-                      padding: '24px 20px',
-                      borderRadius: 16,
-                      background: 'rgba(20,184,166,0.04)',
-                      border: '1px solid rgba(20,184,166,0.12)',
+            <div style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', border: '2px solid rgba(20,184,166,0.3)' }}>
+              <img
+                src={profileImg}
+                alt="Amit Sarode"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+              {/* Gradient overlay */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: 'linear-gradient(to top, rgba(2,13,10,0.9) 0%, rgba(2,13,10,0.1) 60%, transparent 100%)',
+              }} />
+              {/* Stats overlay on image */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                padding: '24px 20px',
+                display: 'flex',
+                gap: 12,
+              }}>
+                {stats.slice(0, 2).map((s, i) => {
+                  const numVal = parseInt(s.value);
+                  const suffix = s.value.replace(/[\d]/g, '');
+                  const actualNum = numVal || 0;
+                  return (
+                    <div key={i} style={{
+                      flex: 1,
+                      padding: '16px 12px',
+                      borderRadius: 14,
+                      background: 'rgba(255,255,255,0.06)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255,255,255,0.1)',
                       textAlign: 'center',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%)',
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    <p
-                      style={{
-                        fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
+                    }}>
+                      <p style={{
+                        fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
                         fontWeight: 800,
                         color: '#14b8a6',
                         lineHeight: 1,
-                        marginBottom: 8,
+                        marginBottom: 4,
                         fontFamily: 'monospace',
-                      }}
-                    >
-                      <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
-                    </p>
-                    <p style={{ fontSize: 12, color: '#94a3b8', letterSpacing: '0.06em' }}>{s.label}</p>
-                  </motion.div>
-                );
-              })}
+                      }}>
+                        <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />
+                      </p>
+                      <p style={{ fontSize: 11, color: '#e2e8f0', letterSpacing: '0.04em', margin: 0 }}>{s.label}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Availability card */}
+            {/* Availability card below image */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.6 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
               style={{
                 marginTop: 16,
-                padding: '18px 24px',
+                padding: '16px 20px',
                 borderRadius: 16,
                 background: 'rgba(20,184,166,0.06)',
                 border: '1px solid rgba(20,184,166,0.2)',
@@ -296,6 +300,63 @@ const About: React.FC = () => {
           </Reveal>
         </div>
 
+        {/* ── Additional stats row ── */}
+        <Reveal delay={0.3}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: 12,
+            marginBottom: 80,
+          }}>
+            {stats.slice(2).map((s, i) => {
+              const numVal = parseInt(s.value);
+              const suffix = s.value.replace(/[\d]/g, '');
+              const actualNum = numVal || 0;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.15 + i * 0.08, duration: 0.5 }}
+                  whileHover={{ y: -4 }}
+                  style={{
+                    padding: '24px 20px',
+                    borderRadius: 16,
+                    background: 'rgba(20,184,166,0.04)',
+                    border: '1px solid rgba(20,184,166,0.12)',
+                    textAlign: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  <p
+                    style={{
+                      fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
+                      fontWeight: 800,
+                      color: '#14b8a6',
+                      lineHeight: 1,
+                      marginBottom: 8,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
+                  </p>
+                  <p style={{ fontSize: 12, color: '#94a3b8', letterSpacing: '0.06em' }}>{s.label}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </Reveal>
+
   <Divider />
 
         {/* ── SOLUTIONS: What I Build ── */}
@@ -303,11 +364,21 @@ const About: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 40 }}>
             {/* FIXED: changed justify-content to justifyContent */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+                <motion.span 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: 32 }}
+                              transition={{ duration: 0.8, delay: 0.2 }}
+                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                            />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
                 TECH STACK
               </span>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+               <motion.span 
+                             initial={{ width: 0 }}
+                             whileInView={{ width: 32 }}
+                             transition={{ duration: 0.8, delay: 0.2 }}
+                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                           />
             </div>
             <motion.h2 
                        initial={{ opacity: 0 }}
@@ -354,11 +425,21 @@ const About: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 40 }}>
             {/* FIXED: changed justify-content to justifyContent */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+                <motion.span 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: 32 }}
+                              transition={{ duration: 0.8, delay: 0.2 }}
+                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                            />
               <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
                 VERIFIED CREDENTIALS
               </span>
-              <span style={{ width: 32, height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} />
+               <motion.span 
+                             initial={{ width: 0 }}
+                             whileInView={{ width: 32 }}
+                             transition={{ duration: 0.8, delay: 0.2 }}
+                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+                           />
             </div>
 
             <h3

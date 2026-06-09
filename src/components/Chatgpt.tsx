@@ -27,6 +27,10 @@ const Chatgpt: React.FC = () => {
     }).then((createdEngine) => {
       setEngine(createdEngine);
       setLoadingModel(false);
+    }).catch((err) => {
+      console.error('Model load failed:', err);
+      setLoadingModel(false);
+      setLoadProgress('Failed to load model. Please refresh and try again.');
     });
   }, []);
 

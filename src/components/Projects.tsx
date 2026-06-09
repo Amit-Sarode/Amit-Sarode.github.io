@@ -1,8 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import SEO from './SEO';
-import { businesses } from './hero/data';
+import {businesses} from "./hero/data"
 
 const t = {
   bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',
@@ -73,7 +73,6 @@ const GlowCard: React.FC<{
         ...style,
       }}
     >
-      {/* Cursor glow */}
       <div style={{
         position: 'absolute', left: mouse.x, top: mouse.y,
         width: 200, height: 200, borderRadius: '50%',
@@ -82,7 +81,6 @@ const GlowCard: React.FC<{
         pointerEvents: 'none', zIndex: 0,
         opacity: hovered ? 1 : 0, transition: 'opacity 0.3s',
       }} />
-      {/* Corner glow */}
       <div style={{
         position: 'absolute', top: -20, right: -20,
         width: 80, height: 80, borderRadius: '50%',
@@ -101,7 +99,7 @@ const Projects: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const biz = businesses.find((b) => b.id === Number(id));
 
-  if (!biz) { navigate('/', { replace: true }); return null; }
+  if (!biz) { return <Navigate to="/" replace />; }
 
   return (
     <div ref={sectionRef} style={{
@@ -114,7 +112,6 @@ const Projects: React.FC = () => {
         path={`/projects/${biz.id}`}
       />
 
-      {/* Grid lines */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: `linear-gradient(rgba(20,184,166,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.03) 1px,transparent 1px)`,
@@ -123,7 +120,6 @@ const Projects: React.FC = () => {
         WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%)',
       }} />
 
-      {/* Ambient orbs */}
       <motion.div animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0] }}
         transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
         style={{
@@ -146,13 +142,13 @@ const Projects: React.FC = () => {
       }}>
         <CursorGlow containerRef={sectionRef} />
 
-        {/* Back */}
+        {/* Back Button */}
         <motion.button
           initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
           whileHover={{ x: -4, boxShadow: `0 0 20px ${t.teal}20` }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.4 }}
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/', { state: { scrollTo: 'industries' } })}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '8px 16px', borderRadius: 10,
@@ -180,7 +176,6 @@ const Projects: React.FC = () => {
           <img src={biz.image} alt={biz.title} loading="lazy"
             style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.4)', transition: 'transform 0.6s' }} />
           <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)` }} />
-          {/* Glow accent on image */}
           <div style={{
             position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%',
             background: biz.color, filter: 'blur(60px)', opacity: 0.08, pointerEvents: 'none',
@@ -198,6 +193,29 @@ const Projects: React.FC = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* NEW: The Problem & Solution Layout */}
+        {(biz.problem || biz.solution) && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} style={{ marginBottom: 40 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+              
+              {biz.problem && (
+                <GlowCard color={t.tealDark} style={{ padding: '24px', borderRadius: 16, background: t.surface, border: `1px solid ${t.cardBorder}` }}>
+                  <SectionLabel text="THE PROBLEM" />
+                  <p style={{ fontSize: 15, color: t.body, lineHeight: 1.6, margin: 0 }}>{biz.problem}</p>
+                </GlowCard>
+              )}
+
+              {biz.solution && (
+                <GlowCard color={biz.color} style={{ padding: '24px', borderRadius: 16, background: `${biz.color}0A`, border: `1px solid ${biz.color}30` }}>
+                  <SectionLabel text="THE SOLUTION" />
+                  <p style={{ fontSize: 15, color: t.body, lineHeight: 1.6, margin: 0 }}>{biz.solution}</p>
+                </GlowCard>
+              )}
+
+            </div>
+          </motion.div>
+        )}
 
         {/* Business Impact */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -282,12 +300,12 @@ const Projects: React.FC = () => {
 
         {/* Architecture / Workflow */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }} style={{ marginBottom: 48 }}>
+          transition={{ duration: 0.5, delay: 0.25 }} style={{ marginBottom: biz.lessonsLearned ? 40 : 48 }}>
           <SectionLabel text="WORKFLOW" />
           <h2 style={{
             fontFamily: "'Syne', sans-serif", fontWeight: 800,
             fontSize: 'clamp(1.3rem, 3vw, 1.7rem)', color: t.heading, margin: '0 0 20px', lineHeight: 1.2,
-          }}>Architecture / Workflow</h2>
+          }}>System Architecture</h2>
           <div style={{
             padding: '24px', borderRadius: 16,
             background: 'rgba(255,255,255,0.02)', border: `1px solid ${t.cardBorder}`,
@@ -327,6 +345,20 @@ const Projects: React.FC = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* NEW: Lessons Learned */}
+        {biz.lessonsLearned && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.28 }} style={{ marginBottom: 48 }}>
+            <SectionLabel text="RETROSPECTIVE" />
+            <div style={{ padding: '24px', borderRadius: 16, background: 'rgba(255,255,255,0.02)', border: `1px dashed ${t.cardBorder}` }}>
+              <h3 style={{ fontSize: 16, color: t.heading, margin: '0 0 12px 0', fontFamily: "'Syne', sans-serif" }}>What I'd do differently:</h3>
+              <p style={{ fontSize: 14, color: t.muted, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                "{biz.lessonsLearned}"
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Links CTA */}
         <motion.div

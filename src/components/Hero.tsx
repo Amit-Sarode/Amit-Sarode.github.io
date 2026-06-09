@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect ,useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import SEO from './SEO';
@@ -7,7 +7,6 @@ import AnimatedCounter from './AnimatedCounter';
 import MagneticButton from './MagneticButton';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 import HeroScrollExperience from './hero/HeroScrollExperience';
-import SkillCard from './hero/SkillCard';
 import { Reveal, Divider } from './hero/Reveal';
 import {
   clients, testimonials,
@@ -206,6 +205,18 @@ const GlowCard: React.FC<{
 const Hero: React.FC = () => {
   const navigate = useNavigate();
 
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+const scrollCarousel = (direction: 'left' | 'right') => {
+  if (carouselRef.current) {
+    const scrollAmount = window.innerWidth > 768 ? 400 : 280; // Scroll width based on screen size
+    carouselRef.current.scrollBy({ 
+      left: direction === 'left' ? -scrollAmount : scrollAmount, 
+      behavior: 'smooth' 
+    });
+  }
+};
+
   // ─── Carousel State ───
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -300,9 +311,7 @@ const Hero: React.FC = () => {
                 style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
               />
               </div>
-              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
-       
-                <motion.h2 
+              <motion.h2 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -318,8 +327,6 @@ const Hero: React.FC = () => {
             >
             How I Work
             </motion.h2>
-    
-              </h2>
               <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 500, margin: '0 auto', lineHeight: 1.75 }}>
                 A proven 3-step process to turn your business challenges into automated solutions.
               </p>
@@ -362,9 +369,7 @@ const Hero: React.FC = () => {
                 style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
               />
             </div>
-            <h2 className="font-bold mb-2" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
-         
-                <motion.h2 
+            <motion.h2 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -380,8 +385,6 @@ const Hero: React.FC = () => {
             >
         The Journey
             </motion.h2>
-          
-            </h2>
           </div>
         </Reveal>
         <div className="grid md:grid-cols-2 gap-10 items-stretch">
@@ -423,8 +426,7 @@ const Hero: React.FC = () => {
                 style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
               />
               </div>
-              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
-               <Reveal>
+              <Reveal>
                 <motion.h2 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -442,7 +444,6 @@ const Hero: React.FC = () => {
          Trusted By
             </motion.h2>
             </Reveal>
-              </h2>
               <p style={{ color: '#94a3b8', fontSize: 15, fontFamily: 'monospace', margin: '0 auto' }}>Businesses I've automated and scaled</p>
             </div>
           </Reveal>
@@ -487,57 +488,138 @@ const Hero: React.FC = () => {
       <Divider />
 
       {/* ── INDUSTRIES ── */}
-      <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
-          <Reveal>
-            <div className="flex flex-col items-center text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>INDUSTRIES</span>
-                 <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              </div>
-              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
-                <Reveal>
-                <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-           Industries I Serve
-            </motion.h2>
-            </Reveal>
-              </h2>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
-                Deep domain expertise across multiple verticals. Each industry has unique workflows — I build automation that fits.
-              </p>
-            </div>
-          </Reveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
-            {businesses.map((biz, i) => (
-              <IndustryCard key={biz.id} biz={biz} index={i} onNavigate={(id) => navigate(`/projects/${id}`)} />
-            ))}
-          </div>
+     <section id="industries" className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+  <div style={{ maxWidth: 1280, margin: '0 auto' }}> {/* Slightly widened to accommodate horizontal scrolling */}
+    
+    <Reveal>
+      <div className="flex flex-col items-center text-center mb-12">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <motion.span 
+            initial={{ width: 0 }}
+            whileInView={{ width: 32 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+          />
+          <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
+            CASE STUDIES
+          </span>
+          <motion.span 
+            initial={{ width: 0 }}
+            whileInView={{ width: 32 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+          />
         </div>
-      </section>
+        
+        <Reveal>
+          <motion.h2 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="font-bold mb-4"
+            style={{ 
+              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+              background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              lineHeight: 1.2,
+              fontFamily: "'Syne', sans-serif" 
+            }}
+          >
+            Featured Work & Impact
+          </motion.h2>
+        </Reveal>
+        
+        <p style={{ color: '#94a3b8', fontSize: 16, fontWeight: 300, maxWidth: 580, margin: '0 auto', lineHeight: 1.75 }}>
+          I don't just write code; I solve business problems. Explore the architecture, technical decisions, and real-world metrics behind my recent projects.
+        </p>
+
+        {/* Carousel Navigation Arrows */}
+        <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
+          <motion.button 
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(20, 184, 166, 0.1)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => scrollCarousel('left')}
+            style={{
+              width: 44, height: 44, borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.03)',
+              color: '#fff', cursor: 'pointer', transition: 'border 0.3s'
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(20, 184, 166, 0.1)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => scrollCarousel('right')}
+            style={{
+              width: 44, height: 44, borderRadius: '50%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.03)',
+              color: '#fff', cursor: 'pointer', transition: 'border 0.3s'
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </motion.button>
+        </div>
+      </div>
+    </Reveal>
+
+    {/* Carousel Container Wrapper (Provides edge fade effect) */}
+    <div style={{ position: 'relative' }}>
+      
+      {/* Optional: Left/Right Gradient Masks to indicate scrolling */}
+      <div style={{
+        position: 'absolute', top: 0, bottom: 0, left: 0, width: 40,
+        background: 'linear-gradient(to right, #020d0a 0%, transparent 100%)', // Match your bg color here
+        zIndex: 2, pointerEvents: 'none'
+      }} />
+      <div style={{
+        position: 'absolute', top: 0, bottom: 0, right: 0, width: 40,
+        background: 'linear-gradient(to left, #020d0a 0%, transparent 100%)', // Match your bg color here
+        zIndex: 2, pointerEvents: 'none'
+      }} />
+
+      {/* The Scrolling Flex Container */}
+      <div 
+        ref={carouselRef}
+        className="hide-scrollbar"
+        style={{ 
+          display: 'flex', 
+          overflowX: 'auto', 
+          gap: 24, 
+          padding: '10px 40px 40px 40px', // Extra padding for box-shadows on hover
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: 'smooth',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
+        {businesses.map((biz, i) => (
+          <div 
+            key={biz.id} 
+            style={{ 
+              minWidth: 'clamp(280px, 80vw, 360px)', // Ensures cards stay a consistent size
+              scrollSnapAlign: 'start',
+              flexShrink: 0 
+            }}
+          >
+            <IndustryCard 
+              biz={biz} 
+              index={i} 
+              onNavigate={(id) => navigate(`/projects/${id}`)} 
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 
       <Divider />
 
@@ -783,8 +865,7 @@ const Hero: React.FC = () => {
                 style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
               />
               </div>
-              <h2 className="font-bold mb-6" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', background: 'linear-gradient(120deg, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1.2 }}>
-                <Reveal>
+              <Reveal>
                 <motion.h2 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -802,7 +883,6 @@ const Hero: React.FC = () => {
           Case Studies
             </motion.h2>
             </Reveal>
-              </h2>
               <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
                 Real projects, real impact. Here's what automation looks like in practice.
               </p>

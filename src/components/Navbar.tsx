@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
   const width = useWindowSize();
   const [mobile, setMobile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   const closeMobile = useCallback(() => setMobile(false), []);
   const menuRef = useClickOutside(closeMobile);

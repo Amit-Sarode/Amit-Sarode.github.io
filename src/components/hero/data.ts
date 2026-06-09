@@ -205,7 +205,6 @@ export const caseStudies = [
     color: '#F59E0B',
   },
 ];
-
 export const industries = [
   { name: 'Healthcare', desc: 'Patient intake, records & AI triage', icon: '🏥', color: '#10B981' },
   { name: 'Hospitality', desc: 'Booking, guest comms & reviews', icon: '🏨', color: '#F59E0B' },
@@ -222,6 +221,10 @@ export interface BusinessCategory {
   icon: string;
   title: string;
   description: string;
+  // NEW CASE STUDY FIELDS
+  problem?: string;
+  solution?: string;
+  lessonsLearned?: string;
   color: string;
   impact: string[];
   tech: string[];
@@ -238,6 +241,9 @@ export const businesses: BusinessCategory[] = [
     icon: '🏋️',
     title: 'Gym Member Acquisition Platform',
     description: 'Automated lead capture, qualification, and membership conversion system for fitness businesses.',
+    problem: 'Sales teams were spending hours manually searching for leads and copy-pasting data, resulting in missed opportunities and high drop-off rates during the trial booking process.',
+    solution: 'Engineered an automated lead capture and AI qualification workflow using the WhatsApp API to bypass tedious manual entry and instantly engage prospects the moment they expressed interest.',
+    lessonsLearned: 'If building this again at a larger scale, I would implement Redis for caching frequent database queries to reduce server load during peak sign-up windows.',
     color: '#10B981',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
     link: 'https://gym-orpin-two.vercel.app/',
@@ -262,15 +268,18 @@ export const businesses: BusinessCategory[] = [
   {
     id: 3,
     icon: '🍰',
-    title: 'Bakery Order & Delivery Platform',
-    description: 'Online ordering, portfolio showcase, and delivery management for bakeries and cake shops.',
+    title: 'Jollie Macarons Digital Experience',
+    description: 'Interactive order platform and custom box builder for a premium macaron bakery in West Leederville.',
+    problem: 'Customers had no way to visually customize their assorted boxes before checkout, leading to friction in the buying process and frequent manual order adjustments over the phone.',
+    solution: 'I built an interactive, drag-and-drop custom box builder that lets users visualize their exact flavor configuration instantly before adding it to their cart.',
+    lessonsLearned: 'Managing complex UI state as users rapidly added or swapped flavors required robust state management on the frontend to ensure the UI updated instantly without losing sync with the backend checkout.',
     color: '#F472B6',
     image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80',
     link: 'https://jollie-macaron.vercel.app/',
-    impact: ['Direct orders from day one', '100% mobile responsive', 'Brand perceived as more premium'],
-    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Vercel'],
-    features: ['Product gallery with order form', 'Automated order confirmation', 'SEO-optimized for local discovery', 'Instagram feed integration'],
-    workflow: ['Browse Menu →', 'Custom Order Form →', 'Payment →', 'Order Confirmation →', 'Delivery Tracking'],
+    impact: ['Direct orders from day one', 'Zero friction in box customization', 'Streamlined order fulfillment for the West Leederville kitchen'],
+    tech: ['React', 'Tailwind CSS', 'Framer Motion', 'Node.js'],
+    features: ['Custom interactive box builder', 'Flavor portfolio gallery', 'Automated order confirmation', 'Contact & Location routing'],
+    workflow: ['Browse Flavors →', 'Custom Box Builder →', 'Payment →', 'Order Confirmation →', 'Kitchen Fulfillment'],
   },
   {
     id: 4,
@@ -279,7 +288,7 @@ export const businesses: BusinessCategory[] = [
     description: 'Smart scheduling, client retention, and staff management system for beauty studios.',
     color: '#A855F7',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
-     link: 'https://saloon-web-app.vercel.app/',
+    link: 'https://saloon-web-app.vercel.app/',
     impact: ['60% fewer empty slots', '40% improvement in client retention', 'Automated rebooking workflows'],
     tech: ['React', 'Firebase', 'WhatsApp API', 'Node.js'],
     features: ['Smart booking with waitlist', 'Automated re-engagement for lapsed clients', 'Staff schedule optimization', 'Before/after gallery integration'],
@@ -301,14 +310,16 @@ export const businesses: BusinessCategory[] = [
   {
     id: 6,
     icon: '🐜',
-    title: 'Pest Control Lead Engine',
-    description: 'Automated lead generation, quote system, and service scheduling for pest control businesses.',
+    title: 'Local Lead Finder Engine',
+    description: 'Automated headless browser tool for extracting structured public profile data and exporting it to reports.',
+    problem: 'Sales teams were spending 3+ hours manually searching directories and LinkedIn profiles to source contact information, copy-pasting everything into disjointed spreadsheets.',
+    solution: 'I engineered a headless browser automation script that accepts target search parameters, navigates specific recruiter/HR profiles, and generates a clean, downloadable Excel report in under 60 seconds.',
     color: '#84CC16',
     image: 'https://images.unsplash.com/photo-1585016495485-4833bad04e33?w=800&q=80',
-    impact: ['24/7 lead capture', 'Instant quote generation', 'Automated service scheduling'],
-    tech: ['React', 'Node.js', 'WhatsApp API', 'Firebase'],
-    features: ['AI chatbot for instant quotes', 'Seasonal campaign automation', 'Service area mapping', 'Automated follow-up sequences'],
-    workflow: ['Customer Enquiry →', 'AI Quote Generation →', 'Booking Confirmation →', 'Service Scheduling →', 'Follow-up & Reviews'],
+    impact: ['Reduced manual lead sourcing from 3 hours to 2 minutes', 'Structured over 500+ accurate HR profiles during testing', 'Eliminated human data-entry errors'],
+    tech: ['Node.js', 'Puppeteer', 'ExcelJS', 'React Native'],
+    features: ['Automated directory scraping', 'Email & contact extraction', 'One-click Excel report generation', 'Rate-limiting & proxy handling'],
+    workflow: ['Input Search Parameters →', 'Headless Browser Execution →', 'Data Extraction →', 'Data Structuring →', 'Excel Export'],
   },
   {
     id: 7,
@@ -362,14 +373,16 @@ export const businesses: BusinessCategory[] = [
   {
     id: 11,
     icon: '🏠',
-    title: 'Real Estate Lead Pipeline',
-    description: 'Automated lead qualification, property matching, and CRM pipeline for real estate agencies.',
+    title: 'Buyer Agent Perth Real Estate Platform',
+    description: 'Comprehensive property matching, market insights, and CRM pipeline for a Perth-based buyer agency.',
+    problem: 'The agency struggled to systematically demonstrate their value to high-net-worth clients, relying on static PDFs to showcase market insights and past successful outcomes.',
+    solution: 'Developed a dynamic, modular web application featuring dedicated sections for Market Insights, Client Outcomes, and an interactive Buyer Agent Perth Blog to nurture leads organically.',
     color: '#EF4444',
     image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
-    impact: ['Instant lead response', 'Automated property matching', '50% faster deal closures'],
-    tech: ['React', 'Node.js', 'OpenAI API', 'CRM API'],
-    features: ['AI lead qualification', 'Smart property matching', 'Automated follow-up sequences', 'Lead scoring dashboard'],
-    workflow: ['Lead Capture →', 'AI Qualification →', 'Property Matching →', 'Automated Follow-up →', 'Deal Closure'],
+    impact: ['Elevated brand authority in the Perth market', 'Streamlined presentation of client outcomes', 'Improved organic lead generation via the integrated blog'],
+    tech: ['React', 'Node.js', 'MongoDB', 'Vite'],
+    features: ['BuyerAgentPerthBlog integration', 'Dynamic Insights dashboard', 'ClientOutcomes portfolio showcase', 'Property matching questionnaire'],
+    workflow: ['Lead Capture →', 'Insights Nurturing →', 'Property Matching →', 'Automated Follow-up →', 'Deal Closure'],
   },
   {
     id: 12,
