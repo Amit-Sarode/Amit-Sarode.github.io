@@ -7,6 +7,20 @@
   <meta name="description" content="The page you're looking for doesn't exist. Let's get you back on track." />
   <meta name="robots" content="noindex, follow" />
 
+  <script>
+    var pathSegmentsToKeep = 0;
+    var l = window.location;
+    if (l.pathname !== '/') {
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+        '/?/' + l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/')
+          .replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') + l.hash
+      );
+    }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -149,17 +163,5 @@
       <a href="javascript:history.back()" class="btn-secondary">Go Back</a>
     </div>
   </div>
-
-  <script>
-    var pathSegmentsToKeep = 0;
-    var l = window.location;
-    l.replace(
-      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
-      '/?/' + l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/')
-        .replace(/&/g, '~and~') +
-      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') + l.hash
-    );
-  </script>
 </body>
 </html>
