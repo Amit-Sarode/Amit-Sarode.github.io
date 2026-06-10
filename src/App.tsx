@@ -1,5 +1,5 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import Loader from './components/Loader';
 import Footer from './components/Footer';
@@ -21,6 +21,14 @@ const ErrorPage  = lazy(() => import('./components/ErrorPage'));
 
 function App() {
   const location = useLocation();
+   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.search.startsWith('?/')) {
+      navigate(location.search.slice(1) + location.hash, { replace: true });
+    }
+  }, []);
+
 
   return (
    <>

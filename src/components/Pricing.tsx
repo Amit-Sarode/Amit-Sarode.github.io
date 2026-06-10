@@ -233,7 +233,7 @@ const Pricing: React.FC = () => {
   )
 }
 <span style={{fontWeight:200 , fontSize:24}}
-> /project</span>
+>/project</span>
                         </span>
                       </>
                     )}
