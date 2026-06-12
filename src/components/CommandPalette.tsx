@@ -36,7 +36,12 @@ const CommandPalette = () => {
       if (e.key === 'Escape') setOpen(false);
     };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const toggleHandler = () => setOpen(p => !p);
+    window.addEventListener('toggle-command-palette', toggleHandler);
+    return () => {
+      window.removeEventListener('keydown', handler);
+      window.removeEventListener('toggle-command-palette', toggleHandler);
+    };
   }, []);
 
   useEffect(() => {

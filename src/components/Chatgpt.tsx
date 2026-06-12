@@ -20,7 +20,7 @@ const Chatgpt: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const selectedModel = 'Llama-3.1-8B-Instruct-q4f32_1-MLC';
+    const selectedModel = 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
     webllm.CreateMLCEngine(selectedModel, {
       initProgressCallback: (progress) => {
         setLoadProgress(progress.text ?? 'Loading...');
@@ -182,7 +182,7 @@ const Chatgpt: React.FC = () => {
                 animation: 'hirePulse 2s ease-in-out infinite',
               }} />
               <span style={{ fontSize: 11, color: '#475569', fontFamily: 'monospace' }}>
-                {loadingModel ? 'Loading model...' : 'Llama 3.1 · Ready'}
+                {loadingModel ? 'Loading model...' : 'Luma· Ready'}
               </span>
             </div>
           </div>

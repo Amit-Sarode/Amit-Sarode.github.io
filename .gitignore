@@ -29,3 +29,8 @@ dist
 
 # OS files
 Thumbs.db
+
+
+dist/
+.wrangler/
+.DS_Store

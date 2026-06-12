@@ -372,11 +372,14 @@ const Navbar: React.FC = () => {
             Email Me
           </motion.button>
 
-          {/* Cmd+K hint */}
-          <motion.div
+          {/* Cmd+K button */}
+          <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55 }}
+            whileHover={{ scale: 1.05, borderColor: 'var(--accent-border)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-command-palette'))}
             style={{
               display: 'flex', alignItems: 'center', gap: 3,
               padding: '3px 8px', borderRadius: 6,
@@ -384,11 +387,13 @@ const Navbar: React.FC = () => {
               border: '1px solid var(--border-default)',
               fontSize: 10, color: 'var(--text-dim)',
               fontFamily: 'monospace',
-              marginLeft: 4,
+              marginLeft: 4, cursor: 'pointer',
+              transition: 'all 0.2s',
             }}
+            title="Ctrl+K or Cmd+K"
           >
             <span>⌘</span>K
-          </motion.div>
+          </motion.button>
         </div>
 
         {/* Mobile hamburger */}
