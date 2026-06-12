@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
+import SocialsDropdown from './SocialsDropdown';
 import resume from '/assets/Amit Sarode -resume (1).pdf';
-
+import logo from "../../public/assets/favicon-removebg-preview.png"
 /* ─── Hooks ─── */
 export const useWindowSize = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -30,10 +31,10 @@ export const useClickOutside = (handler: () => void) => {
 /* ─── Nav items ─── */
 const navItems = [
   { name: 'About', path: '/about' },
+  { name: 'Projects', path: '/projects' },
+  { name: 'Blog', path: '/blog' },
   { name: 'Pricing', path: '/pricing' },
   { name: 'Contact', path: '/contact' },
-  { name: 'LinkedIn', path: 'https://www.linkedin.com/in/amit-sarode/', external: true },
-  { name: 'GitHub', path: 'https://github.com/Amit-Sarode', external: true },
 ];
 
 const Navbar: React.FC = () => {
@@ -143,7 +144,7 @@ const Navbar: React.FC = () => {
                 flexShrink: 0,
               }}
             >
-              AS
+              <img src={logo}/>
             </div>
             <span
               style={{
@@ -171,75 +172,71 @@ const Navbar: React.FC = () => {
           className="md-nav"
         >
           {navItems.map((item, idx) => {
-            const active = !item.external && isActive(item.path);
-            return item.external ? (
-              <motion.a
-                key={idx}
-                href={item.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.07 }}
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  color: 'var(--text-muted)',
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                  transition: 'color 0.2s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 5,
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-light)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
-              >
-                {item.name}
-                <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </motion.a>
-            ) : (
+            const active = isActive(item.path);
+            return (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.07 }}
+                style={{ position: 'relative' }}
               >
                 <Link
                   to={item.path}
                   style={{
-                  padding: '6px 14px',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  color: active ? 'var(--accent)' : 'var(--text-muted)',
-                  textDecoration: 'none',
-                  fontWeight: active ? 600 : 500,
-                  background: active ? 'var(--accent-bg)' : 'transparent',
-                  display: 'block',
-                  transition: 'color 0.2s, background 0.2s',
-                  position: 'relative',
-                }}
-                onMouseEnter={(e) => {
-                  if (!active) {
-                    e.currentTarget.style.color = 'var(--accent-light)';
-                    e.currentTarget.style.background = 'var(--accent-bg)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) {
-                    e.currentTarget.style.color = 'var(--text-muted)';
-                    e.currentTarget.style.background = 'transparent';
-                  }
-                }}
+                    padding: '6px 14px',
+                    borderRadius: 8,
+                    fontSize: 14,
+                    color: active ? 'var(--accent)' : 'var(--text-muted)',
+                    textDecoration: 'none',
+                    fontWeight: active ? 600 : 500,
+                    background: active ? 'var(--accent-bg)' : 'transparent',
+                    display: 'block',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.color = 'var(--accent-light)';
+                      e.currentTarget.style.background = 'var(--accent-bg)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.color = 'var(--text-muted)';
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
                 >
                   {item.name}
                 </Link>
+                {active && (
+                  <motion.div
+                    layoutId="nav-active"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    style={{
+                      position: 'absolute',
+                      bottom: -2,
+                      left: 14,
+                      right: 14,
+                      height: 2,
+                      borderRadius: 1,
+                      background: 'var(--accent)',
+                      boxShadow: '0 0 8px var(--accent)',
+                    }}
+                  />
+                )}
               </motion.div>
             );
           })}
+
+          {/* Socials Dropdown */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: navItems.length * 0.07 }}
+          >
+            <SocialsDropdown />
+          </motion.div>
 
           {/* Theme toggle */}
           {/* <motion.button
@@ -374,6 +371,24 @@ const Navbar: React.FC = () => {
           >
             Email Me
           </motion.button>
+
+          {/* Cmd+K hint */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55 }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 3,
+              padding: '3px 8px', borderRadius: 6,
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-default)',
+              fontSize: 10, color: 'var(--text-dim)',
+              fontFamily: 'monospace',
+              marginLeft: 4,
+            }}
+          >
+            <span>⌘</span>K
+          </motion.div>
         </div>
 
         {/* Mobile hamburger */}
@@ -452,70 +467,36 @@ const Navbar: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.06 }}
                   >
-                    {item.external ? (
-                      <a
-                        href={item.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={closeMobile}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '10px 14px',
-                          borderRadius: 10,
-                          color: 'var(--text-muted)',
-                          fontSize: 14,
-                          textDecoration: 'none',
-                          fontWeight: 500,
-                          transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
+                    <Link
+                      to={item.path}
+                      onClick={closeMobile}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px 14px',
+                        borderRadius: 10,
+                        color: isActive(item.path) ? 'var(--accent)' : 'var(--text-muted)',
+                        fontSize: 14,
+                        textDecoration: 'none',
+                        fontWeight: isActive(item.path) ? 600 : 500,
+                        background: isActive(item.path) ? 'var(--accent-bg)' : 'transparent',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive(item.path)) {
                           e.currentTarget.style.color = 'var(--accent-light)';
                           e.currentTarget.style.background = 'var(--accent-bg)';
-                        }}
-                        onMouseLeave={(e) => {
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive(item.path)) {
                           e.currentTarget.style.color = 'var(--text-muted)';
                           e.currentTarget.style.background = 'transparent';
-                        }}
-                      >
-                        {item.name}
-                        <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" />
-                        </svg>
-                      </a>
-                    ) : (
-                      <Link
-                        to={item.path}
-                        onClick={closeMobile}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          padding: '10px 14px',
-                          borderRadius: 10,
-                          color: isActive(item.path) ? 'var(--accent)' : 'var(--text-muted)',
-                          fontSize: 14,
-                          textDecoration: 'none',
-                          fontWeight: isActive(item.path) ? 600 : 500,
-                          background: isActive(item.path) ? 'var(--accent-bg)' : 'transparent',
-                          transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive(item.path)) {
-                            e.currentTarget.style.color = 'var(--accent-light)';
-                            e.currentTarget.style.background = 'var(--accent-bg)';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive(item.path)) {
-                            e.currentTarget.style.color = 'var(--text-muted)';
-                            e.currentTarget.style.background = 'transparent';
-                          }
-                        }}
-                      >
-                        {item.name}
-                      </Link>
-                    )}
+                        }
+                      }}
+                    >
+                      {item.name}
+                    </Link>
                   </motion.div>
                 ))}
 
@@ -556,6 +537,53 @@ const Navbar: React.FC = () => {
                     Resume ↓
                   </button>
                 </motion.div>
+
+                {/* Mobile socials */}
+                {[
+                  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/amit-sarode/' },
+                  { label: 'GitHub', href: 'https://github.com/Amit-Sarode' },
+                  { label: 'Instagram', href: 'https://www.instagram.com/amit_sarode__/' },
+                  { label: 'X / Twitter', href: 'https://x.com/amitsarode_' },
+                ].map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 1 + i) * 0.06 }}
+                  >
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={closeMobile}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        borderRadius: 10,
+                        color: '#64748b',
+                        fontSize: 14,
+                        textDecoration: 'none',
+                        fontWeight: 500,
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#5eead4';
+                        e.currentTarget.style.background = 'rgba(20,184,166,0.06)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#64748b';
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      {s.label}
+                      <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" />
+                      </svg>
+                    </a>
+                  </motion.div>
+                ))}
 
                 {/* Divider */}
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '8px 14px' }} />

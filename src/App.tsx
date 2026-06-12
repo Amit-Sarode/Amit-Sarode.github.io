@@ -17,6 +17,11 @@ const Projects   = lazy(() => import('./components/Projects'));
 const Hero       = lazy(() => import('./components/Hero'));
 const Pricing    = lazy(() => import('./components/Pricing'));
 const ErrorPage  = lazy(() => import('./components/ErrorPage'));
+const Blog       = lazy(() => import('./components/Blog'));
+const BlogPost   = lazy(() => import('./components/BlogPost'));
+const ProjectsGrid = lazy(() => import('./components/ProjectsGrid'));
+const CaseStudyList = lazy(() => import('./components/CaseStudy').then(m => ({ default: m.CaseStudyList })));
+const CaseStudyPage = lazy(() => import('./components/CaseStudy').then(m => ({ default: m.CaseStudyPage })));
 
 
 function App() {
@@ -54,11 +59,16 @@ function App() {
               <PageTransition>
                 <Routes location={location} key={location.pathname}>
                   <Route path="/"         element={<Hero />} />
+                  <Route path="/projects" element={<ProjectsGrid />} />
                   <Route path="/projects/:id" element={<Projects />} />
                   <Route path="/pricing"  element={<Pricing />} />
                   <Route path="/contact"  element={<Contact />} />
                   <Route path="/about"    element={<About />} />
                   <Route path="/chatgpt"  element={<Chatgpt />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/case-studies" element={<CaseStudyList />} />
+                  <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
                   <Route path="/500" element={<ErrorPage code={500} />} />
                   <Route path="/502" element={<ErrorPage code={502} />} />
                   <Route path="*" element={<ErrorPage code={404} />} />

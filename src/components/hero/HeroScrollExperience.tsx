@@ -278,7 +278,7 @@ const HeroScrollExperience: React.FC = () => {
           alignItems: 'baseline',
           flexWrap: 'nowrap',
           whiteSpace: 'nowrap',
-         
+         gap:20,
           textShadow: '0 20px 40px rgba(0,0,0,0.5)',
         }}
       >
@@ -401,14 +401,14 @@ const HeroScrollExperience: React.FC = () => {
         </motion.button>
 
         <motion.button
-          whileHover={prefersReduced ? {} : { scale: 1.04, background: 'rgba(255,255,255,0.05)' }}
+          whileHover={prefersReduced ? {} : { scale: 1.04, boxShadow: '0 0 30px rgba(20,184,166,0.15)' }}
           whileTap={prefersReduced ? {} : { scale: 0.96 }}
           onClick={() => {
             const el = document.getElementById('industries');
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
-              navigate('/', { state: { scrollTo: 'industries' } });
+              navigate('/projects', { state: { scrollTo: 'industries' } });
             }
           }}
           aria-label="View my recent projects and results"
@@ -423,12 +423,15 @@ const HeroScrollExperience: React.FC = () => {
             border: '1px solid rgba(148,163,184,0.2)',
             cursor: 'pointer',
             letterSpacing: '0.03em',
-            transition: 'background 0.3s, border-color 0.3s',
+            transition: 'background 0.3s, border-color 0.3s, box-shadow 0.3s',
           }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.4)'; e.currentTarget.style.background = 'rgba(20,184,166,0.08)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(148,163,184,0.2)'; e.currentTarget.style.background = 'rgba(0,0,0,0.18)'; }}
         >
           View My Work
         </motion.button>
       </motion.div>
+
     </motion.section>
   );
 };

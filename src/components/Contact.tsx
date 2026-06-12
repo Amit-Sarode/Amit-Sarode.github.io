@@ -10,7 +10,7 @@ import MagneticButton from './MagneticButton';
 import { getCalApi } from "@calcom/embed-react";
 
 // 1. Import the beautiful backgrounds from HeroBackground
-import { AmbientBackground, GridLines } from './hero/HeroBackground';
+import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 
 const apiKeysEMailJS = {
   serviceID: import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -272,6 +272,7 @@ const Contact = () => {
       />
       
       <AmbientBackground />
+      <NoiseOverlay />
       <GridLines />
 
       <ToastContainer

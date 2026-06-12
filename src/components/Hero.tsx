@@ -578,14 +578,21 @@ const Hero: React.FC = () => {
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Eyebrow */}
           <Reveal>
-            <div style={{ textAlign: 'center', marginBottom: 12 }}>
-              <span style={{
-                color: '#14b8a6', fontFamily: 'monospace', fontSize: 13,
-                letterSpacing: '0.16em', fontWeight: 600, textTransform: 'uppercase',
-              }}>
-                Behind the Projects
-              </span>
-            </div>
+            <div className="flex items-center justify-center gap-3 mb-4">
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>RESULTS</span>
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
           </Reveal>
 
           {/* Heading */}
@@ -661,6 +668,75 @@ const Hero: React.FC = () => {
           <Reveal delay={0.25}>
             <CoverflowCarousel projects={businesses} onFocus={(id) => navigate(`/projects/${id}`)} />
           </Reveal>
+        </div>
+      </section>
+
+       <Divider />
+
+      {/* ── CASE STUDIES ── */}
+      <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
+          <Reveal>
+            <div className="flex flex-col items-center text-center mb-16">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>RESULTS</span>
+                  <motion.span 
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
+              />
+              </div>
+              <Reveal>
+                <motion.h2 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-bold mb-2"
+              style={{ 
+                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                lineHeight: 1.2
+              }}
+            >
+          Case Studies
+            </motion.h2>
+            </Reveal>
+              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
+                Real projects, real impact. Here's what automation looks like in practice.
+              </p>
+            </div>
+          </Reveal>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {caseStudies.map((cs, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <GlowCard color={cs.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}20`, border: `1px solid ${cs.color}40`, marginBottom: 16 }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: cs.color }}>↗ {cs.result}</span>
+                    </div>
+                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 18, color: '#ffffff', margin: '0 0 6px', lineHeight: 1.3 }}>{cs.title}</h3>
+                    <p style={{ fontSize: 13, color: '#cbd5e1', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
+                    <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {cs.tags.map((tag) => (
+                        <span key={tag} style={{ fontSize: 11, letterSpacing: '0.05em', padding: '4px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </GlowCard>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -886,74 +962,7 @@ const Hero: React.FC = () => {
       </section>
 
 
-      <Divider />
-
-      {/* ── CASE STUDIES ── */}
-      <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div style={{ maxWidth: 1152, margin: '0 auto' }}>
-          <Reveal>
-            <div className="flex flex-col items-center text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>RESULTS</span>
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              </div>
-              <Reveal>
-                <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-          Case Studies
-            </motion.h2>
-            </Reveal>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
-                Real projects, real impact. Here's what automation looks like in practice.
-              </p>
-            </div>
-          </Reveal>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {caseStudies.map((cs, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <GlowCard color={cs.color} style={{ padding: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 20, background: `${cs.color}20`, border: `1px solid ${cs.color}40`, marginBottom: 16 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: cs.color }}>↗ {cs.result}</span>
-                    </div>
-                    <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 18, color: '#ffffff', margin: '0 0 6px', lineHeight: 1.3 }}>{cs.title}</h3>
-                    <p style={{ fontSize: 13, color: '#cbd5e1', margin: '0 0 12px', fontFamily: 'monospace' }}>{cs.client}</p>
-                    <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7, margin: '0 0 16px', flex: 1 }}>{cs.desc}</p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {cs.tags.map((tag) => (
-                        <span key={tag} style={{ fontSize: 11, letterSpacing: '0.05em', padding: '4px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.1)' }}>{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </GlowCard>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* Cursor blink keyframes */}
       <style>{`

@@ -328,7 +328,7 @@ function HireMeButton() {
                 right: 32,
                 width: 400,
                 height: 560,
-                maxWidth: 'calc(100vw - 64px)',
+                maxWidth: 'calc(100vw - 32px)',
                 maxHeight: 'calc(100vh - 140px)',
                 zIndex: 100,
                 display: 'flex',
@@ -340,6 +340,7 @@ function HireMeButton() {
                 boxShadow: '0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04)',
                 overflow: 'hidden',
               }}
+              className="hireme-panel"
             >
               {/* Header */}
               <div
@@ -417,6 +418,7 @@ function HireMeButton() {
                 style={{
                   flex: 1,
                   overflowY: 'auto',
+                  overflowX: 'hidden',
                   padding: '16px 16px 8px',
                   display: 'flex',
                   flexDirection: 'column',
@@ -484,6 +486,8 @@ function HireMeButton() {
                         <div style={{
                           fontSize: 13, color: '#e2e8f0', margin: 0,
                           lineHeight: 1.6, wordBreak: 'break-word',
+                          overflowWrap: 'break-word',
+                          hyphens: 'auto',
                         }}>
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
@@ -660,7 +664,7 @@ function HireMeButton() {
                       background: 'rgba(255,255,255,0.04)',
                       border: '1px solid rgba(255,255,255,0.08)',
                       color: '#e2e8f0',
-                      fontSize: 13,
+                      fontSize: 16,
                       outline: 'none',
                       fontFamily: 'inherit',
                       transition: 'border-color 0.25s, box-shadow 0.25s',
@@ -719,6 +723,31 @@ function HireMeButton() {
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(20,184,166,0.2); border-radius: 4px; }
+
+        @media (max-width: 480px) {
+          .hireme-panel {
+            right: 16px !important;
+            left: 16px !important;
+            width: auto !important;
+            bottom: 90px !important;
+            border-radius: 20px !important;
+          }
+        }
+
+        .hireme-panel p,
+        .hireme-panel li {
+          overflow-wrap: break-word;
+          word-break: break-word;
+          hyphens: auto;
+        }
+        .hireme-panel pre {
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-x: hidden;
+        }
+        .hireme-panel code {
+          word-break: break-all;
+        }
       `}</style>
     </>
   );

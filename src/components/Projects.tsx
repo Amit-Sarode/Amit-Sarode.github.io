@@ -3,6 +3,7 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import SEO from './SEO';
 import {businesses} from "./hero/data"
+import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 
 const t = {
   bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',
@@ -112,6 +113,9 @@ const Projects: React.FC = () => {
         path={`/projects/${biz.id}`}
       />
 
+      <AmbientBackground />
+      <NoiseOverlay />
+      <GridLines />
       <div style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
         backgroundImage: `linear-gradient(rgba(20,184,166,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.03) 1px,transparent 1px)`,

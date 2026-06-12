@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from './SEO';
+import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 
 type ErrorPageProps = {
   code: number;
@@ -178,22 +179,9 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ code, title, message }) => {
         description={displayMessage}
         path={`/${code}`}
       />
-
-      {/* Ambient glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '20%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 600,
-          height: 400,
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(20,184,166,0.08) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-          pointerEvents: 'none',
-        }}
-      />
+      <AmbientBackground />
+      <NoiseOverlay />
+      <GridLines />
 
       <div
         style={{

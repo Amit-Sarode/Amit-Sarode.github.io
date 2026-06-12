@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as webllm from '@mlc-ai/web-llm';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from './SEO';
+import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -113,28 +114,9 @@ const Chatgpt: React.FC = () => {
         description="Run a local AI language model directly in your browser. Powered by WebLLM, no server required."
         path="/chatgpt"
       />
-      {/* Grid lines */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: 'none',
-          backgroundImage: `
-            linear-gradient(rgba(20,184,166,0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(20,184,166,0.025) 1px, transparent 1px)
-          `,
-          backgroundSize: '80px 80px',
-        }}
-      />
-
-      {/* Ambient glow */}
-      <div style={{
-        position: 'fixed', top: -100, left: '50%', transform: 'translateX(-50%)',
-        width: 500, height: 300, borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(20,184,166,0.08) 0%, transparent 70%)',
-        filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0,
-      }} />
+      <AmbientBackground />
+      <NoiseOverlay />
+      <GridLines />
 
       {/* Chat window */}
       <motion.div
