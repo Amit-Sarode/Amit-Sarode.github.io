@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SEO from './SEO';
-import { businesses } from './hero/data';
+import { businesses, type BusinessCategory } from './hero/data';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
 import { Reveal } from './hero/Reveal';
 import Tilt3D from './ThreeDTilt';
@@ -20,6 +20,96 @@ const allIndustries = [...new Set([
 ])].sort();
 
 const allTechs = [...new Set(businesses.flatMap(b => b.tech))].sort();
+
+const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
+const ProjectCard: React.FC<{ biz: BusinessCategory; index: number; navigate: ReturnType<typeof useNavigate> }> = ({ biz, index, navigate }) => {
+  const [hovered, setHovered] = useState(false);
+  const handleEnter = useCallback(() => setHovered(true), []);
+  const handleLeave = useCallback(() => setHovered(false), []);
+
+  return (
+    <Reveal key={biz.id} delay={index * 0.03}>
+      <Tilt3D>
+        <motion.div
+          whileHover={isTouch ? {} : { y: -6 }}
+          onClick={() => navigate(`/projects/${biz.id}`)}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+          style={{
+            borderRadius: 16, overflow: 'hidden', cursor: 'pointer',
+            border: `1px solid ${hovered ? `${biz.color}40` : t.cardBorder}`,
+            background: hovered ? `${biz.color}06` : t.surface,
+            transition: 'border-color 0.3s, background 0.3s',
+            position: 'relative',
+            boxShadow: hovered ? `0 12px 40px rgba(0,0,0,0.3), 0 0 30px ${biz.color}10` : 'none',
+          }}
+        >
+          <div style={{
+            height: 160, overflow: 'hidden', position: 'relative',
+          }}>
+            <motion.img
+              src={biz.image} alt={biz.title} loading="lazy"
+              animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(0.6)' : 'brightness(0.5)' }}
+              transition={{ duration: 0.5 }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)`,
+            }} />
+            <motion.span
+              animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? [0, -8, 8, 0] : 0 }}
+              transition={{ duration: 0.4 }}
+              style={{ position: 'absolute', top: 12, left: 12, fontSize: 28 }}
+            >{biz.icon}</motion.span>
+            {hovered && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  position: 'absolute', bottom: 12, right: 12,
+                  padding: '4px 10px', borderRadius: 6,
+                  background: `${biz.color}90`, backdropFilter: 'blur(4px)',
+                  fontSize: 10, color: '#fff', fontWeight: 600,
+                  fontFamily: 'monospace', letterSpacing: '0.05em',
+                }}
+              >
+                View Case Study →
+              </motion.div>
+            )}
+          </div>
+          <div style={{ padding: '16px 18px 18px' }}>
+            <h3 style={{
+              fontSize: 15, fontWeight: 700, color: t.heading,
+              margin: '0 0 6px', lineHeight: 1.3,
+            }}>{biz.title}</h3>
+            <p style={{
+              fontSize: 13, color: t.muted, margin: '0 0 12px',
+              lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical', overflow: 'hidden',
+            }}>{biz.description}</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+              {biz.tech.slice(0, 3).map((tech: string) => (
+                <span key={tech} style={{
+                  padding: '2px 8px', borderRadius: 8,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  fontSize: 10, color: t.muted,
+                }}>{tech}</span>
+              ))}
+              {biz.tech.length > 3 && (
+                <span style={{ fontSize: 10, color: t.muted, padding: '2px 4px' }}>
+                  +{biz.tech.length - 3}
+                </span>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </Tilt3D>
+    </Reveal>
+  );
+};
 
 const ProjectsGrid: React.FC = () => {
   const navigate = useNavigate();
@@ -163,92 +253,9 @@ const ProjectsGrid: React.FC = () => {
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16,
         }}>
-          {filtered.map((biz, i) => {
-            const [hovered, setHovered] = useState(false);
-            const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-            const handleEnter = useCallback(() => setHovered(true), []);
-            const handleLeave = useCallback(() => setHovered(false), []);
-            return (
-            <Reveal key={biz.id} delay={i * 0.03}>
-              <Tilt3D>
-              <motion.div
-                whileHover={isTouch ? {} : { y: -6 }}
-                onClick={() => navigate(`/projects/${biz.id}`)}
-                onMouseEnter={handleEnter}
-                onMouseLeave={handleLeave}
-                style={{
-                  borderRadius: 16, overflow: 'hidden', cursor: 'pointer',
-                  border: `1px solid ${hovered ? `${biz.color}40` : t.cardBorder}`,
-                  background: hovered ? `${biz.color}06` : t.surface,
-                  transition: 'border-color 0.3s, background 0.3s',
-                  position: 'relative',
-                  boxShadow: hovered ? `0 12px 40px rgba(0,0,0,0.3), 0 0 30px ${biz.color}10` : 'none',
-                }}
-              >
-                <div style={{
-                  height: 160, overflow: 'hidden', position: 'relative',
-                }}>
-                  <motion.img
-                    src={biz.image} alt={biz.title} loading="lazy"
-                    animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(0.6)' : 'brightness(0.5)' }}
-                    transition={{ duration: 0.5 }}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)`,
-                  }} />
-                  <motion.span
-                    animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? [0, -8, 8, 0] : 0 }}
-                    transition={{ duration: 0.4 }}
-                    style={{ position: 'absolute', top: 12, left: 12, fontSize: 28 }}
-                  >{biz.icon}</motion.span>
-                  {hovered && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      style={{
-                        position: 'absolute', bottom: 12, right: 12,
-                        padding: '4px 10px', borderRadius: 6,
-                        background: `${biz.color}90`, backdropFilter: 'blur(4px)',
-                        fontSize: 10, color: '#fff', fontWeight: 600,
-                        fontFamily: 'monospace', letterSpacing: '0.05em',
-                      }}
-                    >
-                      View Case Study →
-                    </motion.div>
-                  )}
-                </div>
-                <div style={{ padding: '16px 18px 18px' }}>
-                  <h3 style={{
-                    fontSize: 15, fontWeight: 700, color: t.heading,
-                    margin: '0 0 6px', lineHeight: 1.3,
-                  }}>{biz.title}</h3>
-                  <p style={{
-                    fontSize: 13, color: t.muted, margin: '0 0 12px',
-                    lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                  }}>{biz.description}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                    {biz.tech.slice(0, 3).map(tech => (
-                      <span key={tech} style={{
-                        padding: '2px 8px', borderRadius: 8,
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        fontSize: 10, color: t.muted,
-                      }}>{tech}</span>
-                    ))}
-                    {biz.tech.length > 3 && (
-                      <span style={{ fontSize: 10, color: t.muted, padding: '2px 4px' }}>
-                        +{biz.tech.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-              </Tilt3D>
-            </Reveal>
-          )})}
+          {filtered.map((biz, i) => (
+            <ProjectCard key={biz.id} biz={biz} index={i} navigate={navigate} />
+          ))}
         </div>
 
         {filtered.length === 0 && (

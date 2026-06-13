@@ -18,8 +18,6 @@ const ClickParticles = () => {
   const particles = useRef<Particle[]>([]);
   const raf = useRef<number>(0);
 
-  if (isTouch) return null;
-
   const spawn = useCallback((e: MouseEvent) => {
     const count = 8;
     for (let i = 0; i < count; i++) {
@@ -39,11 +37,13 @@ const ClickParticles = () => {
   }, []);
 
   useEffect(() => {
+    if (isTouch) return;
     window.addEventListener('click', spawn);
     return () => window.removeEventListener('click', spawn);
   }, [spawn]);
 
   useEffect(() => {
+    if (isTouch) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
@@ -83,6 +83,8 @@ const ClickParticles = () => {
       window.removeEventListener('resize', resize);
     };
   }, []);
+
+  if (isTouch) return null;
 
   return (
     <canvas

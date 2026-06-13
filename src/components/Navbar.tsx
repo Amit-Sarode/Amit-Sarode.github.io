@@ -3,8 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import SocialsDropdown from './SocialsDropdown';
+import { PHONE_NUMBER } from '../config';
 import resume from '/assets/Amit Sarode -resume (1).pdf';
-import logo from "../../public/assets/favicon-removebg-preview.png"
+const logo = "/assets/favicon-removebg-preview.png"
 /* ─── Hooks ─── */
 export const useWindowSize = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -313,7 +314,7 @@ const Navbar: React.FC = () => {
 
           {/* Call CTA */}
           <motion.a
-            href="tel:+919322137885"
+            href={`tel:${PHONE_NUMBER}`}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.45 }}
@@ -578,7 +579,7 @@ const Navbar: React.FC = () => {
                   style={{ padding: '6px 8px' }}
                 >
                   <a
-                    href="tel:+919322137885"
+                    href={`tel:${PHONE_NUMBER}`}
                     onClick={closeMobile}
                     style={{
                       display: 'flex',

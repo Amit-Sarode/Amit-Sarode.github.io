@@ -21,7 +21,7 @@ const BlogPost: React.FC = () => {
 
   if (!post) return <Navigate to="/blog" replace />;
 
-  const canonicalUrl = `https://amit-sarode.github.io/#/blog/${post.slug}`;
+  const canonicalUrl = `https://amit-sarode.github.io/blog/${post.slug}`;
 
   return (
     <div style={{

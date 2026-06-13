@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import MagneticButton from './MagneticButton'
-import logo from "../../public/assets/favicon-removebg-preview.png"
+const logo = "/assets/favicon-removebg-preview.png"
 const navLinks = [
    { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },

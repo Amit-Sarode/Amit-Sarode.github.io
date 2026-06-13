@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import * as webllm from '@mlc-ai/web-llm';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from './SEO';
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
@@ -21,19 +20,22 @@ const Chatgpt: React.FC = () => {
 
   useEffect(() => {
     const selectedModel = 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
-    webllm.CreateMLCEngine(selectedModel, {
-      initProgressCallback: (progress) => {
-        setLoadProgress(progress.text ?? 'Loading...');
-        if (progress.progress === 1) setLoadingModel(false);
-      },
-    }).then((createdEngine) => {
-      setEngine(createdEngine);
-      setLoadingModel(false);
-    }).catch((err) => {
-      console.error('Model load failed:', err);
-      setLoadingModel(false);
-      setLoadProgress('Failed to load model. Please refresh and try again.');
-    });
+    (async () => {
+      try {
+        const webllm = await import('@mlc-ai/web-llm');
+        const createdEngine = await webllm.CreateMLCEngine(selectedModel, {
+          initProgressCallback: (progress) => {
+            setLoadProgress(progress.text ?? 'Loading...');
+            if (progress.progress === 1) setLoadingModel(false);
+          },
+        });
+        setEngine(createdEngine);
+        setLoadingModel(false);
+      } catch (err) {
+        setLoadingModel(false);
+        setLoadProgress('Failed to load model. Please refresh and try again.');
+      }
+    })();
   }, []);
 
   useEffect(() => {

@@ -1,51 +1,103 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { useRef, useState, type ReactNode, Children, type FC } from 'react';
+import { motion, useInView, useReducedMotion, Variants } from 'framer-motion';
 
-/* ─── Reveal ─── */
-/*
- * Cinematic entrance: content lifts in with a subtle scale + fade,
- * using a clip-path diagonal wipe for a clean, modern reveal.
- */
-const Reveal: React.FC<{
-  children: React.ReactNode;
+type RevealVariant = 'fadeRise' | 'slideLeft' | 'clipReveal' | 'scaleUp' | 'cascade';
+
+interface RevealProps {
+  children: ReactNode;
+  variant?: RevealVariant;
   delay?: number;
+  stagger?: number;
+  duration?: number;
   className?: string;
-}> = ({ children, delay = 0, className }) => {
+  once?: boolean;
+  threshold?: number; // px from edge before triggering
+}
+
+const VARIANTS: Record<RevealVariant, Variants> = {
+  fadeRise: {
+    hidden: { opacity: 0, y: 28, filter: 'blur(0px)' },
+    visible: { opacity: 1, y: 0,  filter: 'blur(0px)' },
+  },
+  slideLeft: {
+    hidden: { opacity: 0, x: -36 },
+    visible: { opacity: 1, x: 0  },
+  },
+  clipReveal: {
+    hidden: { clipPath: 'inset(0 0 100% 0)' },
+    visible: { clipPath: 'inset(0 0 0% 0)'   },
+  },
+  scaleUp: {
+    hidden: { opacity: 0, scale: 0.88 },
+    visible: { opacity: 1, scale: 1   },
+  },
+  cascade: {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0  },
+  },
+};
+
+// Easing curves — tuned per variant for physicality
+const EASINGS: Record<RevealVariant, [number,number,number,number]> = {
+  fadeRise:   [0.16, 1, 0.3, 1],   // expo out — snappy settle
+  slideLeft:  [0.22, 1, 0.36, 1],  // slightly softer expo
+  clipReveal: [0.12, 1, 0.4, 1],   // fast start, slow finish
+  scaleUp:    [0.34, 1.56, 0.64, 1], // gentle spring overshoot
+  cascade:    [0.16, 1, 0.3, 1],
+};
+
+const Reveal: FC<RevealProps> = ({
+  children,
+  variant = 'fadeRise',
+  delay = 0,
+  stagger = 0.1,
+  duration,
+  className,
+  once = false,
+  threshold = 80,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once, margin: `-${threshold}px` as any });
   const prefersReduced = useReducedMotion();
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-  const dur = prefersReduced ? 0.01 : isMobile ? 0.55 : 1.05;
-  const del = prefersReduced || isMobile ? 0 : delay;
-  const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
+  // Duration: explicit override → mobile shortcut → desktop full
+  const dur = prefersReduced ? 0.01
+            : duration       ? duration
+            : isMobile       ? 0.9
+            : variant === 'scaleUp' ? 1.0
+            : 1.5;
+
+  const ease = EASINGS[variant];
+  const variantDef = VARIANTS[variant];
+  const childArr = Children.toArray(children);
 
   return (
-    <div ref={ref} className={className} style={{ position: 'relative' }}>
-      <motion.div
-        initial={
-          prefersReduced
-            ? { opacity: 1 }
-            : { clipPath: 'inset(0 0 100% 0)', opacity: 0, y: 24 }
-        }
-        animate={
-          isInView
-            ? { clipPath: 'inset(0 0 0% 0)', opacity: 1, y: 0 }
-            : { clipPath: 'inset(0 0 100% 0)', opacity: 0, y: 24 }
-        }
-        transition={{ duration: dur, delay: del, ease }}
-        style={{ willChange: 'clip-path, transform, opacity' }}
-      >
-        {children}
-      </motion.div>
+    <div ref={ref} className={className}>
+      {childArr.map((child, i) => (
+        <motion.div
+          key={i}
+          variants={variantDef}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          transition={{
+            duration: dur,
+            delay: prefersReduced ? 0 : delay + i * (isMobile ? stagger * 0.6 : stagger),
+            ease,
+          }}
+          style={{ willChange: 'transform, opacity' }}
+        >
+          {child}
+        </motion.div>
+      ))}
     </div>
   );
 };
 
 /* ─── Divider ─── */
-const Divider: React.FC = () => {
+const Divider: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: '-60px' as any });
   const prefersReduced = useReducedMotion();
   const [hovered, setHovered] = useState(false);
 
@@ -76,7 +128,7 @@ const Divider: React.FC = () => {
 };
 
 /* ─── Arm ─── */
-const Arm: React.FC<{
+const Arm: FC<{
   direction: 'left' | 'right';
   isInView: boolean;
   prefersReduced: boolean;
@@ -150,7 +202,7 @@ const Arm: React.FC<{
 };
 
 /* ─── CentreNode ─── */
-const CentreNode: React.FC<{ hovered: boolean; prefersReduced: boolean }> = ({
+const CentreNode: FC<{ hovered: boolean; prefersReduced: boolean }> = ({
   hovered,
   prefersReduced,
 }) => (

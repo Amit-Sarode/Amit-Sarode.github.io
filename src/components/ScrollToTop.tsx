@@ -6,7 +6,7 @@ const ScrollToTop: React.FC = () => {
 
   useEffect(() => {
     // Check if we should scroll to a specific section
-    const scrollTo = (state as { scrollTo: string } | null)?.scrollTo;
+    const scrollTo = state && typeof state === 'object' && 'scrollTo' in state ? (state as { scrollTo: string }).scrollTo : undefined;
     if (scrollTo) {
       setTimeout(() => {
         const el = document.getElementById(scrollTo);

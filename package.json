@@ -17,7 +17,6 @@
     "@emailjs/browser": "^4.4.1",
     "@mlc-ai/web-llm": "^0.2.78",
     "@tailwindcss/vite": "^4.1.4",
-    "gsap": "^3.12.7",
     "motion": "^12.7.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

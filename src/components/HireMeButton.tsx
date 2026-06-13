@@ -4,6 +4,7 @@ import { getCalApi } from "@calcom/embed-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { pricingPlans } from './hero/data';
+import { PHONE_NUMBER, EMAIL_ADDRESS } from '../config';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -29,7 +30,7 @@ YOUR CAPABILITIES:
 1. **Pricing** — Share detailed pricing plans (Starter, Growth, Enterprise) with exact prices and features.
 2. **Book a Call** — When someone wants to discuss a project, say: "Let me help you book a quick call!" and ask for their preferred time. They can book directly using the "Book a Call" button below.
 3. **Services** — Explain services: AI Chatbots, Workflow Automation, Custom AI Apps, Document Processing (RAG), Full Stack Web, Frontend/UI.
-4. **Contact** — Share WhatsApp (wa.me/9322137885), email (sarodeamit990@gmail.com), or direct them to the contact form.
+4. **Contact** — Share WhatsApp (wa.me/${PHONE_NUMBER}), email (${EMAIL_ADDRESS}), or direct them to the contact form.
 
 CURRENT PRICING (share these when asked):
 ${JSON.stringify(pricingPlans.map(p => ({
@@ -59,6 +60,8 @@ function HireMeButton() {
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesRef = useRef(messages);
+  messagesRef.current = messages;
 
   useEffect(() => {
     const handle = () => setVisible(window.scrollY > 120);
@@ -103,9 +106,11 @@ function HireMeButton() {
       return;
     }
 
+    const currentMessages = messagesRef.current;
     const userMessage: Message = { role: 'user', content: input };
-    const newMessages = [...messages, userMessage];
+    const newMessages = [...currentMessages, userMessage];
     setMessages(newMessages);
+    const inp = input;
     setInput('');
     setIsTyping(true);
 
@@ -174,7 +179,6 @@ function HireMeButton() {
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : 'Unknown error';
-      console.error('Proxy error:', errMsg);
       const isTimeout = errMsg.includes('abor') || errMsg.includes('timeout');
       setMessages((prev) => [
         ...prev,
@@ -187,7 +191,7 @@ function HireMeButton() {
       setIsTyping(false);
       inputRef.current?.focus();
     }
-  }, [input, isTyping, messages]);
+  }, [input, isTyping]);
 
   const quickActions = [
     { label: '💰 Pricing', action: 'What are your pricing plans?' },

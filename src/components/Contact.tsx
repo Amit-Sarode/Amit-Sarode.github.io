@@ -8,6 +8,7 @@ import SEO from './SEO';
 import MagneticButton from './MagneticButton';
 
 import { getCalApi } from "@calcom/embed-react";
+import { WHATSAPP_URL } from '../config';
 
 // 1. Import the beautiful backgrounds from HeroBackground
 import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
@@ -547,7 +548,7 @@ const Contact = () => {
           }}>
     
             <a
-              href="https://wa.me/9322137885?text=Hi%20Amit%2C%20I%27m%20interested%20in%20your%20automation%20services."
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noreferrer"
               style={{
