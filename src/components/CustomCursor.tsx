@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+const prefersReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isDisabled = isTouch || prefersReduced;
 
 const HOVER_SELECTOR = 'a, button, [role="button"], input, textarea, select';
 
@@ -25,7 +27,11 @@ const CustomCursor = () => {
   const glowY = useSpring(mouseY, { stiffness: 200, damping: 25 });
 
   useEffect(() => {
-    if (isTouch) return;
+    if (isDisabled) {
+      document.documentElement.style.cursor = '';
+      return;
+    }
+    document.documentElement.style.cursor = 'none';
 
     const handleMouse = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -59,6 +65,7 @@ const CustomCursor = () => {
     document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
+      document.documentElement.style.cursor = '';
       window.removeEventListener('mousemove', handleMouse);
       document.removeEventListener('mouseleave', handleLeave);
       document.removeEventListener('mousedown', handleDown);
@@ -68,7 +75,7 @@ const CustomCursor = () => {
     };
   }, [mouseX, mouseY]);
 
-  if (isTouch) return null;
+  if (isDisabled) return null;
 
   return (
     <>

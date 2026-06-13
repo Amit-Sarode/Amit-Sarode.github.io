@@ -7,7 +7,7 @@ import HireMeButton from './components/HireMeButton';
 import ScrollToTop from './components/ScrollToTop';
 import CustomCursor from './components/CustomCursor';
 import ClickParticles from './components/ClickParticles';
-import PageTransition from './components/PageTransition';
+
 
 const Contact    = lazy(() => import('./components/Contact'));
 const Navbar     = lazy(() => import('./components/Navbar'));
@@ -56,7 +56,7 @@ function App() {
         <div style={{ paddingTop: 64 }}>
           <Suspense fallback={<Loader />}>
             <AnimatePresence mode="wait">
-              <PageTransition>
+          
                 <Routes location={location} key={location.pathname}>
                   <Route path="/"         element={<Hero />} />
                   <Route path="/projects" element={<ProjectsGrid />} />
@@ -73,7 +73,7 @@ function App() {
                   <Route path="/502" element={<ErrorPage code={502} />} />
                   <Route path="*" element={<ErrorPage code={404} />} />
                 </Routes>
-              </PageTransition>
+
             </AnimatePresence>
           </Suspense>
         </div>
