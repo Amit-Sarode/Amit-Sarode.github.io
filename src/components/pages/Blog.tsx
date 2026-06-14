@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import SEO from './SEO';
-import { blogPosts, blogTags } from '../data/blogData';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
-import { Reveal } from './hero/Reveal';
+import SEO from '../ui/SEO';
+import { blogPosts, blogTags } from '../../data/blogData';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
+import { Reveal } from '../hero/Reveal';
 
 const theme = {
   bg: '#020d0a',
@@ -35,9 +35,11 @@ const formatNewsDate = (date: string) => {
 };
 
 const BLOGS_PER_PAGE = 5;
-const GNEWS_API_KEY = import.meta.env.VITE_GNEWS_API_KEY || 'YOUR_API_KEY';
-const IS_PLACEHOLDER_GNEWS_KEY = GNEWS_API_KEY === 'YOUR_API_KEY';
-const GNEWS_API_URL = `https://gnews.io/api/v4/top-headlines?topic=technology&apikey=${encodeURIComponent(GNEWS_API_KEY)}&lang=en&country=in&max=6`;
+const GNEWS_API_KEY = import.meta.env.VITE_GNEWS_API_KEY || '';
+const GNEWS_API_BASE = 'https://gnews.io/api/v4/top-headlines?topic=technology';
+const GNEWS_API_PARAMS = `apikey=${encodeURIComponent(GNEWS_API_KEY)}&lang=en&country=in&max=6`;
+const GNEWS_DIRECT_URL = `${GNEWS_API_BASE}&${GNEWS_API_PARAMS}`;
+const CORS_PROXIES = ['https://api.allorigins.win/raw?url=', 'https://corsproxy.io/?'];
 
 type GNewsArticle = {
   title: string;
@@ -53,11 +55,23 @@ type GNewsArticle = {
 const Blog: React.FC = () => {
   const navigate = useNavigate();
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [techNews, setTechNews] = useState<GNewsArticle[]>([]);
+  const [techNewsStatus, setTechNewsStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
 
-  const filtered = activeTag
-    ? blogPosts.filter(p => p.tags.includes(activeTag))
-    : blogPosts;
+  const filtered = blogPosts.filter(p => {
+    if (activeTag && !p.tags.includes(activeTag)) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      return (
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.tags.some(t => t.toLowerCase().includes(q))
+      );
+    }
+    return true;
+  });
   const totalPages = Math.max(1, Math.ceil(filtered.length / BLOGS_PER_PAGE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const pageStart = (safeCurrentPage - 1) * BLOGS_PER_PAGE;
@@ -70,11 +84,57 @@ const Blog: React.FC = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTag]);
+  }, [activeTag, searchQuery]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTag, safeCurrentPage]);
+
+  useEffect(() => {
+    if (!GNEWS_API_KEY) {
+      setTechNewsStatus('error');
+      return;
+    }
+
+    const controller = new AbortController();
+    setTechNewsStatus('loading');
+
+    const tryFetch = (url: string): Promise<Response> =>
+      fetch(url, { signal: controller.signal });
+
+    const tryProxies = async (proxyIndex: number): Promise<Response> => {
+      if (proxyIndex >= CORS_PROXIES.length) throw new Error('All proxies exhausted');
+      const proxyUrl = `${CORS_PROXIES[proxyIndex]}${encodeURIComponent(GNEWS_DIRECT_URL)}`;
+      try {
+        const res = await tryFetch(proxyUrl);
+        if (!res.ok) throw new Error(`Proxy ${proxyIndex} returned ${res.status}`);
+        return res;
+      } catch {
+        return tryProxies(proxyIndex + 1);
+      }
+    };
+
+    (async () => {
+      try {
+        let res: Response;
+        try {
+          res = await tryFetch(GNEWS_DIRECT_URL);
+          if (!res.ok) throw new Error(`Direct request failed: ${res.status}`);
+        } catch {
+          res = await tryProxies(0);
+        }
+        const data: { articles?: GNewsArticle[] } = await res.json();
+        setTechNews(Array.isArray(data.articles) ? data.articles : []);
+        setTechNewsStatus('ready');
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (error instanceof Error && error.name === 'AbortError') return;
+        setTechNewsStatus('error');
+      }
+    })();
+
+    return () => controller.abort();
+  }, []);
 
   return (
     <div style={{
@@ -224,6 +284,71 @@ const Blog: React.FC = () => {
                 {tag}
               </motion.button>
             ))}
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.07}>
+          <div style={{
+            position: 'relative',
+            maxWidth: 440,
+            margin: '0 auto 44px',
+          }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search articles..."
+              aria-label="Search articles"
+              style={{
+                width: '100%',
+                padding: '12px 16px 12px 42px',
+                borderRadius: 12,
+                background: theme.surfaceSoft,
+                border: `1px solid ${searchQuery ? theme.borderAccent : theme.border}`,
+                color: theme.heading,
+                fontSize: 14,
+                fontFamily: 'inherit',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                boxSizing: 'border-box',
+              }}
+            />
+            <span style={{
+              position: 'absolute',
+              left: 14,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: theme.dim,
+              fontSize: 16,
+              pointerEvents: 'none',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+            </span>
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                style={{
+                  position: 'absolute',
+                  right: 12,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 0,
+                  color: theme.dim,
+                  cursor: 'pointer',
+                  padding: 4,
+                  fontSize: 16,
+                  lineHeight: 1,
+                }}
+              >
+                ✕
+              </button>
+            )}
           </div>
         </Reveal>
 
@@ -517,6 +642,212 @@ const Blog: React.FC = () => {
           </div>
         )}
 
+        {(techNewsStatus === 'loading' || techNewsStatus === 'ready' || techNewsStatus === 'error') && (
+          <section
+            style={{
+              marginTop: 72,
+              paddingTop: 40,
+              borderTop: `1px solid ${theme.border}`,
+            }}
+          >
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+              gap: 20,
+              marginBottom: 24,
+            }}>
+              <div>
+                <span style={{
+                  color: theme.accent,
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  letterSpacing: '0.14em',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                }}>
+                  Live feed
+                </span>
+                <h2 style={{
+                  fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif',
+                  fontSize: 'clamp(2rem, 4vw, 3rem)',
+                  lineHeight: 1.12,
+                  letterSpacing: '-0.045em',
+                  color: theme.heading,
+                  margin: '8px 0 0',
+                }}>
+                  Latest Tech News
+                </h2>
+              </div>
+              <span style={{ color: theme.muted, fontSize: 13, whiteSpace: 'nowrap' }}>
+                Powered by GNews
+              </span>
+            </div>
+
+            {techNewsStatus === 'loading' && (
+              <div className="tech-news-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: 16,
+              }}>
+                {[0, 1, 2].map(index => (
+                  <div
+                    key={index}
+                    style={{
+                      borderRadius: 20,
+                      border: `1px solid ${theme.border}`,
+                      background: theme.surfaceSoft,
+                      overflow: 'hidden',
+                      minHeight: 280,
+                    }}
+                  >
+                    <div style={{
+                      height: 150,
+                      background: `linear-gradient(135deg, ${theme.accentSoft}, rgba(255,255,255,0.03))`,
+                    }} />
+                    <div style={{ padding: 20 }}>
+                      <div style={{ height: 12, width: '45%', borderRadius: 999, background: 'rgba(255,255,255,0.08)', marginBottom: 16 }} />
+                      <div style={{ height: 22, width: '88%', borderRadius: 8, background: 'rgba(255,255,255,0.12)', marginBottom: 10 }} />
+                      <div style={{ height: 22, width: '72%', borderRadius: 8, background: 'rgba(255,255,255,0.08)' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {techNewsStatus === 'error' && !GNEWS_API_KEY && (
+              <div style={{
+                padding: 28,
+                borderRadius: 20,
+                background: 'rgba(20, 184, 166, 0.08)',
+                border: `1px solid ${theme.borderAccent}`,
+                color: theme.body,
+                lineHeight: 1.7,
+              }}>
+                Add your GNews API key to enable the technology news feed. Set <strong>VITE_GNEWS_API_KEY</strong> in your environment and restart the dev server.
+              </div>
+            )}
+
+            {techNewsStatus === 'error' && !!GNEWS_API_KEY && (
+              <div style={{
+                padding: 28,
+                borderRadius: 20,
+                background: 'rgba(239, 68, 68, 0.08)',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                color: theme.body,
+                lineHeight: 1.7,
+              }}>
+                Unable to load tech news. Check your GNews API key, network connection, or try again later.
+              </div>
+            )}
+
+            {techNewsStatus === 'ready' && techNews.length === 0 && (
+              <div style={{
+                padding: 28,
+                borderRadius: 20,
+                background: theme.surfaceSoft,
+                border: `1px solid ${theme.border}`,
+                color: theme.muted,
+              }}>
+                No technology news found.
+              </div>
+            )}
+
+            {techNewsStatus === 'ready' && techNews.length > 0 && (
+              <div className="tech-news-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: 16,
+              }}>
+                {techNews.map((article, index) => (
+                  <motion.button
+                    type="button"
+                    key={`${article.url}-${index}`}
+                    onClick={() => navigate(`/blog/news/${index}`, { state: { article } })}
+                    whileHover={{ y: -4 }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      borderRadius: 20,
+                      border: `1px solid ${theme.border}`,
+                      background: theme.surfaceSoft,
+                      overflow: 'hidden',
+                      color: 'inherit',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      fontFamily: 'inherit',
+                      fontSize: 'inherit',
+                      padding: 0,
+                      width: '100%',
+                      transition: 'border-color 0.2s ease, background 0.2s ease',
+                    }}
+                  >
+                    {article.image ? (
+                      <img
+                        src={article.image}
+                        alt=""
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: 150,
+                          objectFit: 'cover',
+                          display: 'block',
+                          background: theme.accentSoft,
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        height: 150,
+                        display: 'grid',
+                        placeItems: 'center',
+                        background: `linear-gradient(135deg, ${theme.accentSoft}, rgba(255,255,255,0.03))`,
+                        color: '#5eead4',
+                        fontWeight: 800,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                      }}>
+                        Tech
+                      </div>
+                    )}
+                    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10, flexGrow: 1 }}>
+                      <span style={{ color: theme.muted, fontSize: 12 }}>
+                        {formatNewsDate(article.publishedAt)} · {article.source.name}
+                      </span>
+                      <h3 style={{
+                        fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif',
+                        fontSize: '1.25rem',
+                        lineHeight: 1.25,
+                        letterSpacing: '-0.025em',
+                        color: theme.heading,
+                        margin: 0,
+                      }}>
+                        {article.title}
+                      </h3>
+                      <p style={{
+                        color: theme.body,
+                        fontSize: 14,
+                        lineHeight: 1.65,
+                        margin: 0,
+                      }}>
+                        {article.description?.trim() || 'Click to read the full technology update.'}
+                      </p>
+                      <span style={{
+                        color: '#5eead4',
+                        fontSize: 13,
+                        fontWeight: 700,
+                        marginTop: 'auto',
+                      }}>
+                        Read more →
+                      </span>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         {filtered.length === 0 && (
           <div style={{
             textAlign: 'center',
@@ -562,6 +893,16 @@ const Blog: React.FC = () => {
           .blog-pagination-pages {
             justify-content: center;
             width: 100%;
+          }
+
+          .tech-news-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        @media (min-width: 641px) and (max-width: 900px) {
+          .tech-news-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           }
         }
       `}</style>

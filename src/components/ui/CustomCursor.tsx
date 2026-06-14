@@ -40,6 +40,7 @@ const CustomCursor = () => {
     };
 
     const handleLeave = () => setVisible(false);
+    const handleEnter = () => setVisible(true);
     const handleDown = () => setIsClicking(true);
     const handleUp = () => setIsClicking(false);
 
@@ -59,6 +60,7 @@ const CustomCursor = () => {
 
     window.addEventListener('mousemove', handleMouse);
     document.addEventListener('mouseleave', handleLeave);
+    document.addEventListener('mouseenter', handleEnter);
     document.addEventListener('mousedown', handleDown);
     document.addEventListener('mouseup', handleUp);
     document.addEventListener('mouseover', handleMouseOver);
@@ -68,6 +70,7 @@ const CustomCursor = () => {
       document.documentElement.style.cursor = '';
       window.removeEventListener('mousemove', handleMouse);
       document.removeEventListener('mouseleave', handleLeave);
+      document.removeEventListener('mouseenter', handleEnter);
       document.removeEventListener('mousedown', handleDown);
       document.removeEventListener('mouseup', handleUp);
       document.removeEventListener('mouseover', handleMouseOver);

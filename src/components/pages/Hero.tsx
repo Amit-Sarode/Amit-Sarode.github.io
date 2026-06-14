@@ -1,16 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import SEO from './SEO';
-import AnimatedCounter from './AnimatedCounter';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
-import HeroScrollExperience from './hero/HeroScrollExperience';
-import { Reveal, Divider } from './hero/Reveal';
-import Carousel from './hero/Carousel';
+import SEO from '../ui/SEO';
+import AnimatedCounter from '../ui/AnimatedCounter';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
+import HeroScrollExperience from '../hero/HeroScrollExperience';
+import { Reveal, Divider } from '../hero/Reveal';
+import Carousel from '../hero/Carousel';
 import {
   clients, testimonials,
   caseStudies, processSteps, stats, businesses,
-} from './hero/data';
+} from '../hero/data';
 
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -409,8 +409,8 @@ const Hero: React.FC = () => {
           {/* CTA Button */}
           <Reveal delay={0.2}>
             <div style={{ textAlign: 'center', marginBottom: 40 }}>
-              <motion.a
-                href="#case-studies"
+              <motion.button
+                onClick={() => navigate('/projects')}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 style={{
@@ -420,10 +420,11 @@ const Hero: React.FC = () => {
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
                   color: '#e2e8f0',
-                  textDecoration: 'none',
                   fontSize: 14,
                   fontWeight: 500,
                   letterSpacing: '0.02em',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
                   transition: 'all 0.3s',
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(20,184,166,0.4)'; e.currentTarget.style.background = 'rgba(20,184,166,0.06)'; }}
@@ -439,7 +440,7 @@ const Hero: React.FC = () => {
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </span>
-              </motion.a>
+              </motion.button>
             </div>
           </Reveal>
 

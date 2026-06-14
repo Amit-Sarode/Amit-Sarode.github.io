@@ -2,9 +2,9 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import SEO from './SEO';
-import { blogPosts } from '../data/blogData';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
+import SEO from '../ui/SEO';
+import { blogPosts } from '../../data/blogData';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { Helmet } from 'react-helmet-async';
 
 const t = {
@@ -22,6 +22,11 @@ const BlogPost: React.FC = () => {
   if (!post) return <Navigate to="/blog" replace />;
 
   const canonicalUrl = `https://amit-sarode.github.io/blog/${post.slug}`;
+
+  // Split content at first major heading for inline CTA
+  const splitIndex = post.content.search(/\n## /);
+  const contentBefore = splitIndex === -1 ? '' : post.content.slice(0, splitIndex);
+  const contentAfter = splitIndex === -1 ? post.content : post.content.slice(splitIndex);
 
   return (
     <div style={{
@@ -122,6 +127,109 @@ const BlogPost: React.FC = () => {
           }}
         >
           <div className="blog-content">
+            {contentBefore && (
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h2({ children }) {
+                    return <h2 style={{
+                      fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700,
+                      color: t.heading, margin: '40px 0 16px', lineHeight: 1.3,
+                    }}>{children}</h2>;
+                  },
+                  h3({ children }) {
+                    return <h3 style={{
+                      fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', fontWeight: 600,
+                      color: t.heading, margin: '28px 0 12px', lineHeight: 1.3,
+                    }}>{children}</h3>;
+                  },
+                  p({ children }) {
+                    return <p style={{ margin: '0 0 16px', color: t.body, lineHeight: 1.8 }}>{children}</p>;
+                  },
+                  ul({ children }) {
+                    return <ul style={{ margin: '0 0 16px', paddingLeft: 24, color: t.body }}>{children}</ul>;
+                  },
+                  ol({ children }) {
+                    return <ol style={{ margin: '0 0 16px', paddingLeft: 24, color: t.body }}>{children}</ol>;
+                  },
+                  li({ children }) {
+                    return <li style={{ marginBottom: 8 }}>{children}</li>;
+                  },
+                  strong({ children }) {
+                    return <strong style={{ color: t.heading, fontWeight: 700 }}>{children}</strong>;
+                  },
+                  a({ href, children }) {
+                    return <a href={href} target="_blank" rel="noopener noreferrer"
+                      style={{ color: t.teal, textDecoration: 'underline', textUnderlineOffset: 3 }}
+                    >{children}</a>;
+                  },
+                  table({ children }) {
+                    return <div style={{ overflowX: 'auto', marginBottom: 16 }}>
+                      <table style={{
+                        width: '100%', borderCollapse: 'collapse', fontSize: 14,
+                      }}>{children}</table>
+                    </div>;
+                  },
+                  th({ children }) {
+                    return <th style={{
+                      border: '1px solid rgba(20,184,166,0.2)', padding: '10px 12px',
+                      textAlign: 'left', background: 'rgba(20,184,166,0.08)', color: t.heading,
+                      fontWeight: 600,
+                    }}>{children}</th>;
+                  },
+                  td({ children }) {
+                    return <td style={{
+                      border: '1px solid rgba(20,184,166,0.12)', padding: '10px 12px',
+                      color: t.body,
+                    }}>{children}</td>;
+                  },
+                  hr() {
+                    return <hr style={{
+                      border: 'none', borderTop: `1px solid ${t.cardBorder}`,
+                      margin: '32px 0',
+                    }} />;
+                  },
+                }}
+              >
+                {contentBefore}
+              </ReactMarkdown>
+            )}
+
+            {/* Inline CTA - appears mid-content */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              style={{
+                margin: '32px 0',
+                padding: '24px',
+                borderRadius: 16,
+                background: 'rgba(20,184,166,0.06)',
+                border: '1px solid rgba(20,184,166,0.15)',
+                textAlign: 'center',
+              }}
+            >
+              <p style={{ color: t.heading, fontWeight: 700, margin: '0 0 6px', fontSize: 15 }}>
+                Need This for Your Business?
+              </p>
+              <p style={{ color: t.muted, fontSize: 13, margin: '0 0 16px' }}>
+                I build custom AI solutions exactly like this. Let's discuss your project.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/contact')}
+                style={{
+                  padding: '10px 24px', borderRadius: 10,
+                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                  color: '#fff', fontSize: 13, fontWeight: 700,
+                  border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                }}
+              >
+                Get Free Consultation →
+              </motion.button>
+            </motion.div>
+
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -185,7 +293,7 @@ const BlogPost: React.FC = () => {
                 },
               }}
             >
-              {post.content}
+              {contentAfter}
             </ReactMarkdown>
           </div>
         </motion.div>

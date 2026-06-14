@@ -2,15 +2,15 @@ import React, { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import profileImg from '/assets/img/profileImg.png'
-import SEO from './SEO'
-import AnimatedCounter from './AnimatedCounter'
-import { skills } from './hero/data'
-import SkillCard from './hero/SkillCard'
+import SEO from '../ui/SEO'
+import AnimatedCounter from '../ui/AnimatedCounter'
+import { skills } from '../hero/data'
+import SkillCard from '../hero/SkillCard'
 
 
 // 1. Import the dynamic background components
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground'
-import { Reveal, Divider } from './hero/Reveal'
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground'
+import { Reveal, Divider } from '../hero/Reveal'
 
 const certificates = [
   { name: "React Development", url: "https://udemy-certificate.s3.amazonaws.com/image/UC-896441cf-e535-45b3-84dd-fa3f21eb3428.jpg" },

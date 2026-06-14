@@ -1,9 +1,9 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import SEO from './SEO';
-import {businesses} from "./hero/data"
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
+import SEO from '../ui/SEO';
+import {businesses} from "../hero/data"
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 
 const t = {
   bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',

@@ -159,12 +159,7 @@ input, textarea {
   }
 }
 
-/* Hide default cursor on desktop */
-@media (pointer: fine) {
-  body, a, button, [role="button"], input, textarea, select {
-    cursor: none !important;
-  }
-}
+/* Custom cursor handled by CustomCursor component */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -288,10 +283,4 @@ img {
 @keyframes hirePulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.8); }
-}
-
-/* ── Global keyframes ── */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
 }

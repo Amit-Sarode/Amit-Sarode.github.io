@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import profileImg from '/assets/img/profileImg.png';
-import Tilt3D from '../ThreeDTilt';
+import Tilt3D from '../ui/ThreeDTilt';
+import AnimatedCounter from '../ui/AnimatedCounter';
+import { stats } from './data';
 
 /* ─── Global Keyframes ─── */
 const INJECTED_STYLES = `
@@ -201,6 +203,7 @@ const HeroScrollExperience: React.FC = () => {
         y: prefersReduced ? 0 : heroY,
         scale: prefersReduced ? 1 : heroScale,
         willChange: 'opacity, transform',
+        paddingTop: 'clamp(32px, 6vh, 64px)',
       }}
       className="min-h-screen flex flex-col items-center justify-center text-center px-4 relative z-10"
     >
@@ -430,6 +433,47 @@ const HeroScrollExperience: React.FC = () => {
         >
           View My Work
         </motion.button>
+      </motion.div>
+
+      {/* Stats Bar — social proof right below hero */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 'clamp(16px, 4vw, 48px)',
+          flexWrap: 'wrap',
+          marginTop: 48,
+          padding: '20px 32px',
+          borderRadius: 20,
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        {stats.map((s, i) => {
+          const numVal = parseInt(s.value);
+          const suffix = s.value.replace(/[\d]/g, '');
+          const actualNum = numVal || 0;
+          return (
+            <div key={i} style={{ textAlign: 'center' }}>
+              <p style={{
+                fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
+                fontWeight: 800,
+                color: '#14b8a6',
+                margin: '0 0 2px',
+                fontFamily: 'monospace',
+              }}>
+                <AnimatedCounter value={actualNum} suffix={suffix} duration={2} />{!actualNum && s.value}
+              </p>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, whiteSpace: 'nowrap' }}>
+                {s.label}
+              </p>
+            </div>
+          );
+        })}
       </motion.div>
 
     </motion.section>

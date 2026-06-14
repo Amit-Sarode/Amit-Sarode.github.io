@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeContext';
-import SocialsDropdown from './SocialsDropdown';
-import { PHONE_NUMBER } from '../config';
+import { useTheme } from '../../contexts/ThemeContext';
+import SocialsDropdown from '../ui/SocialsDropdown';
+import { PHONE_NUMBER } from '../../config';
 import resume from '/assets/Amit Sarode -resume (1).pdf';
 const logo = "/assets/favicon-removebg-preview.png"
 /* ─── Hooks ─── */

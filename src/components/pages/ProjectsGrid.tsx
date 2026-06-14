@@ -1,11 +1,11 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import SEO from './SEO';
-import { businesses, type BusinessCategory } from './hero/data';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
-import { Reveal } from './hero/Reveal';
-import Tilt3D from './ThreeDTilt';
+import SEO from '../ui/SEO';
+import { businesses, type BusinessCategory } from '../hero/data';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
+import { Reveal } from '../hero/Reveal';
+import Tilt3D from '../ui/ThreeDTilt';
 
 const t = {
   bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',

@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import SEO from './SEO';
-import { caseStudies, businesses } from './hero/data';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
+import SEO from '../ui/SEO';
+import { caseStudies, businesses } from '../hero/data';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { Helmet } from 'react-helmet-async';
 
 const t = {

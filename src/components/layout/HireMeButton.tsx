@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getCalApi } from "@calcom/embed-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { pricingPlans } from './hero/data';
-import { PHONE_NUMBER, EMAIL_ADDRESS } from '../config';
+import { pricingPlans } from '../hero/data';
+import { PHONE_NUMBER, EMAIL_ADDRESS } from '../../config';
 
 interface Message {
   role: 'user' | 'assistant';

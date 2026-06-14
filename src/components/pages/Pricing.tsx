@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Reveal, Divider } from './hero/Reveal';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
-import { pricingPlans } from './hero/data';
-import SEO from './SEO';
+import { Reveal, Divider } from '../hero/Reveal';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
+import { pricingPlans } from '../hero/data';
+import SEO from '../ui/SEO';
 const GlowCard: React.FC<{
   children: React.ReactNode;
   color?: string;
@@ -109,6 +109,7 @@ const TogglePill: React.FC<{
 const Pricing: React.FC = () => {
   const navigate = useNavigate();
   const [currency, setCurrency] = useState<'USD' | 'INR'>('USD');
+  const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
 
   return (
@@ -278,6 +279,73 @@ const Pricing: React.FC = () => {
             </Reveal>
           ))}
         </div>
+
+        {/* FAQ */}
+        <Reveal delay={0.35}>
+          <div style={{ marginTop: 72 }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <h2 style={{
+                fontSize: 'clamp(1.6rem, 3vw, 2rem)', fontWeight: 700,
+                color: '#f1f5f9', margin: '0 0 8px',
+              }}>Frequently Asked Questions</h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 680, margin: '0 auto' }}>
+              {[
+                { q: 'How long does a typical project take?', a: 'Most projects deliver within 2–4 weeks. Simple chatbot MVPs can go live in 7–10 days. Complex enterprise systems with multiple integrations typically take 4–6 weeks.' },
+                { q: 'What kind of support do you provide after launch?', a: 'Every project includes 1 month of post-launch support with bug fixes and minor adjustments. Retainer options are available for ongoing maintenance, monitoring, and feature updates.' },
+                { q: 'Do you work with specific industries?', a: 'I\'ve built solutions for healthcare, hospitality, e-commerce, fitness, finance, education, and more. The technology adapts — what matters is your specific workflow and goals.' },
+                { q: 'Can I request revisions during the build?', a: 'Absolutely. I provide weekly demos so you can see progress and give feedback at every stage. No black boxes — you\'re involved throughout.' },
+                { q: 'What tech stack do you typically use?', a: 'Frontend: React, Next.js, Tailwind CSS. Backend: Node.js, Python. AI: GPT-4, Claude, LangChain, Pinecone. The stack is chosen per project based on your specific needs.' },
+                { q: 'Is there a free discovery call?', a: 'Yes — the first consultation is always free. We\'ll map your current workflows, identify automation opportunities, and discuss scope, timeline, and budget.' },
+              ].map((faq, i) => {
+                const isOpen = openFAQ === i;
+                return (
+                  <div key={i} style={{
+                    borderRadius: 14,
+                    border: `1px solid ${isOpen ? 'rgba(20,184,166,0.2)' : 'rgba(255,255,255,0.06)'}`,
+                    background: isOpen ? 'rgba(20,184,166,0.04)' : 'rgba(255,255,255,0.02)',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s',
+                  }}>
+                    <button
+                      type="button"
+                      onClick={() => setOpenFAQ(isOpen ? null : i)}
+                      style={{
+                        width: '100%', padding: '16px 20px',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        background: 'none', border: 'none', color: '#f1f5f9',
+                        fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                        textAlign: 'left', fontFamily: 'inherit', gap: 12,
+                      }}
+                    >
+                      {faq.q}
+                      <motion.span
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        style={{ color: '#14b8a6', fontSize: 14, flexShrink: 0 }}
+                      >
+                        ▼
+                      </motion.span>
+                    </button>
+                    <motion.div
+                      initial={false}
+                      animate={{
+                        height: isOpen ? 'auto' : 0,
+                        opacity: isOpen ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div style={{ padding: '0 20px 16px', color: '#94a3b8', fontSize: 14, lineHeight: 1.7 }}>
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Reveal>
 
         {/* FAQ note */}
         <Reveal delay={0.4}>

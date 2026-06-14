@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SEO from './SEO';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
+import SEO from '../ui/SEO';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -133,13 +133,16 @@ const Chatgpt: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           background: 'rgba(5,15,16,0.85)',
-          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          backdropFilter: 'blur(12px)',
           border: '1px solid rgba(20,184,166,0.12)',
           borderRadius: 24,
           boxShadow: '0 40px 100px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04)',
           position: 'relative',
           zIndex: 1,
           overflow: 'hidden',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
         }}
       >
         {/* Header */}
@@ -214,7 +217,8 @@ const Chatgpt: React.FC = () => {
                 inset: 0,
                 zIndex: 10,
                 background: 'rgba(2,13,10,0.92)',
-                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(6px)',
+                backdropFilter: 'blur(6px)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -289,6 +293,7 @@ const Chatgpt: React.FC = () => {
             gap: 12,
             scrollbarWidth: 'thin',
             scrollbarColor: 'rgba(20,184,166,0.15) transparent',
+            willChange: 'scroll-position',
           }}
         >
           {/* Empty state */}

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import SEO from './SEO';
-import { AmbientBackground, NoiseOverlay, GridLines } from './hero/HeroBackground';
+import SEO from '../ui/SEO';
+import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 
 type ErrorPageProps = {
   code: number;
