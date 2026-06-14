@@ -7,7 +7,7 @@ import HireMeButton from './components/HireMeButton';
 import ScrollToTop from './components/ScrollToTop';
 import CustomCursor from './components/CustomCursor';
 import ClickParticles from './components/ClickParticles';
-
+import DreamGlowBackground from './components/animation/DreamGlowBackground';
 
 const Contact    = lazy(() => import('./components/Contact'));
 const Navbar     = lazy(() => import('./components/Navbar'));
@@ -37,6 +37,7 @@ function App() {
 
   return (
    <>
+   <DreamGlowBackground/>
       <CustomCursor />
       <ClickParticles />
       <div

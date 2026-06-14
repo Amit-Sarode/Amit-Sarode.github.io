@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import SEO from './SEO';
 import AnimatedCounter from './AnimatedCounter';
@@ -8,7 +9,7 @@ import { Reveal, Divider } from './hero/Reveal';
 import Carousel from './hero/Carousel';
 import {
   clients, testimonials,
-  caseStudies, processSteps, stats,
+  caseStudies, processSteps, stats, businesses,
 } from './hero/data';
 
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
@@ -75,6 +76,8 @@ const GlowCard: React.FC<{
 };
 
 const Hero: React.FC = () => {
+  const navigate = useNavigate();
+
   // ─── Carousel State ───
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -442,7 +445,7 @@ const Hero: React.FC = () => {
 
           {/* 3D Coverflow Carousel */}
           <Reveal delay={0.25}>
-            <Carousel />
+            <Carousel projects={businesses} onFocus={(id: number) => navigate(`/projects/${id}`)} />
           </Reveal>
         </div>
       </section>
