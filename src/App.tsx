@@ -34,6 +34,7 @@ function App() {
     if (location.search.startsWith('?/')) {
       navigate(location.search.slice(1) + location.hash, { replace: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

@@ -19,8 +19,6 @@ const allIndustries = [...new Set([
   'Fitness', 'Travel', 'Education', 'Real Estate', 'Automotive', 'SaaS',
 ])].sort();
 
-const allTechs = [...new Set(businesses.flatMap(b => b.tech))].sort();
-
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
 const ProjectCard: React.FC<{ biz: BusinessCategory; index: number; navigate: ReturnType<typeof useNavigate> }> = ({ biz, index, navigate }) => {
@@ -114,7 +112,6 @@ const ProjectCard: React.FC<{ biz: BusinessCategory; index: number; navigate: Re
 const ProjectsGrid: React.FC = () => {
   const navigate = useNavigate();
   const [industryFilter, setIndustryFilter] = useState<string | null>(null);
-  const [techFilter, setTechFilter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filtered = businesses.filter(b => {
@@ -134,7 +131,6 @@ const ProjectsGrid: React.FC = () => {
       const related = indMap[industryFilter] || [];
       if (!related.some(r => b.title.includes(r))) return false;
     }
-    if (techFilter && !b.tech.some(t => t.toLowerCase().includes(techFilter.toLowerCase()))) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       if (!b.title.toLowerCase().includes(q) && !b.description.toLowerCase().includes(q) && !b.tech.some(t => t.toLowerCase().includes(q))) return false;

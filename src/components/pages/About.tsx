@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import profileImg from '/assets/img/profileImg.png'
@@ -28,53 +28,6 @@ const stats = [
   { value: '7', label: 'Certifications' },
   // { value: '∞', label: 'Lines of Code' },
 ]
-
-const GlowCard: React.FC<{
-  children: React.ReactNode
-  color?: string
-  style?: React.CSSProperties
-}> = ({ children, color = '#14b8a6', style }) => {
-  const [hovered, setHovered] = useState(false)
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
-
-  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect()
-    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top })
-  }, [])
-
-  return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onMouseMove={onMove}
-      style={{
-        position: 'relative', overflow: 'hidden', borderRadius: 20,
-        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
-        border: `1px solid ${hovered ? `${color}40` : 'rgba(255,255,255,0.06)'}`,
-        transition: 'background 0.4s, border-color 0.4s',
-        ...style,
-      }}
-    >
-      <div style={{
-        position: 'absolute', left: mouse.x, top: mouse.y,
-        width: 200, height: 200, borderRadius: '50%',
-        background: `radial-gradient(circle, ${color}15 0%, transparent 70%)`,
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
-      }} />
-      <div style={{
-        position: 'absolute', top: -20, right: -20,
-        width: 80, height: 80, borderRadius: '50%',
-        background: color, filter: 'blur(30px)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 0.1 : 0, transition: 'opacity 0.5s',
-      }} />
-      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
-    </motion.div>
-  )
-}
 
 const About: React.FC = () => {
   const navigate = useNavigate();

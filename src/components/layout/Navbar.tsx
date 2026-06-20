@@ -7,7 +7,7 @@ import { PHONE_NUMBER } from '../../config';
 import resume from '/assets/Amit Sarode -resume (1).pdf';
 const logo = "/assets/favicon-removebg-preview.png"
 /* ─── Hooks ─── */
-export const useWindowSize = () => {
+const useWindowSize = () => {
   const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handle = () => setWidth(window.innerWidth);
@@ -17,7 +17,7 @@ export const useWindowSize = () => {
   return width;
 };
 
-export const useClickOutside = (handler: () => void) => {
+const useClickOutside = (handler: () => void) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const listener = (e: MouseEvent) => {
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
   const width = useWindowSize();
   const [mobile, setMobile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { toggleTheme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   const closeMobile = useCallback(() => setMobile(false), []);
   const menuRef = useClickOutside(closeMobile);

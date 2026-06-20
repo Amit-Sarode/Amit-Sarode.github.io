@@ -57,7 +57,7 @@ const Reveal: FC<RevealProps> = ({
   threshold = 80,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: `-${threshold}px` as any });
+  const isInView = useInView(ref, { once, margin: `-${threshold}px` as unknown as undefined });
   const prefersReduced = useReducedMotion();
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
@@ -97,7 +97,7 @@ const Reveal: FC<RevealProps> = ({
 /* ─── Divider ─── */
 const Divider: FC = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' as any });
+  const isInView = useInView(ref, { once: true, margin: '-60px' as unknown as undefined });
   const prefersReduced = useReducedMotion();
   const [hovered, setHovered] = useState(false);
 

@@ -95,6 +95,7 @@ function HireMeButton() {
         content: "Hi! I'm your AI assistant. I can help you with:\n\n• Pricing – See our plans\n• Book a Call – Schedule a meeting\n• Services – What we build\n• Contact – Get in touch\n\nWhat would you like to know?"
       }]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleSendMessage = useCallback(async () => {
@@ -110,7 +111,6 @@ function HireMeButton() {
     const userMessage: Message = { role: 'user', content: input };
     const newMessages = [...currentMessages, userMessage];
     setMessages(newMessages);
-    const inp = input;
     setInput('');
     setIsTyping(true);
 

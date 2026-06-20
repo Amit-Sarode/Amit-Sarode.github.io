@@ -125,7 +125,7 @@ const Hero: React.FC = () => {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [autoPlay, testimonials.length]);
+  }, [autoPlay]);
 
   return (
     <div

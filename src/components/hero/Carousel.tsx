@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import type { BusinessCategory } from './data';
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;

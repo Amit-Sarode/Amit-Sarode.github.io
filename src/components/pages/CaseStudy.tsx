@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Navigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../ui/SEO';
 import { caseStudies, businesses } from '../hero/data';

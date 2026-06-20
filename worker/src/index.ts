@@ -68,7 +68,7 @@ export default {
         headers: responseHeaders,
       });
 
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: 'Failed to contact OpenRouter',

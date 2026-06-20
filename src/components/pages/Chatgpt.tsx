@@ -10,7 +10,8 @@ interface Message {
 
 const Chatgpt: React.FC = () => {
   const [input, setInput] = useState('');
-  const [engine, setEngine] = useState<any | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [engine, setEngine] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [loadingModel, setLoadingModel] = useState(true);
@@ -31,7 +32,7 @@ const Chatgpt: React.FC = () => {
         });
         setEngine(createdEngine);
         setLoadingModel(false);
-      } catch (err) {
+      } catch {
         setLoadingModel(false);
         setLoadProgress('Failed to load model. Please refresh and try again.');
       }

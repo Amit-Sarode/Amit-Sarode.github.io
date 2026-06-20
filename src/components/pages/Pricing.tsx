@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Reveal, Divider } from '../hero/Reveal';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { pricingPlans } from '../hero/data';
@@ -69,7 +69,7 @@ const GlowCard: React.FC<{
 const TogglePill: React.FC<{
   options: { label: string; value: string }[];
   active: string;
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
   color: string;
 }> = ({ options, active, onChange, color }) => (
   <div style={{
@@ -177,7 +177,7 @@ const Pricing: React.FC = () => {
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               <TogglePill 
                 active={currency} 
-                onChange={setCurrency} 
+                onChange={(v: string) => setCurrency(v as 'USD' | 'INR')} 
                 color="#334155"
                 options={[ { label: 'USD', value: 'USD' }, { label: 'INR', value: 'INR' } ]} 
               />

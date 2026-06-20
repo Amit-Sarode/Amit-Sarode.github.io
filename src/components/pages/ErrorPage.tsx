@@ -30,7 +30,6 @@ const errorConfig: Record<number, { emoji: string; title: string; message: strin
 
 const ErrorIllustration: React.FC<{ code: number }> = ({ code }) => {
   const is404 = code === 404;
-  const is500 = code === 500;
   const accent = '#14b8a6';
   const accentLight = '#5eead4';
   const muted = '#475569';
