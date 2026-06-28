@@ -12,6 +12,7 @@ const DreamGlowBackground = memo(() => {
 
     let raf: number;
     let hidden = false;
+    let t = 0; // animation clock, drives pulsing
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -36,44 +37,62 @@ const DreamGlowBackground = memo(() => {
     };
     document.addEventListener('visibilitychange', onVisibility);
 
-    const orbs = Array.from({ length: 6 }, (_, i) => ({
+    // Fewer, bigger, more saturated orbs with their own pulse phase/speed
+    const orbs = Array.from({ length: 5 }, (_, i) => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      r: 200 + Math.random() * 300,
-      dx: (Math.random() - 0.5) * 0.3,
-      dy: (Math.random() - 0.5) * 0.3,
-      hue: [168, 180, 200, 160, 190, 150][i],
-      sat: 60 + Math.random() * 20,
+      baseR: 260 + Math.random() * 260,
+      dx: (Math.random() - 0.5) * 0.15,
+      dy: (Math.random() - 0.5) * 0.15,
+      hue: [168, 180, 200, 160, 190][i],
+      sat: 70 + Math.random() * 20,
+      // pulse params, mirrors the motion.div: scale 1 -> 1.2 -> 1, opacity 0.4 -> 0.7 -> 0.4
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.6 + Math.random() * 0.3, // radians/sec-ish, varied per orb so they don't sync
+      baseAlpha: 0.16, // peak alpha, ~2x stronger than original 0.08
     }));
 
-    const draw = () => {
+    let lastTime = performance.now();
+
+    const draw = (now: number) => {
       if (hidden) return;
       raf = requestAnimationFrame(draw);
+
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+      t += dt;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (const o of orbs) {
-        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-        g.addColorStop(0, `hsla(${o.hue}, ${o.sat}%, 50%, 0.08)`);
-        g.addColorStop(0.5, `hsla(${o.hue}, ${o.sat}%, 50%, 0.03)`);
+        // sine wave 0->1->0 driving both scale and opacity, like the hero glow
+        const wave = (Math.sin(o.phase + t * o.speed) + 1) / 2; // 0..1
+        const scale = 1 + wave * 0.25; // 1 -> 1.25 -> 1
+        const alpha = 0.4 * o.baseAlpha + wave * (0.7 - 0.4) * o.baseAlpha; // mirrors opacity: [0.4,0.7,0.4] scaled to baseAlpha
+        const r = o.baseR * scale;
+
+        const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, r);
+        g.addColorStop(0, `hsla(${o.hue}, ${o.sat}%, 55%, ${alpha})`);
+        g.addColorStop(0.4, `hsla(${o.hue}, ${o.sat}%, 50%, ${alpha * 0.5})`);
         g.addColorStop(1, `hsla(${o.hue}, ${o.sat}%, 50%, 0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+        ctx.arc(o.x, o.y, r, 0, Math.PI * 2);
         ctx.fill();
 
         o.x += o.dx;
         o.y += o.dy;
-        if (o.x < -o.r) o.x = canvas.width + o.r;
-        if (o.x > canvas.width + o.r) o.x = -o.r;
-        if (o.y < -o.r) o.y = canvas.height + o.r;
-        if (o.y > canvas.height + o.r) o.y = -o.r;
+        if (o.x < -o.baseR) o.x = canvas.width + o.baseR;
+        if (o.x > canvas.width + o.baseR) o.x = -o.baseR;
+        if (o.y < -o.baseR) o.y = canvas.height + o.baseR;
+        if (o.y > canvas.height + o.baseR) o.y = -o.baseR;
       }
 
       const { x, y } = mousePos.current;
       if (x > -100) {
         const g = ctx.createRadialGradient(x, y, 0, x, y, 400);
-        g.addColorStop(0, 'rgba(20, 184, 166, 0.08)');
-        g.addColorStop(0.5, 'rgba(20, 184, 166, 0.03)');
+        g.addColorStop(0, 'rgba(20, 184, 166, 0.14)');
+        g.addColorStop(0.5, 'rgba(20, 184, 166, 0.06)');
         g.addColorStop(1, 'rgba(20, 184, 166, 0)');
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -95,7 +114,11 @@ const DreamGlowBackground = memo(() => {
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0"
+        style={{ filter: 'blur(8px)' }} // softens hard gradient edges -> hazier, dreamier
+      />
       <div
         className="absolute inset-0 hidden md:block"
         style={{
@@ -118,9 +141,9 @@ const DreamGlowBackground = memo(() => {
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse 80% 60% at 20% 10%, rgba(20,184,166,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 50% at 80% 20%, rgba(56,189,248,0.05) 0%, transparent 50%),
-            radial-gradient(ellipse 50% 40% at 50% 80%, rgba(20,184,166,0.06) 0%, transparent 50%)
+            radial-gradient(ellipse 80% 60% at 20% 10%, rgba(20,184,166,0.1) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 80% 20%, rgba(56,189,248,0.07) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 40% at 50% 80%, rgba(20,184,166,0.08) 0%, transparent 50%)
           `,
         }}
       />

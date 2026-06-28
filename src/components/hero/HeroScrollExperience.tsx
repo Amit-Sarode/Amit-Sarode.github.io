@@ -5,6 +5,7 @@ import profileImg from '/assets/img/profileImg.png';
 import Tilt3D from '../ui/ThreeDTilt';
 import AnimatedCounter from '../ui/AnimatedCounter';
 import { stats } from './data';
+import PromoVideo from './PromoVideo';
 
 /* ─── Global Keyframes ─── */
 const INJECTED_STYLES = `
@@ -181,6 +182,7 @@ const HeroScrollExperience: React.FC = () => {
   const navigate = useNavigate();
   const prefersReduced = useReducedMotion() ?? false;
   const { scrollY } = useScroll();
+  const [showPromo, setShowPromo] = useState(false);
 
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 0.95]);
@@ -196,6 +198,7 @@ const HeroScrollExperience: React.FC = () => {
   const cinematicEase = [0.16, 1, 0.3, 1];
 
   return (
+    <>
     <motion.section
       aria-label="Hero section"
       style={{
@@ -235,7 +238,8 @@ const HeroScrollExperience: React.FC = () => {
       <motion.div
         animate={prefersReduced ? {} : { y: [0, -12, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ willChange: 'transform' }}
+        style={{ willChange: 'transform', cursor: 'pointer' }}
+        onClick={() => setShowPromo(true)}
       >
         <Tilt3D>
           <motion.div
@@ -247,6 +251,7 @@ const HeroScrollExperience: React.FC = () => {
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #14b8a6, #0e7490, #14b8a6)',
               boxShadow: '0 0 40px rgba(20,184,166,0.4), inset 0 0 20px rgba(20,184,166,0.8)',
+              position: 'relative',
             }}
           >
             <img
@@ -262,6 +267,31 @@ const HeroScrollExperience: React.FC = () => {
               loading="eager"
               fetchPriority="high"
             />
+            {/* Play button overlay */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.5, duration: 0.5 }}
+              style={{
+                position: 'absolute', inset: 0, zIndex: 2,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '50%',
+                background: 'rgba(0,0,0,0.35)',
+                backdropFilter: 'blur(2px)',
+                pointerEvents: 'none',
+              }}
+            >
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background: 'rgba(20,184,166,0.9)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 0 20px rgba(20,184,166,0.5)',
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+                  <polygon points="8,5 19,12 8,19" />
+                </svg>
+              </div>
+            </motion.div>
           </motion.div>
         </Tilt3D>
       </motion.div>
@@ -477,6 +507,11 @@ const HeroScrollExperience: React.FC = () => {
       </motion.div>
 
     </motion.section>
+
+      <AnimatePresence>
+        {showPromo && <PromoVideo onClose={() => setShowPromo(false)} />}
+      </AnimatePresence>
+    </>
   );
 };
 
