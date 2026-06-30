@@ -17,7 +17,7 @@ const VOICEOVER = [
   'What I build. AI Chatbots, Workflow Automation, Full-Stack Platforms, RAG and Document AI.',
   'Track record. 15 plus projects delivered, 10 plus happy clients, 3 plus years building.',
   'The toolkit. React, TypeScript, Node.js, Claude API, LangChain, PostgreSQL, Next.js.',
-  'Let\'s build something that works. Start a project. amit-sarode.github.io',
+  'Let\'s build something that works. Start a project. amit sarode.github.io',
 ];
 
 const PromoVideo: React.FC<{ onClose: () => void }> = ({ onClose }) => {

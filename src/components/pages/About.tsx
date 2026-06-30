@@ -65,14 +65,24 @@ const About: React.FC = () => {
       >
         {/* ── Back button ── */}
         <Reveal>
-          <div style={{ marginBottom: 12 }}>
+          <div style={{ marginBottom: 16 }}>
             <motion.button
-              whileHover={{ x: -3 }}
+              whileHover={{ x: -3, backgroundColor: 'rgba(20,184,166,0.08)' }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/')}
               style={{
-                background: 'none', border: 'none', color: '#475569', fontSize: 13,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                fontFamily: 'monospace', padding: 0,
+                background: 'transparent',
+                border: '1px solid rgba(20,184,166,0.2)',
+                color: '#14b8a6',
+                fontSize: 13,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontFamily: 'monospace',
+                padding: '8px 16px',
+                borderRadius: 8,
+                transition: 'background-color 0.2s',
               }}
             >
               <span style={{ fontSize: 16 }}>←</span> Back to Home
@@ -160,6 +170,57 @@ const About: React.FC = () => {
             <blockquote style={{ marginTop: 18, padding: '14px 16px', borderLeft: '3px solid #14b8a6', background: 'rgba(20,184,166,0.05)', color: '#f8fafc' }}>
               "Amit consistently delivers clean frontend work and communicates clearly across deadlines." - Colleague at Atum IT
             </blockquote>
+
+            {/* CTA */}
+            <div style={{ marginTop: 24, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <motion.button
+                whileHover={{ y: -3, boxShadow: '0 10px 24px -10px rgba(20,184,166,0.5)' }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/contact')}
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: 12,
+                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                  color: '#fff',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  letterSpacing: '0.02em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                Get in Touch
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </motion.button>
+              <motion.button
+                whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => window.open('https://calendly.com/amitsarode', '_blank')}
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: 12,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: '#f1f5f9',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                Book a Call
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </motion.button>
+            </div>
           </Reveal>
 
           {/* Right: Image with overlay stats */}
@@ -219,6 +280,8 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
+              whileHover={{ y: -4, scale: 1.01, borderColor: 'rgba(20,184,166,0.4)' }}
+              onClick={() => navigate('/contact')}
               style={{
                 marginTop: 16,
                 padding: '16px 20px',
@@ -228,6 +291,8 @@ const About: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 14,
+                cursor: 'pointer',
+                transition: 'border-color 0.2s, transform 0.2s',
               }}
             >
               <span
@@ -246,7 +311,7 @@ const About: React.FC = () => {
                   Open to opportunities
                 </p>
                 <p style={{ fontSize: 12, color: '#94a3b8' }}>
-                  Freelance, full-time & contract roles
+                  Freelance, full-time & contract roles — Click to get in touch
                 </p>
               </div>
             </motion.div>
@@ -421,22 +486,55 @@ const About: React.FC = () => {
           {certificates.map((cert, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.07, duration: 0.6 }}
-              whileHover={{ y: -8, scale: 1.02 }}
+              initial={{ opacity: 0, y: 40, rotateX: 10 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{
+                delay: idx * 0.1,
+                duration: 0.7,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+              whileHover={{
+                y: -12,
+                scale: 1.03,
+                rotateY: 5,
+                borderColor: 'rgba(20,184,166,0.5)',
+                boxShadow: '0 30px 80px rgba(20,184,166,0.25), 0 15px 35px rgba(0,0,0,0.5)'
+              }}
               style={{
                 position: 'relative',
-                borderRadius: 16,
+                borderRadius: 20,
                 overflow: 'hidden',
-                border: '1px solid rgba(255,255,255,0.06)',
-                background: '#0a1628',
+                border: '1px solid rgba(20,184,166,0.15)',
+                background: 'linear-gradient(145deg, #0a1628, #0d1f35)',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
                 cursor: 'pointer',
+                transformStyle: 'preserve-3d',
+                perspective: 1000,
               }}
             >
-              <img
+              {/* Animated border glow */}
+              <motion.div
+                style={{
+                  position: 'absolute',
+                  inset: -2,
+                  borderRadius: 22,
+                  background: 'linear-gradient(45deg, #14b8a6, #0d9488, #14b8a6)',
+                  opacity: 0,
+                  zIndex: -1,
+                }}
+                animate={{
+                  opacity: [0, 0.3, 0],
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+              />
+
+              <motion.img
                 loading="lazy"
                 src={cert.url}
                 alt={cert.name}
@@ -445,29 +543,35 @@ const About: React.FC = () => {
                   aspectRatio: '16 / 10',
                   objectFit: 'cover',
                   display: 'block',
-                  filter: 'brightness(0.75) saturate(0.6)',
-                  transition: 'filter 0.5s ease, transform 0.5s ease',
                 }}
-                onMouseEnter={(e) => {
-                  const img = e.currentTarget
-                  img.style.filter = 'brightness(0.95) saturate(1)'
-                  img.style.transform = 'scale(1.05)'
+                initial={{ scale: 1.1, filter: 'brightness(0.6) saturate(0.4)' }}
+                whileInView={{
+                  scale: 1,
+                  filter: 'brightness(0.75) saturate(0.6)'
                 }}
-                onMouseLeave={(e) => {
-                  const img = e.currentTarget
-                  img.style.filter = 'brightness(0.75) saturate(0.6)'
-                  img.style.transform = 'scale(1)'
+                whileHover={{
+                  scale: 1.08,
+                  filter: 'brightness(0.95) saturate(1)'
+                }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.8,
+                  ease: 'easeOut'
                 }}
               />
 
               {/* Overlay gradient */}
-              <div
+              <motion.div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, rgba(2,13,10,0.9) 0%, transparent 55%)',
+                  background: 'linear-gradient(to top, rgba(2,13,10,0.95) 0%, rgba(2,13,10,0.4) 50%, transparent 100%)',
                   pointerEvents: 'none',
                 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2, duration: 0.6 }}
               />
 
               {/* Label */}
@@ -477,39 +581,39 @@ const About: React.FC = () => {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  padding: '16px 18px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  padding: '20px 18px',
                 }}
               >
-                <div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', marginBottom: 2 }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 + 0.2, duration: 0.5 }}
+                >
+                  <p style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 4 }}>
                     {cert.name}
                   </p>
-                  <p style={{ fontSize: 11, color: '#14b8a6', fontFamily: 'monospace', letterSpacing: '0.06em' }}>
-                    Udemy · Verified
-                  </p>
-                </div>
-
-                {/* Check badge */}
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    background: 'rgba(20,184,166,0.15)',
-                    border: '1px solid rgba(20,184,166,0.3)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 12,
-                    color: '#14b8a6',
-                    flexShrink: 0,
-                  }}
-                >
-                  ✓
-                </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: '50%',
+                      background: 'rgba(20,184,166,0.15)',
+                      border: '1px solid rgba(20,184,166,0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 10,
+                      color: '#14b8a6',
+                      flexShrink: 0,
+                    }}>
+                      ✓
+                    </div>
+                    <p style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'monospace', letterSpacing: '0.04em' }}>
+                      Udemy · Professional Certificate
+                    </p>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           ))}

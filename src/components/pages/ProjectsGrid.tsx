@@ -21,91 +21,125 @@ const allIndustries = [...new Set([
 
 const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
-const ProjectCard: React.FC<{ biz: BusinessCategory; index: number; navigate: ReturnType<typeof useNavigate> }> = ({ biz, index, navigate }) => {
-  const [hovered, setHovered] = useState(false);
-  const handleEnter = useCallback(() => setHovered(true), []);
-  const handleLeave = useCallback(() => setHovered(false), []);
+const ProjectRow: React.FC<{ biz: BusinessCategory; index: number; navigate: ReturnType<typeof useNavigate> }> = ({ biz, index, navigate }) => {
+  const isEven = index % 2 === 0;
 
   return (
-    <Reveal key={biz.id} delay={index * 0.03}>
-      <Tilt3D>
-        <motion.div
-          whileHover={isTouch ? {} : { y: -6 }}
-          onClick={() => navigate(`/projects/${biz.id}`)}
-          onMouseEnter={handleEnter}
-          onMouseLeave={handleLeave}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`flex flex-col gap-10 md:gap-16 items-center ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} w-full`}
+    >
+      {/* Image / Mockup Section */}
+      <div className="w-full md:w-1/2 group relative">
+        <div 
+          className="relative overflow-hidden rounded-2xl border border-white/10"
           style={{
-            borderRadius: 16, overflow: 'hidden', cursor: 'pointer',
-            border: `1px solid ${hovered ? `${biz.color}40` : t.cardBorder}`,
-            background: hovered ? `${biz.color}06` : t.surface,
-            transition: 'border-color 0.3s, background 0.3s',
-            position: 'relative',
-            boxShadow: hovered ? `0 12px 40px rgba(0,0,0,0.3), 0 0 30px ${biz.color}10` : 'none',
+             background: 'rgba(255,255,255,0.03)',
+             boxShadow: `0 20px 40px -10px ${biz.color}30`
           }}
         >
-          <div style={{
-            height: 160, overflow: 'hidden', position: 'relative',
-          }}>
-            <motion.img
-              src={biz.image} alt={biz.title} loading="lazy"
-              animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(0.6)' : 'brightness(0.5)' }}
-              transition={{ duration: 0.5 }}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          {/* Browser Bar */}
+          <div className="h-8 bg-black/40 border-b border-white/5 flex items-center px-4 gap-1.5 backdrop-blur-md">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+          </div>
+          
+          {/* Image */}
+          <div className="overflow-hidden aspect-video relative">
+            <motion.img 
+              src={biz.image} 
+              alt={biz.title}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: `linear-gradient(to top, ${t.bg} 0%, transparent 50%)`,
-            }} />
-            <motion.span
-              animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? [0, -8, 8, 0] : 0 }}
-              transition={{ duration: 0.4 }}
-              style={{ position: 'absolute', top: 12, left: 12, fontSize: 28 }}
-            >{biz.icon}</motion.span>
-            {hovered && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  position: 'absolute', bottom: 12, right: 12,
-                  padding: '4px 10px', borderRadius: 6,
-                  background: `${biz.color}90`, backdropFilter: 'blur(4px)',
-                  fontSize: 10, color: '#fff', fontWeight: 600,
-                  fontFamily: 'monospace', letterSpacing: '0.05em',
-                }}
-              >
-                View Case Study →
-              </motion.div>
-            )}
+            {/* Subtle overlay for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
           </div>
-          <div style={{ padding: '16px 18px 18px' }}>
-            <h3 style={{
-              fontSize: 15, fontWeight: 700, color: t.heading,
-              margin: '0 0 6px', lineHeight: 1.3,
-            }}>{biz.title}</h3>
-            <p style={{
-              fontSize: 13, color: t.muted, margin: '0 0 12px',
-              lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical', overflow: 'hidden',
-            }}>{biz.description}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {biz.tech.slice(0, 3).map((tech: string) => (
-                <span key={tech} style={{
-                  padding: '2px 8px', borderRadius: 8,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  fontSize: 10, color: t.muted,
-                }}>{tech}</span>
-              ))}
-              {biz.tech.length > 3 && (
-                <span style={{ fontSize: 10, color: t.muted, padding: '2px 4px' }}>
-                  +{biz.tech.length - 3}
-                </span>
-              )}
-            </div>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="w-full md:w-1/2 flex flex-col items-start text-left">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: '#f1f5f9' }}>{biz.title}</h2>
+        
+        <p className="text-slate-300 text-base md:text-lg mb-6 leading-relaxed">
+          {biz.description} {biz.problem && <span className="opacity-80 block mt-2">{biz.problem}</span>}
+        </p>
+        
+        {/* Tech Stack */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {biz.tech.map(tech => (
+            <span key={tech} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: `${biz.color}15`, color: biz.color, border: `1px solid ${biz.color}40` }}>
+              {tech}
+            </span>
+          ))}
+        </div>
+        
+        {/* Key Highlights */}
+        {biz.impact && biz.impact.length > 0 && (
+          <div className="flex flex-col gap-3 mb-8 w-full">
+            {biz.impact.slice(0, 4).map((highlight, idx) => (
+              <div key={idx} className="flex items-start gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: biz.color }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm md:text-base text-slate-300">{highlight}</span>
+              </div>
+            ))}
           </div>
-        </motion.div>
-      </Tilt3D>
-    </Reveal>
+        )}
+        
+        {/* CTAs */}
+        <div className="flex flex-wrap gap-4 w-full sm:w-auto mt-auto">
+          <motion.button
+            whileHover={{ y: -3, boxShadow: `0 10px 20px -10px ${biz.color}` }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => biz.link ? window.open(biz.link, '_blank') : navigate(`/projects/${biz.id}`)}
+            className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2"
+            style={{ background: biz.color }}
+          >
+            Live Demo
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </motion.button>
+          
+          {biz.github ? (
+            <motion.button
+              whileHover={{ y: -3, backgroundColor: 'rgba(255,255,255,0.1)' }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => window.open(biz.github, '_blank')}
+              className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 border border-white/20"
+              style={{ color: '#f1f5f9', background: 'rgba(255,255,255,0.03)' }}
+            >
+              GitHub
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+            </motion.button>
+          ) : (
+            <motion.button
+              whileHover={{ y: -3, backgroundColor: 'rgba(255,255,255,0.1)' }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate(`/projects/${biz.id}`)}
+              className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 border border-white/20"
+              style={{ color: '#f1f5f9', background: 'rgba(255,255,255,0.03)' }}
+            >
+              Case Study
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </motion.button>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
@@ -246,11 +280,9 @@ const ProjectsGrid: React.FC = () => {
         </Reveal>
 
         {/* Project grid */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16,
-        }}>
+        <div className="flex flex-col gap-24 md:gap-32 mt-16">
           {filtered.map((biz, i) => (
-            <ProjectCard key={biz.id} biz={biz} index={i} navigate={navigate} />
+            <ProjectRow key={biz.id} biz={biz} index={i} navigate={navigate} />
           ))}
         </div>
 
