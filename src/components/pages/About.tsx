@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import profileImg from '/assets/img/profileImg.png'
 import SEO from '../ui/SEO'
+import SectionHeader from '../ui/SectionHeader'
 import AnimatedCounter from '../ui/AnimatedCounter'
 import { skills } from '../hero/data'
 import SkillCard from '../hero/SkillCard'
@@ -92,42 +93,7 @@ const About: React.FC = () => {
 
         {/* ── Section label ── */}
         <Reveal>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 60 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-                <motion.span 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: 32 }}
-                              transition={{ duration: 0.8, delay: 0.2 }}
-                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                            />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                ABOUT
-              </span>
-               <motion.span 
-                             initial={{ width: 0 }}
-                             whileInView={{ width: 32 }}
-                             transition={{ duration: 0.8, delay: 0.2 }}
-                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                           />
-            </div>
-
-         <motion.h2 
-                       initial={{ opacity: 0 }}
-                       whileInView={{ opacity: 1 }}
-                       transition={{ duration: 0.8, delay: 0.3 }}
-                       className="font-bold mb-2"
-                       style={{ 
-                         fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                         background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                         WebkitBackgroundClip: 'text',
-                         WebkitTextFillColor: 'transparent',
-                         backgroundClip: 'text',
-                         lineHeight: 1.2
-                       }}
-                     >
-                    About Me
-                     </motion.h2>
-          </div>
+          <SectionHeader label="ABOUT" title="About Me" />
         </Reveal>
 
         {/* ── Bio + Image layout ── */}
@@ -379,45 +345,11 @@ const About: React.FC = () => {
 
         {/* ── SOLUTIONS: What I Build ── */}
         <Reveal>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 40 }}>
-            {/* FIXED: changed justify-content to justifyContent */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-                <motion.span 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: 32 }}
-                              transition={{ duration: 0.8, delay: 0.2 }}
-                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                            />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                TECH STACK
-              </span>
-               <motion.span 
-                             initial={{ width: 0 }}
-                             whileInView={{ width: 32 }}
-                             transition={{ duration: 0.8, delay: 0.2 }}
-                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                           />
-            </div>
-            <motion.h2 
-                       initial={{ opacity: 0 }}
-                       whileInView={{ opacity: 1 }}
-                       transition={{ duration: 0.8, delay: 0.3 }}
-                       className="font-bold mb-2"
-                       style={{ 
-                         fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                         background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                         WebkitBackgroundClip: 'text',
-                         WebkitTextFillColor: 'transparent',
-                         backgroundClip: 'text',
-                         lineHeight: 1.2
-                       }}
-                     >
-                   Professional Capabilities 
-                     </motion.h2>
-            <p style={{ color: '#94a3b8', fontSize: 15, lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
-             Building end-to-end digital products—from LLM-powered conversational agents to high-performance web and mobile platforms.
-            </p>
-          </div>
+          <SectionHeader
+            label="TECH STACK"
+            title="Professional Capabilities"
+            description="Building end-to-end digital products—from LLM-powered conversational agents to high-performance web and mobile platforms."
+          />
         </Reveal>
 
        {/* ── SKILLS ── */}
@@ -440,39 +372,10 @@ const About: React.FC = () => {
         <Divider />
         {/* ── Certifications ── */}
         <Reveal delay={0.1}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 40 }}>
-            {/* FIXED: changed justify-content to justifyContent */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-                <motion.span 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: 32 }}
-                              transition={{ duration: 0.8, delay: 0.2 }}
-                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                            />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                VERIFIED CREDENTIALS
-              </span>
-               <motion.span 
-                             initial={{ width: 0 }}
-                             whileInView={{ width: 32 }}
-                             transition={{ duration: 0.8, delay: 0.2 }}
-                             style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                           />
-            </div>
-
-            <h3
-              style={{
-                fontSize: 'clamp(1.6rem, 4vw, 2.5rem)',
-                fontWeight: 700,
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Professional Certifications
-            </h3>
-          </div>
+          <SectionHeader
+            label="VERIFIED CREDENTIALS"
+            title="Professional Certifications"
+          />
         </Reveal>
 
 

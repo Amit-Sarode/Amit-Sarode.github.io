@@ -235,7 +235,6 @@ const Carousel = ({ projects, onFocus }: { projects: BusinessCategory[]; onFocus
           {projects.map((p, i) => (
             <motion.button
               key={p.id}
-              onClick={() => goTo(i)}
               animate={{
                 width: focusIdx === i ? 24 : 6,
                 background: focusIdx === i ? p.color : 'rgba(255,255,255,0.12)',

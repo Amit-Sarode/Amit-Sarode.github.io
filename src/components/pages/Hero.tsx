@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import SEO from '../ui/SEO';
+import SectionHeader from '../ui/SectionHeader';
+import GlowCard from '../ui/GlowCard';
 import AnimatedCounter from '../ui/AnimatedCounter';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import HeroScrollExperience from '../hero/HeroScrollExperience';
@@ -14,66 +16,6 @@ import {
 
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-
-
-
-// ─── Glow Card (reusable) ────────────────────────────
-const GlowCard: React.FC<{
-  children: React.ReactNode;
-  color?: string;
-  className?: string;
-  style?: React.CSSProperties;
-  hoverY?: number;
-}> = ({ children, color = '#14b8a6', className, style, hoverY = -6 }) => {
-  const [hovered, setHovered] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
-  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouchDevice) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top });
-  }, []);
-
-  return (
-    <motion.div
-      whileHover={{ y: hoverY }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onMouseMove={onMove}
-      className={className}
-      style={{
-        position: 'relative', overflow: 'hidden', borderRadius: 20,
-        background: hovered ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
-        border: `1px solid ${hovered ? `${color}50` : 'rgba(255,255,255,0.08)'}`,
-        transition: 'background 0.4s, border-color 0.4s',
-        ...style,
-      }}
-    >
-      <div style={{
-        position: 'absolute', left: mouse.x, top: mouse.y,
-        width: 220, height: 220, borderRadius: '50%',
-        background: `radial-gradient(circle, ${color}18 0%, transparent 70%)`,
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
-      }} />
-      <div style={{
-        position: 'absolute', top: -25, right: -25,
-        width: 100, height: 100, borderRadius: '50%',
-        background: color, filter: 'blur(35px)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 0.15 : 0, transition: 'opacity 0.5s',
-      }} />
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
-        zIndex: 1,
-      }} />
-      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
-    </motion.div>
-  );
-};
 
 const Hero: React.FC = () => {
   const navigate = useNavigate();
@@ -156,42 +98,11 @@ const Hero: React.FC = () => {
       <section style={{ position: 'relative', zIndex: 10, padding: '112px 24px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
           <Reveal>
-            <div className="flex flex-col items-center text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                 <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>PROCESS</span>
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              </div>
-              <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-            How I Work
-            </motion.h2>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 500, margin: '0 auto', lineHeight: 1.75 }}>
-                A proven 3-step process to turn your business challenges into automated solutions.
-              </p>
-            </div>
+            <SectionHeader
+              label="PROCESS"
+              title="How I Work"
+              description="A proven 3-step process to turn your business challenges into automated solutions."
+            />
           </Reveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
             {processSteps.map((item, i) => (
@@ -214,39 +125,10 @@ const Hero: React.FC = () => {
       {/* ── JOURNEY ── */}
       <section className="relative z-10 py-28 max-w-6xl mx-auto px-6">
         <Reveal delay={0.1} className="mt-16">
-          <div className="flex flex-col items-center text-center mb-16">
-            <div className="flex items-center justify-center gap-3 mb-4">
-                 <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>STORY</span>
-                <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-            </div>
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-        The Journey
-            </motion.h2>
-          </div>
+          <SectionHeader
+            label="STORY"
+            title="The Journey"
+          />
         </Reveal>
         <div className="grid md:grid-cols-2 gap-10 items-stretch">
           <Reveal delay={0.15}>
@@ -271,42 +153,11 @@ const Hero: React.FC = () => {
       <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="max-w-6xl mx-auto">
           <Reveal>
-            <div className="flex flex-col items-center text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                   <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>CLIENTS</span>
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              </div>
-              <Reveal>
-                <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-         Trusted By
-            </motion.h2>
-            </Reveal>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontFamily: 'monospace', margin: '0 auto' }}>Businesses I've automated and scaled</p>
-            </div>
+            <SectionHeader
+              label="CLIENTS"
+              title="Trusted By"
+              description="Businesses I've automated and scaled"
+            />
           </Reveal>
           <div style={{ position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #020d0a, transparent)', pointerEvents: 'none' }} />
@@ -457,44 +308,11 @@ const Hero: React.FC = () => {
       <section className="relative z-10 py-24 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div style={{ maxWidth: 1152, margin: '0 auto' }}>
           <Reveal>
-            <div className="flex flex-col items-center text-center mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-                <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>RESULTS</span>
-                  <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              </div>
-              <Reveal>
-                <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-          Case Studies
-            </motion.h2>
-            </Reveal>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300, maxWidth: 520, margin: '0 auto', lineHeight: 1.75 }}>
-                Real projects, real impact. Here's what automation looks like in practice.
-              </p>
-            </div>
+            <SectionHeader
+              label="RESULTS"
+              title="Case Studies"
+              description="Real projects, real impact. Here's what automation looks like in practice."
+            />
           </Reveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {caseStudies.map((cs, i) => (
@@ -528,48 +346,10 @@ const Hero: React.FC = () => {
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(20,184,166,0.03) 0%, transparent 100%)' }}
       >
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center text-center mb-16"
-          >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                CLIENT SUCCESS
-              </span>
-              <motion.span 
-                initial={{ width: 0 }}
-                whileInView={{ width: 32 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-              />
-            </div>
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-bold mb-2"
-              style={{ 
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1.2
-              }}
-            >
-              What Clients Say
-            </motion.h2>
-          </motion.div>
+          <SectionHeader
+            label="CLIENT SUCCESS"
+            title="What Clients Say"
+          />
    
           {/* Main Carousel Container */}
           {testimonials.length > 0 && (

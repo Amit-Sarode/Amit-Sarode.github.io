@@ -65,8 +65,8 @@ const Footer: React.FC = () => {
   return (
     <footer
       style={{
-        background: 'linear-gradient(180deg, transparent 0%, rgba(2,13,10,0.95) 20%, #020d0a 100%)',
-        borderTop: '1px solid rgba(20,184,166,0.08)',
+        background: 'linear-gradient(180deg, transparent 0%, var(--bg-nav-scrolled) 20%, var(--bg-primary) 100%)',
+        borderTop: '1px solid var(--accent-border)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
           transform: 'translateX(-50%)',
           width: '60%',
           height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.4), transparent)',
+          background: 'linear-gradient(90deg, transparent, var(--accent-border), transparent)',
           pointerEvents: 'none',
         }}
       />
@@ -95,7 +95,7 @@ const Footer: React.FC = () => {
           width: 400,
           height: 200,
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(20,184,166,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, var(--glow-color) 0%, transparent 70%)',
           filter: 'blur(30px)',
           pointerEvents: 'none',
         }}
@@ -133,7 +133,7 @@ const Footer: React.FC = () => {
                   width: 36,
                   height: 36,
                   borderRadius: 10,
-                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                  background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -141,7 +141,7 @@ const Footer: React.FC = () => {
                   fontWeight: 800,
                   color: '#fff',
                   fontFamily: 'monospace',
-                  boxShadow: '0 0 20px rgba(20,184,166,0.3)',
+                  boxShadow: '0 0 20px var(--glow-color)',
                   flexShrink: 0,
                 }}
               >
@@ -165,7 +165,7 @@ const Footer: React.FC = () => {
               style={{
                 fontSize: 13,
                 lineHeight: 1.75,
-                color: '#475569',
+                color: 'var(--text-faint)',
                 maxWidth: 240,
               }}
             >
@@ -187,24 +187,24 @@ const Footer: React.FC = () => {
                     width: 36,
                     height: 36,
                     borderRadius: 10,
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid var(--border-default)',
+                    background: 'var(--bg-card)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#64748b',
+                    color: 'var(--text-dim)',
                     transition: 'color 0.25s, border-color 0.25s, background 0.25s',
                     textDecoration: 'none',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#14b8a6'
-                    e.currentTarget.style.borderColor = 'rgba(20,184,166,0.3)'
-                    e.currentTarget.style.background = 'rgba(20,184,166,0.06)'
+                    e.currentTarget.style.color = 'var(--accent)'
+                    e.currentTarget.style.borderColor = 'var(--accent-border)'
+                    e.currentTarget.style.background = 'var(--accent-bg)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#64748b'
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+                    e.currentTarget.style.color = 'var(--text-dim)'
+                    e.currentTarget.style.borderColor = 'var(--border-default)'
+                    e.currentTarget.style.background = 'var(--bg-card)'
                   }}
                 >
                   {s.icon}
@@ -221,17 +221,17 @@ const Footer: React.FC = () => {
             transition={{ delay: 0.1, duration: 0.6 }}
             style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
           >
-            <p
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                color: '#334155',
-                textTransform: 'uppercase',
-                fontFamily: 'monospace',
-              }}
-            >
-              Navigation
-            </p>
+              <p
+                style={{
+                  fontSize: 11,
+                  letterSpacing: '0.14em',
+                  color: 'var(--text-faint)',
+                  textTransform: 'uppercase',
+                  fontFamily: 'monospace',
+                }}
+              >
+                Navigation
+              </p>
 
             <nav style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {navLinks.map((link) => (
@@ -240,7 +240,7 @@ const Footer: React.FC = () => {
                   to={link.to}
                   style={{
                     fontSize: 14,
-                    color: '#64748b',
+                    color: 'var(--text-dim)',
                     textDecoration: 'none',
                     display: 'flex',
                     alignItems: 'center',
@@ -248,21 +248,21 @@ const Footer: React.FC = () => {
                     transition: 'color 0.25s, gap 0.25s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#5eead4'
+                    e.currentTarget.style.color = 'var(--accent-light)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#64748b'
+                    e.currentTarget.style.color = 'var(--text-dim)'
                   }}
                 >
-                  <span
-                    style={{
-                      width: 16,
-                      height: 1,
-                      background: '#14b8a6',
-                      display: 'inline-block',
-                      flexShrink: 0,
-                      opacity: 0.5,
-                    }}
+                    <span
+                      style={{
+                        width: 16,
+                        height: 1,
+                        background: 'var(--accent)',
+                        display: 'inline-block',
+                        flexShrink: 0,
+                        opacity: 0.5,
+                      }}
                   />
                   {link.label}
                 </Link>
@@ -278,19 +278,19 @@ const Footer: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
           >
-            <p
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                color: '#334155',
-                textTransform: 'uppercase',
-                fontFamily: 'monospace',
-              }}
-            >
-              Get In Touch
-            </p>
+              <p
+                style={{
+                  fontSize: 11,
+                  letterSpacing: '0.14em',
+                  color: 'var(--text-faint)',
+                  textTransform: 'uppercase',
+                  fontFamily: 'monospace',
+                }}
+              >
+                Get In Touch
+              </p>
 
-            <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.7 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-faint)', lineHeight: 1.7 }}>
               Open to freelance, full-time, and contract roles. Let's build something great together.
             </p>
 
@@ -305,7 +305,7 @@ const Footer: React.FC = () => {
                   gap: 8,
                   padding: '11px 22px',
                   borderRadius: 50,
-                  background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                  background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
                   color: '#fff',
                   fontSize: 13,
                   fontWeight: 600,
@@ -331,7 +331,7 @@ const Footer: React.FC = () => {
                 alignItems: 'center',
                 gap: 8,
                 fontSize: 12,
-                color: '#334155',
+                color: 'var(--text-faint)',
                 fontFamily: 'monospace',
                 letterSpacing: '0.06em',
                 padding: 0,
@@ -342,12 +342,12 @@ const Footer: React.FC = () => {
                   width: 20,
                   height: 20,
                   borderRadius: '50%',
-                  border: '1px solid rgba(20,184,166,0.3)',
+                  border: '1px solid var(--accent-border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: 10,
-                  color: '#14b8a6',
+                  color: 'var(--accent)',
                 }}
               >
                 ↑
@@ -360,7 +360,7 @@ const Footer: React.FC = () => {
         {/* ── Bottom bar ── */}
         <div
           style={{
-            borderTop: '1px solid rgba(255,255,255,0.04)',
+            borderTop: '1px solid var(--divider)',
             padding: '20px 0',
             display: 'flex',
             alignItems: 'center',
@@ -369,7 +369,7 @@ const Footer: React.FC = () => {
             gap: 12,
           }}
         >
-          <p style={{ fontSize: 12, color: '#334155', fontFamily: 'monospace' }}>
+          <p style={{ fontSize: 12, color: 'var(--text-faint)', fontFamily: 'monospace' }}>
             © {new Date().getFullYear()} Amit Sarode
           </p>
 
@@ -379,12 +379,12 @@ const Footer: React.FC = () => {
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: '#14b8a6',
-                boxShadow: '0 0 8px #14b8a6',
+                background: 'var(--accent)',
+                boxShadow: '0 0 8px var(--accent)',
                 display: 'inline-block',
               }}
             />
-            <span style={{ fontSize: 12, color: '#334155', fontFamily: 'monospace' }}>
+            <span style={{ fontSize: 12, color: 'var(--text-faint)', fontFamily: 'monospace' }}>
               Built with React · TypeScript · Tailwind
             </span>
           </div>

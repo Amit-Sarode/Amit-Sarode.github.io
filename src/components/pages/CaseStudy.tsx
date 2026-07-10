@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../ui/SEO';
+import SectionHeader from '../ui/SectionHeader';
 import { caseStudies, businesses } from '../hero/data';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { Helmet } from 'react-helmet-async';
@@ -387,33 +388,32 @@ const CaseStudyList: React.FC = () => {
         padding: '120px 24px 80px', position: 'relative', zIndex: 1,
       }}>
         <motion.button
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          whileHover={{ x: -3 }}
-          onClick={() => navigate('/')}
-          style={{
-            background: 'none', border: 'none', color: '#475569', fontSize: 13,
-            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-            fontFamily: 'monospace', padding: 0, marginBottom: 24,
-          }}
-        >← Back to Home</motion.button>
+                     whileHover={{ x: -3, backgroundColor: 'rgba(20,184,166,0.08)' }}
+                     whileTap={{ scale: 0.98 }}
+                     onClick={() => navigate('/')}
+                     style={{
+                       background: 'transparent',
+                       border: '1px solid rgba(20,184,166,0.2)',
+                       color: '#14b8a6',
+                       fontSize: 13,
+                       cursor: 'pointer',
+                       display: 'inline-flex',
+                       alignItems: 'center',
+                       gap: 8,
+                       fontFamily: 'monospace',
+                       padding: '8px 16px',
+                       borderRadius: 8,
+                       transition: 'background-color 0.2s',
+                     }}
+                   >
+                     <span style={{ fontSize: 16 }}>←</span> Back to Home
+                   </motion.button>
 
-        <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-            <span style={{ width: 32, height: 2, background: t.teal, borderRadius: 2 }} />
-            <span style={{ color: t.teal, fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>CASE STUDIES</span>
-            <span style={{ width: 32, height: 2, background: t.teal, borderRadius: 2 }} />
-          </div>
-          <h1 style={{
-            fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800,
-            background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text', lineHeight: 1.2, margin: '0 0 12px',
-          }}>Real Results</h1>
-          <p style={{ color: t.muted, fontSize: 15, maxWidth: 560, margin: '0 auto' }}>
-            Detailed case studies showing measurable business outcomes from AI automation and custom development.
-          </p>
-        </div>
+        <SectionHeader
+          label="CASE STUDIES"
+          title="Real Results"
+          description="Detailed case studies showing measurable business outcomes from AI automation and custom development."
+        />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {caseStudyList.map((item, i) => (

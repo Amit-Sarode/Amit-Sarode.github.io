@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../ui/SEO';
+import SectionHeader from '../ui/SectionHeader';
 import { businesses, type BusinessCategory } from '../hero/data';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { Reveal } from '../hero/Reveal';
-import Tilt3D from '../ui/ThreeDTilt';
 
 const t = {
   bg: '#020d0a', bgAlt: '#050f10', bgDeep: '#02100d',
@@ -191,46 +191,35 @@ const ProjectsGrid: React.FC = () => {
         padding: '120px 24px 80px', position: 'relative', zIndex: 1,
       }}>
         <Reveal>
-          <motion.button
-            whileHover={{ x: -3 }}
-            onClick={() => navigate('/')}
-            style={{
-              background: 'none', border: 'none', color: '#475569', fontSize: 13,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-              fontFamily: 'monospace', padding: 0, marginBottom: 24,
-            }}
-          >← Back to Home</motion.button>
+           <motion.button
+                        whileHover={{ x: -3, backgroundColor: 'rgba(20,184,166,0.08)' }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => navigate('/')}
+                        style={{
+                          background: 'transparent',
+                          border: '1px solid rgba(20,184,166,0.2)',
+                          color: '#14b8a6',
+                          fontSize: 13,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          fontFamily: 'monospace',
+                          padding: '8px 16px',
+                          borderRadius: 8,
+                          transition: 'background-color 0.2s',
+                        }}
+                      >
+                        <span style={{ fontSize: 16 }}>←</span> Back to Home
+                      </motion.button>
         </Reveal>
 
         <Reveal>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-             
-                                <motion.span 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: 32 }}
-                              transition={{ duration: 0.8, delay: 0.2 }}
-                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                            />
-                              <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>PORTFOLIO</span>
-                                <motion.span 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: 32 }}
-                              transition={{ duration: 0.8, delay: 0.2 }}
-                              style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                            />
-                          
-            </div>
-            <h1 style={{
-              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800,
-              background: 'linear-gradient(120deg, #ffffff, #cbd5e1)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text', lineHeight: 1.2, margin: '0 0 12px',
-            }}>All Projects</h1>
-            <p style={{ color: t.muted, fontSize: 15, maxWidth: 560, margin: '0 auto' }}>
-              Browse AI chatbots, automation systems, and full-stack platforms I've built.
-            </p>
-          </div>
+          <SectionHeader
+            label="PORTFOLIO"
+            title="All Projects"
+            description="Browse AI chatbots, automation systems, and full-stack platforms I've built."
+          />
         </Reveal>
 
         {/* Search + Filters */}

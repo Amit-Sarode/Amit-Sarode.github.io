@@ -87,10 +87,10 @@ const Navbar: React.FC = () => {
           left: 0,
           right: 0,
           height: 2,
-          background: 'linear-gradient(90deg, #14b8a6, #0d9488, #14b8a6)',
+          background: 'linear-gradient(90deg, var(--accent), var(--accent-dark), var(--accent))',
           transformOrigin: '0%',
           zIndex: 100,
-          boxShadow: '0 0 10px rgba(20,184,166,0.6)',
+          boxShadow: '0 0 10px var(--glow-color)',
         }}
       />
 
@@ -239,44 +239,7 @@ const Navbar: React.FC = () => {
             <SocialsDropdown />
           </motion.div>
 
-          {/* Theme toggle */}
-          {/* <motion.button
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            style={{
-              width: 34, height: 34, borderRadius: 10,
-              border: '1px solid var(--border-default)',
-              background: 'var(--bg-card)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: 'var(--accent)', fontSize: 16,
-              transition: 'all 0.3s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border-hover)';
-              e.currentTarget.style.background = 'var(--bg-card-hover)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border-default)';
-              e.currentTarget.style.background = 'var(--bg-card)';
-            }}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {isDark ? (
-                <motion.svg key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }} width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" strokeLinecap="round" />
-                </motion.svg>
-              ) : (
-                <motion.svg key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }} width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" strokeLinecap="round" strokeLinejoin="round" />
-                </motion.svg>
-              )}
-            </AnimatePresence>
-          </motion.button> */}
+
 
           {/* Resume download */}
           <motion.button
@@ -383,7 +346,7 @@ const Navbar: React.FC = () => {
               width: 38,
               height: 38,
               borderRadius: 10,
-              border: '1px solid rgba(255,255,255,0.08)',
+              border: '1px solid var(--border-default)',
               background: mobile ? 'var(--accent-bg)' : 'var(--bg-card)',
               display: 'flex',
               alignItems: 'center',
@@ -499,7 +462,7 @@ const Navbar: React.FC = () => {
                       gap: 6,
                       padding: '10px 14px',
                       borderRadius: 10,
-                      color: '#64748b',
+                      color: 'var(--text-dim)',
                       fontSize: 14,
                       background: 'none',
                       border: 'none',
@@ -509,11 +472,11 @@ const Navbar: React.FC = () => {
                       textAlign: 'left',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#5eead4';
-                      e.currentTarget.style.background = 'rgba(20,184,166,0.06)';
+                      e.currentTarget.style.color = 'var(--accent-light)';
+                      e.currentTarget.style.background = 'var(--accent-bg)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#64748b';
+                      e.currentTarget.style.color = 'var(--text-dim)';
                       e.currentTarget.style.background = 'transparent';
                     }}
                   >
@@ -545,18 +508,18 @@ const Navbar: React.FC = () => {
                         justifyContent: 'space-between',
                         padding: '10px 14px',
                         borderRadius: 10,
-                        color: '#64748b',
+                        color: 'var(--text-dim)',
                         fontSize: 14,
                         textDecoration: 'none',
                         fontWeight: 500,
                         transition: 'all 0.2s',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.color = '#5eead4';
-                        e.currentTarget.style.background = 'rgba(20,184,166,0.06)';
+                        e.currentTarget.style.color = 'var(--accent-light)';
+                        e.currentTarget.style.background = 'var(--accent-bg)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#64748b';
+                        e.currentTarget.style.color = 'var(--text-dim)';
                         e.currentTarget.style.background = 'transparent';
                       }}
                     >
@@ -569,7 +532,7 @@ const Navbar: React.FC = () => {
                 ))}
 
                 {/* Divider */}
-                <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '8px 14px' }} />
+                <div style={{ height: 1, background: 'var(--divider)', margin: '8px 14px' }} />
 
                 {/* Mobile call CTA */}
                 <motion.div
@@ -590,8 +553,8 @@ const Navbar: React.FC = () => {
                       padding: '11px',
                       borderRadius: 10,
                       background: 'transparent',
-                      border: '1px solid rgba(20,184,166,0.3)',
-                      color: '#14b8a6',
+                      border: '1px solid var(--accent-border)',
+                      color: 'var(--accent)',
                       fontSize: 13,
                       fontWeight: 600,
                       cursor: 'pointer',
@@ -620,7 +583,7 @@ const Navbar: React.FC = () => {
                       width: '100%',
                       padding: '11px',
                       borderRadius: 10,
-                      background: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+                      background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
                       color: '#fff',
                       fontSize: 13,
                       fontWeight: 600,

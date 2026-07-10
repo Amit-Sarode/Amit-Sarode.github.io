@@ -152,20 +152,30 @@ const Projects: React.FC = () => {
           whileHover={{ x: -4, boxShadow: `0 0 20px ${t.teal}20` }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.4 }}
-          onClick={() => navigate('/', { state: { scrollTo: 'industries' } })}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '8px 16px', borderRadius: 10,
-            background: 'rgba(255,255,255,0.04)', border: `1px solid ${t.cardBorder}`,
-            color: t.mutedMid, fontSize: 13, cursor: 'pointer',
-            marginBottom: 32, fontFamily: 'monospace', letterSpacing: '0.04em',
-          }}
+          onClick={() => navigate('/projects', { state: { scrollTo: 'industries' } })}
+           style={{
+                        background: 'transparent',
+                        border: '1px solid rgba(20,184,166,0.2)',
+                        color: '#14b8a6',
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        fontFamily: 'monospace',
+                        padding: '8px 16px',
+                        borderRadius: 8,
+                        transition: 'background-color 0.2s',
+                         marginBottom: 32,
+                      }}
+      
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          Back to Industries
+          Back to Projects
         </motion.button>
+        
 
         {/* Hero Image + Title */}
         <motion.div

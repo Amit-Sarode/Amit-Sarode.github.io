@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SEO from '../ui/SEO';
+import SectionHeader from '../ui/SectionHeader';
 import MagneticButton from '../ui/MagneticButton';
 
 import { getCalApi } from "@calcom/embed-react";
@@ -305,52 +306,14 @@ const Contact = () => {
         }}
       >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          style={{ textAlign: 'center', marginBottom: 52 }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-            <motion.span 
-                                                     initial={{ width: 0 }}
-                                                     whileInView={{ width: 32 }}
-                                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                                     style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                                                   />
-                                     <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                                       CONTACT
-                                     </span>
-                                      <motion.span 
-                                                    initial={{ width: 0 }}
-                                                    whileInView={{ width: 32 }}
-                                                    transition={{ duration: 0.8, delay: 0.2 }}
-                                                    style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                                                  />
-          </div>
-
-          <h1
-            style={{
-              fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-              fontWeight: 700,
-              lineHeight: 1.1,
-              background: 'linear-gradient(135deg, #f1f5f9 30%, #94a3b8 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: 16,
-            }}
-          >
-            Let's Automate Your Business
-          </h1>
-
-          <p style={{ color: '#64748b', fontSize: 16, maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
-            Tell us about your automation goals. We'll map your workflows, identify quick wins, and build a custom proposal — no strings attached.
-          </p>
-          <p style={{ color: '#5eead4', marginTop: 12, fontSize: 14, fontWeight: 500 }}>
-            Free discovery call · 24-hour response time
-          </p>
-        </motion.div>
+        <SectionHeader
+          label="CONTACT"
+          title="Let's Automate Your Business"
+          description="Tell us about your automation goals. We'll map your workflows, identify quick wins, and build a custom proposal — no strings attached."
+        />
+        <p style={{ color: 'var(--accent)', marginTop: -48, marginBottom: 52, fontSize: 14, fontWeight: 500, textAlign: 'center' }}>
+          Free discovery call · 24-hour response time
+        </p>
 
         {/* Form card */}
         <motion.div

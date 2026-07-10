@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../ui/SEO';
+import SectionHeader from '../ui/SectionHeader';
 import { blogPosts, blogTags } from '../../data/blogData';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { Reveal } from '../hero/Reveal';
@@ -161,76 +162,35 @@ const Blog: React.FC = () => {
         zIndex: 1,
       }}>
         <Reveal>
-          <motion.button
-            type="button"
-            whileHover={{ x: -4 }}
-            onClick={() => navigate('/')}
-            style={{
-              background: 'transparent',
-              border: 0,
-              color: theme.dim,
-              fontSize: 13,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              fontFamily: 'monospace',
-              padding: 0,
-              marginBottom: 32,
-            }}
-          >
-            ← Back to Home
-          </motion.button>
+         <motion.button
+                      whileHover={{ x: -3, backgroundColor: 'rgba(20,184,166,0.08)' }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate('/')}
+                      style={{
+                        background: 'transparent',
+                        border: '1px solid rgba(20,184,166,0.2)',
+                        color: '#14b8a6',
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        fontFamily: 'monospace',
+                        padding: '8px 16px',
+                        borderRadius: 8,
+                        transition: 'background-color 0.2s',
+                      }}
+                    >
+                      <span style={{ fontSize: 16 }}>←</span> Back to Home
+                    </motion.button>
         </Reveal>
 
         <Reveal>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 14,
-              marginBottom: 18,
-            }}>
-              <motion.span
-                initial={{ width: 0 }}
-                whileInView={{ width: 36 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: theme.accent, borderRadius: 2, display: 'inline-block' }}
-              />
-              <span style={{
-                color: theme.accent,
-                fontFamily: 'monospace',
-                fontSize: 12,
-                letterSpacing: '0.16em',
-                fontWeight: 700,
-              }}>
-                BEHIND THE PROJECT
-              </span>
-              <motion.span
-                initial={{ width: 0 }}
-                whileInView={{ width: 36 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ height: 2, background: theme.accent, borderRadius: 2, display: 'inline-block' }}
-              />
-            </div>
-            <h1 style={{
-              fontSize: 'clamp(2.4rem, 6vw, 4.5rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.06em',
-              background: 'linear-gradient(120deg, #ffffff, #cbd5e1 52%, #5eead4)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              lineHeight: 1.05,
-              margin: '0 0 16px',
-            }}>
-              Articles & Insights
-            </h1>
-            <p style={{ color: theme.muted, fontSize: 16, maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>
-              Medium-style editorial notes on AI chatbots, automation, SaaS products, and full-stack engineering — written for Indian businesses building faster.
-            </p>
-          </div>
+          <SectionHeader
+            label="BEHIND THE PROJECT"
+            title="Articles & Insights"
+            description="Medium-style editorial notes on AI chatbots, automation, SaaS products, and full-stack engineering — written for Indian businesses building faster."
+          />
         </Reveal>
 
         <Reveal delay={0.05}>

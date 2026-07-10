@@ -1,69 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Reveal, Divider } from '../hero/Reveal';
 import { AmbientBackground, NoiseOverlay, GridLines } from '../hero/HeroBackground';
 import { pricingPlans } from '../hero/data';
 import SEO from '../ui/SEO';
-const GlowCard: React.FC<{
-  children: React.ReactNode;
-  color?: string;
-  style?: React.CSSProperties;
-}> = ({ children, color = '#14b8a6', style }) => {
-  const [hovered, setHovered] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
-  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    setMouse({ x: e.clientX - r.left, y: e.clientY - r.top });
-  }, []);
-
-  return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.01 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onMouseMove={onMove}
-      style={{
-        position: 'relative', overflow: 'hidden', borderRadius: 24,
-        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
-        border: `1px solid ${hovered ? `${color}50` : 'rgba(255,255,255,0.08)'}`,
-        transition: 'background 0.4s ease, border-color 0.4s ease',
-        boxShadow: hovered ? `0 20px 40px -10px ${color}20` : '0 10px 30px -10px rgba(0,0,0,0.5)',
-        ...style,
-      }}
-    >
-      {/* Cinematic Cursor Glow */}
-      <div style={{
-        position: 'absolute', left: mouse.x, top: mouse.y,
-        width: 300, height: 300, borderRadius: '50%',
-        background: `radial-gradient(circle, ${color}20 0%, transparent 60%)`,
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 1 : 0, transition: 'opacity 0.4s ease',
-      }} />
-      
-      {/* Ambient Corner Blob */}
-      <div style={{
-        position: 'absolute', top: -30, right: -30,
-        width: 120, height: 120, borderRadius: '50%',
-        background: color, filter: 'blur(45px)',
-        pointerEvents: 'none', zIndex: 0,
-        opacity: hovered ? 0.2 : 0.05, transition: 'opacity 0.5s ease',
-      }} />
-      
-      {/* Top Accent Bar */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-        opacity: hovered ? 1 : 0.3, transition: 'opacity 0.4s ease',
-        zIndex: 1,
-      }} />
-      
-      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>{children}</div>
-    </motion.div>
-  );
-};
+import SectionHeader from '../ui/SectionHeader';
+import GlowCard from '../ui/GlowCard';
 
 // Reusable Toggle Button Component
 const TogglePill: React.FC<{
@@ -131,58 +74,41 @@ const Pricing: React.FC = () => {
         <Reveal>
           <div style={{ marginBottom: 12 }}>
             <motion.button
-              whileHover={{ x: -3 }}
-              onClick={() => navigate('/')}
-              style={{
-                background: 'none', border: 'none', color: '#475569', fontSize: 13,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                fontFamily: 'monospace', padding: 0,
-              }}
-            >
-              <span style={{ fontSize: 16 }}>←</span> Back to Home
-            </motion.button>
+                         whileHover={{ x: -3, backgroundColor: 'rgba(20,184,166,0.08)' }}
+                         whileTap={{ scale: 0.98 }}
+                         onClick={() => navigate('/')}
+                         style={{
+                           background: 'transparent',
+                           border: '1px solid rgba(20,184,166,0.2)',
+                           color: '#14b8a6',
+                           fontSize: 13,
+                           cursor: 'pointer',
+                           display: 'inline-flex',
+                           alignItems: 'center',
+                           gap: 8,
+                           fontFamily: 'monospace',
+                           padding: '8px 16px',
+                           borderRadius: 8,
+                           transition: 'background-color 0.2s',
+                         }}
+                       >
+                         <span style={{ fontSize: 16 }}>←</span> Back to Home
+                       </motion.button>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
-            <motion.span 
-                                         initial={{ width: 0 }}
-                                         whileInView={{ width: 32 }}
-                                         transition={{ duration: 0.8, delay: 0.2 }}
-                                         style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                                       />
-                         <span style={{ color: '#14b8a6', fontFamily: 'monospace', fontSize: 13, letterSpacing: '0.12em', fontWeight: 600 }}>
-                           INVESTMENTS
-                         </span>
-                          <motion.span 
-                                        initial={{ width: 0 }}
-                                        whileInView={{ width: 32 }}
-                                        transition={{ duration: 0.8, delay: 0.2 }}
-                                        style={{ height: 2, background: '#14b8a6', borderRadius: 2, display: 'inline-block' }} 
-                                      />
-          </div>
+          <SectionHeader
+            label="INVESTMENTS"
+            title="Pricing"
+            description="Transparent pricing to help you plan. Every project includes a discovery call, weekly demos, and post-launch support."
+          />
           
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 24, marginBottom: 56 }}>
-            <div>
-              <h1 style={{
-                fontFamily: "'Syne', sans-serif", fontWeight: 800,
-                fontSize: 'clamp(2rem, 5vw, 3.2rem)', color: '#f1f5f9',
-                margin: '0 0 12px', lineHeight: 1.1,
-              }}>Pricing</h1>
-              <p style={{ color: '#64748b', fontSize: 15, fontWeight: 300, margin: '0 auto', maxWidth: 460, lineHeight: 1.75 }}>
-                Transparent pricing to help you plan. Every project includes a discovery call, weekly demos, and post-launch support.
-              </p>
-            </div>
-            
-            {/* Cinematic Toggles */}
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <TogglePill 
-                active={currency} 
-                onChange={(v: string) => setCurrency(v as 'USD' | 'INR')} 
-                color="#334155"
-                options={[ { label: 'USD', value: 'USD' }, { label: 'INR', value: 'INR' } ]} 
-              />
-            
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: -24, marginBottom: 56 }}>
+            <TogglePill 
+              active={currency} 
+              onChange={(v: string) => setCurrency(v as 'USD' | 'INR')} 
+              color="#334155"
+              options={[ { label: 'USD', value: 'USD' }, { label: 'INR', value: 'INR' } ]} 
+            />
           </div>
         </Reveal>
         
@@ -196,15 +122,6 @@ const Pricing: React.FC = () => {
                 border: plan.featured ? '1px solid rgba(139, 92, 246, 0.25)' : undefined,
               }}>
                 <div style={{ padding: '36px 32px', display: 'flex', flexDirection: 'column', flex: 1, position: 'relative' }}>
-                  {/* {plan.featured && (
-                    <div style={{
-                      position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)',
-                      padding: '6px 20px', borderRadius: '0 0 16px 16px', 
-                      background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
-                      fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', color: 'white', textTransform: 'uppercase',
-                      boxShadow: '0 10px 20px -5px rgba(139, 92, 246, 0.4)'
-                    }}>Most Popular</div>
-                  )} */}
                   
                   <p style={{ fontSize: 13, fontWeight: 600, color: plan.color, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px', fontFamily: 'monospace' }}>
                     {plan.tier}
