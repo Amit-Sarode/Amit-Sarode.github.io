@@ -195,7 +195,7 @@ const HeroScrollExperience: React.FC = () => {
     'Process Automation Specialist',
   ]);
 
-  const cinematicEase = [0.16, 1, 0.3, 1];
+  const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
   return (
     <>

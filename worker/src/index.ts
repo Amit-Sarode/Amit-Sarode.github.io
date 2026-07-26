@@ -5,11 +5,19 @@ interface Env {
   OPENROUTER_API_KEY: string;
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://amit-sarode.github.io',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+const ALLOWED_ORIGINS = [
+  'https://amit-sarode.github.io',
+  'http://localhost:5173',
+];
+
+function corsHeaders(origin: string | null): Record<string, string> {
+  const originHeader = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': originHeader,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+}
 
 /**
  * Durable free models tried, in order, when the requested model is
@@ -60,26 +68,28 @@ function isUnavailable(status: number, bodyText: string): boolean {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const origin = request.headers.get('Origin');
+    const ch = () => corsHeaders(origin);
 
     // Handle CORS preflight requests
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: corsHeaders,
+        headers: ch(),
       });
     }
 
     if (request.method !== 'POST') {
       return new Response('Method not allowed', {
         status: 405,
-        headers: corsHeaders,
+        headers: ch(),
       });
     }
 
     if (!env.OPENROUTER_API_KEY) {
       return new Response('Server config error', {
         status: 500,
-        headers: corsHeaders,
+        headers: ch(),
       });
     }
 
@@ -94,7 +104,7 @@ export default {
         JSON.stringify({ error: 'Invalid JSON body' }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...ch(), 'Content-Type': 'application/json' },
         }
       );
     }
@@ -134,7 +144,7 @@ export default {
 
       // Success → return immediately.
       if (!isUnavailable(openRouterRes.status, bodyText)) {
-        const responseHeaders = new Headers(corsHeaders);
+        const responseHeaders = new Headers(ch());
         responseHeaders.set('Content-Type', contentType);
         responseHeaders.set('Cache-Control', 'no-store');
         // Tell the client which model actually served the request.
@@ -153,7 +163,7 @@ export default {
     }
 
     // Every model in the chain was rate-limited / unavailable.
-    const responseHeaders = new Headers(corsHeaders);
+    const responseHeaders = new Headers(ch());
     responseHeaders.set('Content-Type', lastContentType);
     responseHeaders.set('Cache-Control', 'no-store');
     responseHeaders.set('X-Model-Fallback-Exhausted', 'true');

@@ -217,6 +217,7 @@ const Carousel = ({ projects, onFocus }: { projects: BusinessCategory[]; onFocus
       {/* Navigation */}
       <div className="flex items-center justify-center gap-4 mt-2">
         <motion.button
+          aria-label="Previous slide"
           whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.12)' }}
           whileTap={{ scale: 0.9 }}
           onClick={() => goTo(Math.max(0, focusIdx - 1))}
@@ -235,6 +236,7 @@ const Carousel = ({ projects, onFocus }: { projects: BusinessCategory[]; onFocus
           {projects.map((p, i) => (
             <motion.button
               key={p.id}
+              aria-label={`Go to slide ${i + 1}`}
               animate={{
                 width: focusIdx === i ? 24 : 6,
                 background: focusIdx === i ? p.color : 'rgba(255,255,255,0.12)',
@@ -247,6 +249,7 @@ const Carousel = ({ projects, onFocus }: { projects: BusinessCategory[]; onFocus
         </div>
 
         <motion.button
+          aria-label="Next slide"
           whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.12)' }}
           whileTap={{ scale: 0.9 }}
           onClick={() => goTo(Math.min(total - 1, focusIdx + 1))}

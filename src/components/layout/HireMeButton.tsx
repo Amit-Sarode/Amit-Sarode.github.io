@@ -398,6 +398,7 @@ function HireMeButton() {
 
                 {/* Close button */}
                 <motion.button
+                  aria-label="Close chat"
                   whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.08)' }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setOpen(false)}
@@ -657,6 +658,7 @@ function HireMeButton() {
                   <input
                     ref={inputRef}
                     type="text"
+                    aria-label="Chat message"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
@@ -687,6 +689,7 @@ function HireMeButton() {
 
                 {/* Send button */}
                 <motion.button
+                  aria-label="Send message"
                   whileHover={!isTyping && input.trim() ? { scale: 1.08, boxShadow: '0 0 20px rgba(20,184,166,0.5)' } : {}}
                   whileTap={!isTyping && input.trim() ? { scale: 0.94 } : {}}
                   onClick={handleSendMessage}

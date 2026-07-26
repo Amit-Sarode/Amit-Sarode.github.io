@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
                 flexShrink: 0,
               }}
             >
-              <img src={logo}/>
+              <img src={logo} alt="Amit Sarode logo"/>
             </div>
             <span
               style={{

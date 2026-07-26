@@ -476,6 +476,7 @@ const Chatgpt: React.FC = () => {
             <input
               ref={inputRef}
               type="text"
+              aria-label="Chat message"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
@@ -508,6 +509,7 @@ const Chatgpt: React.FC = () => {
 
           {/* Send button */}
           <motion.button
+            aria-label="Send message"
             whileHover={!loadingModel && !isTyping ? { scale: 1.08, boxShadow: '0 0 20px rgba(20,184,166,0.5)' } : {}}
             whileTap={!loadingModel && !isTyping ? { scale: 0.94 } : {}}
             onClick={handleSendMessage}

@@ -14,7 +14,6 @@ import {
   caseStudies, processSteps, stats, businesses,
 } from '../hero/data';
 
-const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
 const Hero: React.FC = () => {
@@ -474,6 +473,7 @@ const Hero: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40, gap: 32 }}>
                 
                 <motion.button
+                  aria-label="Previous testimonial"
                   onClick={() => paginate(-1)}
                   whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.15)' }}
                   whileTap={{ scale: 0.95 }}
@@ -490,6 +490,7 @@ const Hero: React.FC = () => {
                   {testimonials.map((_, i) => (
                     <motion.button
                       key={i}
+                      aria-label={`Go to testimonial ${i + 1}`}
                       onClick={() => { setCurrent(i); setAutoPlay(false); }}
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
@@ -503,6 +504,7 @@ const Hero: React.FC = () => {
                 </div>
      
                 <motion.button
+                  aria-label="Next testimonial"
                   onClick={() => paginate(1)}
                   whileHover={{ scale: 1.1, background: 'rgba(20,184,166,0.15)' }}
                   whileTap={{ scale: 0.95 }}

@@ -145,7 +145,7 @@ const Footer: React.FC = () => {
                   flexShrink: 0,
                 }}
               >
-               <img src={logo}/>
+               <img src={logo} alt="Amit Sarode logo"/>
               </div>
               <span
                 style={{
@@ -236,7 +236,7 @@ const Footer: React.FC = () => {
             <nav style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {navLinks.map((link) => (
                 <Link
-                  key={link.to}
+                  key={link.label}
                   to={link.to}
                   style={{
                     fontSize: 14,

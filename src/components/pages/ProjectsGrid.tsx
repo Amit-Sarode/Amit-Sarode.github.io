@@ -19,8 +19,6 @@ const allIndustries = [...new Set([
   'Fitness', 'Travel', 'Education', 'Real Estate', 'Automotive', 'SaaS',
 ])].sort();
 
-const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-
 const ProjectRow: React.FC<{ biz: BusinessCategory; index: number; navigate: ReturnType<typeof useNavigate> }> = ({ biz, index, navigate }) => {
   const isEven = index % 2 === 0;
 
@@ -227,6 +225,7 @@ const ProjectsGrid: React.FC = () => {
           <div style={{ marginBottom: 32 }}>
             <input
               type="text"
+              aria-label="Search projects"
               placeholder="Search projects..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
