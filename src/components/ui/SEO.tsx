@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { SITE_URL } from '../../config';
 
 type SEOProps = {
   title: string;
@@ -7,7 +8,6 @@ type SEOProps = {
   noindex?: boolean;
 };
 
-const SITE_URL = 'https://amit-sarode.github.io';
 const OG_IMAGE = `${SITE_URL}/og-preview-card.svg`;
 
 const SEO: React.FC<SEOProps> = ({ title, description, path = '/', noindex }) => {

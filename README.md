@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+# Amit Sarode — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio and AI automation agency website built with React 19, TypeScript, Vite, and Tailwind CSS v4.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework:** React 19 + TypeScript
+- **Build:** Vite 6
+- **Styling:** Tailwind CSS v4
+- **Animation:** Framer Motion / Motion, animejs
+- **3D:** Three.js / @react-three/fiber
+- **Routing:** React Router v7
+- **SEO:** react-helmet-async
+- **Testing:** Vitest
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Type-check + build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run tests |
+| `npm run deploy` | Build + deploy to GitHub Pages |
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+
+- `VITE_GNEWS_API_KEY` — GNews API key for tech news feed
+- `VITE_EMAILJS_SERVICE_ID` — EmailJS service ID
+- `VITE_EMAILJS_TEMPLATE_ID` — EmailJS template ID
+- `VITE_EMAILJS_PUBLIC_KEY` — EmailJS public key
+- `VITE_OPENROUTER_PROXY_URL` — Cloudflare Worker URL for AI chat proxy
+
+## Project Structure
+
+```
+src/
+  App.tsx             Root component with routes
+  main.tsx            Entry point
+  config.ts           App configuration (phone, email, URLs)
+  index.css           Tailwind + theme variables + global styles
+  components/
+    ui/               Reusable UI components
+    layout/           Layout components (Navbar, Footer)
+    pages/            Page-level components
+    hero/             Hero section components and data
+    skills/           3D skill cloud components
+    animation/        Canvas-based background effects
+  contexts/           React contexts (Theme, Cursor)
+  data/               Static data (blog posts, skills)
+```
+
+## Cloudflare Worker
+
+The `worker/` directory contains a Cloudflare Worker that proxies OpenRouter API requests for the AI chat assistant. Deploy with:
+
+```bash
+cd worker && wrangler deploy
 ```

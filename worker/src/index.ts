@@ -30,7 +30,6 @@ function corsHeaders(origin: string | null): Record<string, string> {
  */
 const FALLBACK_MODELS = [
   'openai/gpt-oss-120b:free',
-  'openai/gpt-oss-20b:free',
   'meta-llama/llama-3.3-70b-instruct:free',
   'openrouter/free',
 ];
